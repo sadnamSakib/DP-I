@@ -29,7 +29,7 @@ class _HomeState extends State<Home> {
             ),
             const SizedBox(height: 20),
             const Text(
-              'Welcome to our Learning App',
+              'Welcome to our Daktarer App',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
