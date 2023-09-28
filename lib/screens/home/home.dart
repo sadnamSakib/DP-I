@@ -12,7 +12,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Learning App'),
+        title: Text('Doctor App'),
         centerTitle: true,
       ),
       body: Container(
