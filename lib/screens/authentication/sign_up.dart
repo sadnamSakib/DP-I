@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:design_project_1/services/auth.dart';
 
-class SignIn extends StatefulWidget {
+import '../../services/auth.dart';
+class SignUp extends StatefulWidget {
   final Function toggleView;
-  SignIn({required this.toggleView});
-  //const SignIn({super.key, required void Function() toggleView});
+  SignUp({required this.toggleView});
+  //const SignUp({super.key});
 
   @override
-  State<SignIn> createState() => _SignInState();
+  State<SignUp> createState() => _SignUpState();
 }
 
-class _SignInState extends State<SignIn> {
+class _SignUpState extends State<SignUp> {
   final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
   String email = '';
@@ -19,10 +19,10 @@ class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Sign In'),
-        ),
-        body: Container(
+      appBar: AppBar(
+        title: const Text('SIgn Up'),
+      ),
+      body: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
           child: Form(
             key: _formKey,
@@ -53,43 +53,46 @@ class _SignInState extends State<SignIn> {
                 ElevatedButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      //print('valid');
-                      dynamic result = await _auth.signInWithEmailAndPassword(
+                      dynamic result = await _auth.registerWithEmailAndPassword(
                           email, password);
                       if (result == null) {
                         setState(() {
-                          error = 'Could not sign in with those credentials';
+                          error = 'Please supply a valid email';
                         });
+                      } else {
+                        print('signed in');
+                        print(result.uid);
                       }
                     }
                   },
-                  child: const Text('Sign In'),
-                  ),
+                  child: const Text('Register'),
+                ),
                 const SizedBox(height: 20.0),
                 Text(
                   error,
                   style: const TextStyle(color: Colors.red, fontSize: 14.0),
                 ),
-                const SizedBox(height: 20.0),
                 Center(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center, // Aligns the children to the center horizontally
                     children: [
                       SizedBox(height: 20.0),
-                      Text('Don\'t have an account?'),
+                      Text('Already have an account?'),
                       TextButton(
                         onPressed: () {
                           widget.toggleView();
                         },
-                        child: Text('Register'),
+                        child: Text('Sign In'),
                       ),
                     ],
                   ),
                 )
+
               ],
             ),
-          ),
-        ),
+          )
+      ),
     );
   }
 }
+
