@@ -1,8 +1,11 @@
-import 'package:design_project_1/screens/wrapper.dart';
+ import 'package:design_project_1/screens/wrapper.dart';
+import 'package:design_project_1/services/auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
 import 'firebase_options.dart';
+import 'models/UserModel.dart';
 Future main() async {
    WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -15,8 +18,18 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-     home : Wrapper(),
+    return StreamProvider<UserModel?>.value(
+      value: AuthService().user,
+      initialData: UserModel(uid: ''),
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: const Wrapper(),
+      ),
     );
   }
 }
+
+
