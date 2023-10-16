@@ -44,7 +44,7 @@ class _SignUpState extends State<SignUp> {
                   TextFormField(
                     validator: (val) => val!.isEmpty ? 'Enter your name' : null,
                     onChanged: (val) {
-                      setState(()=>  email = val);
+                      setState(()=>  name = val);
                     },
                     decoration: const InputDecoration(
                       hintText: 'Full name',
