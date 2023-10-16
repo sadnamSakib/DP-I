@@ -13,6 +13,11 @@ class DatabaseService {
       'email': email
     });
   }
+  Future setUserRole(String role) async{
+    return await userCollection.doc(uid).update({
+      'role': role
+    });
+  }
 
   //get user data stream
   // Stream<QuerySnapshot> get users {
