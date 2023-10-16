@@ -3,6 +3,7 @@ import 'package:design_project_1/services/auth.dart';
 
 class SignIn extends StatefulWidget {
   final Function toggleView;
+
   SignIn({required this.toggleView});
   //const SignIn({super.key, required void Function() toggleView});
 

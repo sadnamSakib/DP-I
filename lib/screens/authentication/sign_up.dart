@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../services/auth.dart';
+import 'emailVerificationPage.dart';
 class SignUp extends StatefulWidget {
 
   final Function toggleView;
@@ -79,6 +80,7 @@ class _SignUpState extends State<SignUp> {
                       if(!matchPassword()){
                         setState(() {
                           error = 'Passwords do not match';
+
                         });
                       }
                       else{
@@ -98,16 +100,26 @@ class _SignUpState extends State<SignUp> {
                   ElevatedButton(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        dynamic result = await _auth.registerWithEmailAndPassword(
-                            name,email, password);
-                        if (result == null) {
-                          setState(() {
-                            error = 'Please supply a valid email';
-                          });
-                        } else {
+
+                          try {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EmailVerificationPage(
+                                  name: name,
+                                  email: email,
+                                  password: password,
+                                ),
+                              ),
+                            );
+                            print("Navigation success jayna");
+                          } catch (e) {
+                            print("Navigation error jayna: $e");
+                          }
+
                           print('signed in');
-                          print(result.uid);
-                        }
+
+
                       }
                     },
                     child: const Text('Register'),
