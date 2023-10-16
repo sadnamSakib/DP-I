@@ -20,6 +20,7 @@ class Wrapper extends StatelessWidget {
 
         if (user == null) {
           return const Authenticate();
+          // return  doctorHome.Home();
         } else if (!user.emailVerified) {
           return const Authenticate();
         } else {
