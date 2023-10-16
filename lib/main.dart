@@ -1,4 +1,5 @@
- import 'package:design_project_1/screens/wrapper.dart';
+ import 'package:design_project_1/screens/authentication/resetPassword.dart';
+import 'package:design_project_1/screens/wrapper.dart';
 import 'package:design_project_1/services/auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -21,11 +22,15 @@ class MyApp extends StatelessWidget {
     return StreamProvider<UserModel?>.value(
       value: AuthService().user,
       initialData: UserModel(uid: ''),
+
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
+        routes: {
+          ForgotPassword.id: (context) => const ForgotPassword(),
+        },
         home: const Wrapper(),
       ),
     );

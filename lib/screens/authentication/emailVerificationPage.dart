@@ -25,8 +25,8 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
   bool isEmailVerified = false;
   Timer? timer;
   @override
-   initState()   {
-     _auth.registerWithEmailAndPassword(widget.name, widget.email, widget.password);
+  initState()   {
+    _auth.registerWithEmailAndPassword(widget.name, widget.email, widget.password);
     super.initState();
     timer =
         Timer.periodic(const Duration(seconds: 3), (_) => checkEmailVerified());
@@ -45,8 +45,8 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
           .showSnackBar(SnackBar(content: Text("Email Successfully Verified")));
 
       timer?.cancel();
-
-
+      await _auth.signOut();
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Wrapper()));
     }
   }
 
