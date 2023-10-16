@@ -1,3 +1,4 @@
+import 'package:design_project_1/screens/authentication/resetPassword.dart';
 import 'package:flutter/material.dart';
 import 'package:design_project_1/services/auth.dart';
 
@@ -69,20 +70,36 @@ class _SignInState extends State<SignIn> {
                 const SizedBox(height: 20.0),
                 Text(
                   error,
-                  style: const TextStyle(color: Colors.red, fontSize: 14.0),
+                  style: const TextStyle(color: Colors.red, fontSize: 20.0),
                 ),
                 const SizedBox(height: 20.0),
                 Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center, // Aligns the children to the center horizontally
+                  child: Column(
                     children: [
-                      SizedBox(height: 20.0),
-                      Text('Don\'t have an account?'),
                       TextButton(
                         onPressed: () {
-                          widget.toggleView();
+                          Navigator.push(
+                            context, MaterialPageRoute(builder: (context)
+                              {
+                                return ForgotPassword();
+                              },
+                            ),
+                          );
                         },
-                        child: Text('Register'),
+                        child: Text('Forgot Password?'),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center, // Aligns the children to the center horizontally
+                        children: [
+                          SizedBox(height: 20.0),
+                          Text('Don\'t have an account?'),
+                          TextButton(
+                            onPressed: () {
+                              widget.toggleView();
+                            },
+                            child: Text('Register'),
+                          ),
+                        ],
                       ),
                     ],
                   ),
