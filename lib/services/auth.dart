@@ -1,11 +1,15 @@
+import 'dart:async';
+
 import 'package:design_project_1/models/UserModel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import 'database.dart';
 class AuthService{
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   //create user object based on firebase user
   UserModel? _userFromFirebaseUser(User? user){
-    return user != null ? UserModel(uid: user.uid) : null;
+    return user != null && user.emailVerified  ? UserModel(uid: user.uid) : null;
   }
   //auth change user stream
   Stream<UserModel?> get user{
@@ -25,11 +29,26 @@ class AuthService{
       return null;
     }
   }
+
   //register with email and password
-  Future registerWithEmailAndPassword(String email, String password) async{
+  Future registerWithEmailAndPassword(String name, String email, String password) async{
+    bool isEmailVerified = false;
+    Timer? timer;
+
     try{
       UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       User? user = result.user;
+      await FirebaseAuth.instance.currentUser!.sendEmailVerification();
+      timer = Timer.periodic(const Duration(seconds: 3), (timer) async {
+        await FirebaseAuth.instance.currentUser?.reload();
+        isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
+        if (isEmailVerified) {
+          timer.cancel();
+        }
+      });
+
+      await DatabaseService(uid: user?.uid).updateUserData(name, email);
+
       return _userFromFirebaseUser(user);
     }
     catch(e){
