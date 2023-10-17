@@ -15,27 +15,27 @@ class _HomeState extends State<Home> {
 
   List<Widget> _buildScreens() {
     return [
-      ProfileScreen(),
+      Text('Tracker'),
       Text('Reports'),
       Text('Home'),
       Text('Appointment'),
-      Text('Tracker'),
+      ProfileScreen(),
+
     ];
   }
 
   List<PersistentBottomNavBarItem> _navBarItems() {
     return [
-      PersistentBottomNavBarItem(icon: Icon(Icons.person,color:Colors.indigo),
-        inactiveIcon:  Icon(Icons.person , color: Colors.grey)),
-      PersistentBottomNavBarItem(icon: Icon(Icons.report,color:Colors.indigo),
-          inactiveIcon:  Icon(Icons.report , color: Colors.grey)),
+      PersistentBottomNavBarItem(icon: Icon(Icons.track_changes,color:Colors.indigo),
+          inactiveIcon:  Icon(Icons.track_changes , color: Colors.grey)),
+      PersistentBottomNavBarItem(icon: Icon(Icons.summarize_outlined,color:Colors.indigo),
+          inactiveIcon:  Icon(Icons.summarize_outlined , color: Colors.grey)),
       PersistentBottomNavBarItem(icon: Icon(Icons.home,color:Colors.indigo),
           inactiveIcon:  Icon(Icons.home , color: Colors.white)),
-
       PersistentBottomNavBarItem(icon: Icon(Icons.calendar_month,color:Colors.indigo),
           inactiveIcon:  Icon(Icons.calendar_month , color: Colors.grey)),
-      PersistentBottomNavBarItem(icon: Icon(Icons.track_changes,color:Colors.indigo),
-          inactiveIcon:  Icon(Icons.track_changes , color: Colors.grey))
+      PersistentBottomNavBarItem(icon: Icon(Icons.person,color:Colors.indigo),
+          inactiveIcon:  Icon(Icons.person , color: Colors.grey))
     ];
   }
 
