@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
         routes: {
-          ForgotPassword.id: (context) => ForgotPassword(),
+          ForgotPassword.id: (context) => const ForgotPassword(),
         },
         home: const Wrapper(),
       ),

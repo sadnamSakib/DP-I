@@ -18,6 +18,10 @@ class DatabaseService {
       'role': role
     });
   }
+  //get user doc stream
+  Stream<DocumentSnapshot> get userDoc {
+    return userCollection.doc(uid).snapshots();
+  }
 
   //get user data stream
   // Stream<QuerySnapshot> get users {
