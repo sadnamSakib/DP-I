@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:design_project_1/models/UserModel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import 'database.dart';
 class AuthService{
@@ -66,7 +67,26 @@ class AuthService{
       return null;
     }
   }
-
+//register with google
+  Future registerWithGoogle() async{
+      // Trigger the authentication flow
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      print("Jhamela1");
+      // Obtain the auth details from the request
+      final GoogleSignInAuthentication googleAuth = await googleUser!.authentication;
+      print("Jhamela2");
+      // Create a new credential
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      print("Jhamela3");
+      UserCredential result = await _auth.signInWithCredential(credential);
+      print("Jhamela4");
+      User? user = result.user;
+      print(user.toString());
+      // return _userFromFirebaseUser(user);
+  }
 
 
   //sign in with email and password
