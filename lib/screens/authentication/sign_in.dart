@@ -2,6 +2,8 @@ import 'package:design_project_1/screens/authentication/resetPassword.dart';
 import 'package:flutter/material.dart';
 import 'package:design_project_1/services/auth.dart';
 
+import '../../squareTile.dart';
+
 class SignIn extends StatefulWidget {
   final Function toggleView;
 
@@ -101,6 +103,18 @@ class _SignInState extends State<SignIn> {
                           ),
                         ],
                       ),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children:[
+                            //google button
+                            Text("or Login with "),
+                            SquareTile(
+                              onTap: () => _auth.registerWithGoogle(),
+                              imagePath: 'assets/images/google.png',
+                            ),
+
+                          ]
+                      )
                     ],
                   ),
                 )
