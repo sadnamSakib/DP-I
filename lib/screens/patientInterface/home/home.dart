@@ -1,18 +1,20 @@
+import 'package:design_project_1/services/auth.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+  Home({Key? key}) : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
+  final AuthService _auth = AuthService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Learning App'),
+        title: Text('Doctor App'),
         centerTitle: true,
       ),
       body: Container(
@@ -23,29 +25,29 @@ class _HomeState extends State<Home> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const Icon(
-              Icons.school,
+              Icons.medical_services,
               size: 100,
               color: Colors.blue,
             ),
             const SizedBox(height: 20),
             const Text(
-              'Welcome to our Learning App',
+              'Welcome to our rogider home',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 10),
             const Text(
-              'Explore and expand your knowledge with our diverse courses.',
+              'Pawfect Health Care for you.',
               style: TextStyle(fontSize: 16),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 30),
             ElevatedButton(
-              onPressed: () {
-                print("Getting started haha!");
+              onPressed: () async {
+                await _auth.signOut();
                 // Add your navigation logic here
               },
-              child: Text('Get Started'),
+              child: Text('Logout'),
               style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
                 textStyle: TextStyle(fontSize: 18),
