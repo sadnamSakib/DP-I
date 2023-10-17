@@ -41,6 +41,8 @@ dependencies:
   cloud_firestore: ^4.9.3
   persistent_bottom_nav_bar: ^5.0.2
   intl_phone_number_input: ^0.7.3+1
+  image_picker: ^1.0.4
+
 
 dev_dependencies:
   flutter_test:
