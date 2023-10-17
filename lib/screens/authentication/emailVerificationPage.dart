@@ -7,6 +7,7 @@ import '../../models/UserModel.dart';
 import '../../services/auth.dart';
 import '../../main.dart';
 import '../wrapper.dart';
+import 'chooseRole.dart';
 
 class EmailVerificationPage extends StatefulWidget {
   final String name;
@@ -45,8 +46,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
           .showSnackBar(SnackBar(content: Text("Email Successfully Verified")));
 
       timer?.cancel();
-      await _auth.signOut();
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Wrapper()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>  RoleSelectionPage()));
     }
   }
 

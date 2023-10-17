@@ -1,3 +1,5 @@
+import 'package:design_project_1/screens/authentication/doctorDetailsPage.dart';
+import 'package:design_project_1/screens/authentication/patientDetailsPage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -17,7 +19,12 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
     if (user != null) {
       // Set custom claim based on the selected role
       await DatabaseService(uid: user?.uid).setUserRole(role);
-      Navigator.pushReplacementNamed(context, '/home'); // Replace with your home page
+      if(role=='doctor'){
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>  DoctorDetailsPage()));
+      }
+      else{
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>  PatientDetailsPage()));
+      }// Replace with your home page
     }
   }
 
