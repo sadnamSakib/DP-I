@@ -1,7 +1,9 @@
+import 'package:design_project_1/services/profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 
 
 class ProfileScreen extends StatefulWidget {
@@ -20,99 +22,111 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child:StreamBuilder<DocumentSnapshot>(
-            stream : users.doc(userUID).snapshots(),
+      body: ChangeNotifierProvider(
+        create: (_) => ProfileController(),
+        child: Consumer<ProfileController>(
+          builder: (context,provider,child){
+            return SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child:StreamBuilder<DocumentSnapshot>(
+                    stream : users.doc(userUID).snapshots(),
 
-            builder: (context,snapshot)
-            {
-              if(!snapshot.hasData)
-                {
-                  return Center(child: CircularProgressIndicator());
-                }else if(snapshot.hasData)
-                  {
-                    Map<dynamic, dynamic>? userData = snapshot.data?.data() as Map<dynamic, dynamic>?;
-                    String imageURL = userData?['imageURL'] ?? '';
+                    builder: (context,snapshot)
+                    {
+                      if(!snapshot.hasData)
+                      {
+                        return Center(child: CircularProgressIndicator());
+                      }else if(snapshot.hasData)
+                      {
+                        Map<dynamic, dynamic>? userData = snapshot.data?.data() as Map<dynamic, dynamic>?;
+                        String imageURL = userData?['imageURL'] ?? '';
 
-                    return SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          SizedBox(height: 20),
-                         Stack(
-                           alignment: Alignment.bottomCenter,
+                        return SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 20),
+                              Stack(
+                                alignment: Alignment.bottomCenter,
 
-                           children: [
-                             Padding(
-                               padding: const EdgeInsets.symmetric(vertical: 10, horizontal:15 ),
-                               child: Center(
-                                 child: Container(
-                                   height: 130,
-                                   width: 130,
-                                   decoration: BoxDecoration(
-                                       shape: BoxShape.circle,
-                                       border:  Border.all(
-                                           color: Color(0xFF2144F3),
-                                           width: 5
-                                       )
-                                   ),
-                                   child: ClipOval(
-                                     child: (imageURL.isEmpty)
-                                         ? Icon(Icons.person_2_outlined, size: 35)
-                                         : Image.network(
-                                       imageURL,
-                                       fit: BoxFit.cover,
-                                       loadingBuilder: (context, child, loadingProgress) {
-                                         if (loadingProgress == null) return child;
-                                         return Center(child: CircularProgressIndicator());
-                                       },
-                                       errorBuilder: (context,object,stack){
-                                         return Container(
-                                           child: Icon(Icons.error_outline, color:Colors.redAccent ,),
-                                         );
-                                       },
-                                     ),
-                                   ),
-                                 ),
-                               ),
-                             ),
-                             InkWell(
-                               onTap:(){
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 10, horizontal:15 ),
+                                    child: Center(
+                                      child: Container(
+                                        height: 130,
+                                        width: 130,
+                                        decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            border:  Border.all(
+                                                color: Color(0xFF2144F3),
+                                                width: 5
+                                            )
+                                        ),
+                                        child: ClipOval(
+                                          child: (imageURL.isEmpty)
+                                              ? Icon(Icons.person_2_outlined, size: 35)
+                                              : Image.network(
+                                            imageURL,
+                                            fit: BoxFit.cover,
+                                            loadingBuilder: (context, child, loadingProgress) {
+                                              if (loadingProgress == null) return child;
+                                              return Center(child: CircularProgressIndicator());
+                                            },
+                                            errorBuilder: (context,object,stack){
+                                              return Container(
+                                                child: Icon(Icons.error_outline, color:Colors.redAccent ,),
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap:(){
+                                   provider.pickImage(context);
+                                    },
+                                    child: CircleAvatar(
+                                        radius: 14,
+                                        backgroundColor: Colors.black,
+                                        child: Icon(Icons.add , size:18, color: Colors.white)
+                                    ),
+                                  )
 
-            }
-                               child: CircleAvatar(
-                                   radius: 14,
-                                     backgroundColor: Colors.black,
-                                   child: Icon(Icons.add , size:18, color: Colors.white)
-                                     ),
-                             )
 
+                                ],
+                              ),
+                              const SizedBox(height: 40,),
+                              ReusableRow(title: 'Username', value: userData?['name'], iconData: Icons.person_2_outlined),
+                              ReusableRow(title: 'Email', value: userData?['email'], iconData: Icons.email_outlined),
+                              ReusableRow(title: 'Phone', value: userData?['phone'] ?? 'xxx-xxx-xxx', iconData: Icons.phone_android),
 
-                           ],
-                         ),
-                          const SizedBox(height: 40,),
-                          ReusableRow(title: 'Username', value: userData?['name'], iconData: Icons.person_2_outlined),
-                          ReusableRow(title: 'Email', value: userData?['email'], iconData: Icons.email_outlined),
-                          ReusableRow(title: 'Phone', value: userData?['phone'] ?? 'xxx-xxx-xxx', iconData: Icons.phone_android),
+                            ],
+                          ),
+                        );
 
-                        ],
-                      ),
-                    );
+                      }
 
-                  }
+                      else {
+                        return Center(child: Text('Something went wrong', style: Theme.of(context).textTheme.displayMedium));
+                      }
 
-              else {
-                return Center(child: Text('Something went wrong', style: Theme.of(context).textTheme.displayMedium));
-            }
+                    }
 
-            }
-
+                ),
+              ),
+            );
+          },
         ),
-      ),
-    ),
+      )
+
+
+
+
+
     );
   }
 }
