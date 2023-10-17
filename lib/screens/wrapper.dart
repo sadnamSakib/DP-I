@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/UserModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:design_project_1/screens/authentication/doctorDetailsPage.dart' as doctordetails;
+import 'package:design_project_1/screens/authentication/patientDetailsPage.dart' as patientdetails;
 
 class Wrapper extends StatelessWidget {
   const Wrapper({super.key});
@@ -17,6 +19,7 @@ class Wrapper extends StatelessWidget {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         final user = snapshot.data;
+        print(user.toString());
 
         if (user == null) {
           return const Authenticate();
@@ -35,16 +38,41 @@ class Wrapper extends StatelessWidget {
                 return Text('Error: ${snapshot.error}');
               }
 
-              final userData = snapshot.data?.data() as Map<String, dynamic>;
+              final userData = snapshot.data?.data() as Map<String, dynamic>?;
+              if (userData == null) {
+                // Handle the case when userData is null, e.g., by returning an error message or redirecting to a login page.
+                return const Authenticate();
+              }
               final userRole = userData['role'] as String?;
 
-              if (userRole == null) {
-                return RoleSelectionPage();
-              } else if (userRole == 'doctor') {
-                return doctorHome.Home();
-              } else {
-                return patientHome.Home();
-              }
+              // Fetch doctor and patient documents
+              final doctorFuture = FirebaseFirestore.instance.collection('doctors').doc(user.uid).get();
+              final patientFuture = FirebaseFirestore.instance.collection('patients').doc(user.uid).get();
+
+              return FutureBuilder<DocumentSnapshot>(
+                future: userRole == 'doctor' ? doctorFuture : patientFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  }
+
+                  if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  }
+
+                  if (userRole == null) {
+                    return RoleSelectionPage();
+                  } else if (userRole == 'doctor' && !snapshot.hasData) {
+                    return doctordetails.DoctorDetailsPage();
+                  } else if (userRole == 'patient' && !snapshot.hasData) {
+                    return patientdetails.PatientDetailsPage();
+                  } else if (userRole == 'doctor') {
+                    return doctorHome.Home();
+                  } else {
+                    return patientHome.Home();
+                  }
+                },
+              );
             },
           );
         }
