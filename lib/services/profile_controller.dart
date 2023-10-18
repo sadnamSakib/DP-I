@@ -15,7 +15,7 @@ class ProfileController with ChangeNotifier{
 
   CollectionReference users = FirebaseFirestore.instance.collection('users');
 
-  firebase_storage.FirebaseStorage storage = firebase_storage.FirebaseStorage.instance;
+  // firebase_storage.FirebaseStorage storage = firebase_storage.FirebaseStorage.instance;
 
   final nameController = TextEditingController();
   final phoneContoller = TextEditingController();
@@ -33,7 +33,7 @@ class ProfileController with ChangeNotifier{
     _loading=value;
     notifyListeners();
   }
-  
+
   Future pickGalleryImage(BuildContext context)async{
     final pickedFile = await picker.pickImage(source: ImageSource.gallery , imageQuality: 100);
 
@@ -152,27 +152,106 @@ class ProfileController with ChangeNotifier{
         actions: [
           TextButton(onPressed: (){
             Navigator.pop(context);
-          }, child: Text('Cancel')),
+          }, child: Text('Cancel',
+              style: TextStyle(color: Colors.red)),
+          ),
 
-          TextButton(onPressed: (){
+          TextButton(onPressed: () async {
             Navigator.pop(context);
             String newName = nameController.text;
-            if(newName.isNotEmpty){
-              users.doc(userUID).update({
-                'name': newName,
-              }).then((_) {
-                // Username updated successfully
-                nameController.clear(); // Clear the input field
-                Navigator.pop(context); // Close the dialog
-              }).catchError((error) {
-                // Handle any errors that may occur during the update
+            if (newName.isNotEmpty) {
+              try {
+                await users.doc(userUID).update({'name': newName});
+                nameController.clear();
+                Fluttertoast.showToast(
+                  msg: 'Username updated',
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.white,
+                  textColor: Colors.blue,
+                );
+              } catch (error) {
                 print('Error updating username: $error');
-                // You can show an error message to the user if needed
-              });
+
+              }
             }
-          },child: Text('OK')),
+          },
+              child: Text('OK')),
         ],
       );
         });
   }
+
+
+  Future<void> showPhoneNumberDialogueAlert(BuildContext context, String phone) {
+
+    return showDialog(context: context,
+        builder: (context){
+          return AlertDialog(
+            title: Text('Update phone number'),
+            content: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    TextField(
+                      controller: phoneContoller,
+                      decoration: InputDecoration(labelText: 'New phone number'),
+                    ),
+                  ],
+                )
+            ),
+            actions: [
+              TextButton(onPressed: (){
+                Navigator.pop(context);
+              }, child: Text('Cancel',
+                  style: TextStyle(color: Colors.red)),
+              ),
+
+              TextButton(onPressed: () async {
+                Navigator.pop(context);
+                String newphone = phoneContoller.text;
+                if (newphone.isNotEmpty) {
+                  try {
+                    await users.doc(userUID).update({'phone': newphone});
+                    phoneContoller.clear();
+                    Fluttertoast.showToast(
+                      msg: 'Phone number updated',
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.white,
+                      textColor: Colors.blue,
+                    );
+                  } catch (error) {
+                    print('Error updating phone number: $error');
+
+                  }
+                }
+              },
+                  child: Text('OK')),
+            ],
+          );
+        });
+  }
+
+  Future<void> showEmailDialogueAlert(BuildContext context, String email) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Email'),
+          content: Text('Your email cannot be changed.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 }

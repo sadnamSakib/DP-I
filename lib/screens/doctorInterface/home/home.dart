@@ -12,7 +12,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final AuthService _auth = AuthService();
-  int _currentIndex = 0; // Track the current tab index
+  int _currentIndex = 2; // Track the current tab index
 
   List<Widget> _buildScreens() {
     return [
