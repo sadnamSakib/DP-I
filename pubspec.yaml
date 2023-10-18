@@ -46,6 +46,7 @@ dependencies:
   file_picker: ^4.0.1
   firebase_storage: ^11.3.0
   fluttertoast: ^8.2.2
+  table_calendar: ^3.0.9
 
 
 dev_dependencies:
