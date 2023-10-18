@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
-
+import 'package:design_project_1/services/auth.dart';
 import '../profile/profile.dart';
 
 class Home extends StatefulWidget {
@@ -11,6 +11,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final AuthService _auth = AuthService();
   int _currentIndex = 0; // Track the current tab index
 
   List<Widget> _buildScreens() {
@@ -76,7 +77,7 @@ class _HomeState extends State<Home> {
                   SizedBox(height: 30),
                   ElevatedButton(
                     onPressed: () async {
-                      // Add your log-out logic here
+                      await _auth.signOut();
                     },
                     child: Text('Logout'),
                     style: ElevatedButton.styleFrom(
