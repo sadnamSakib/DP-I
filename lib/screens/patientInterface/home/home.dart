@@ -1,3 +1,4 @@
+import 'package:design_project_1/screens/patientInterface/healthTracker/tracker.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:design_project_1/services/auth.dart';
@@ -15,7 +16,7 @@ class _HomeState extends State<Home> {
 
   List<Widget> _buildScreens() {
     return [
-      Text('Tracker'),
+      Tracker(),
       Text('Reports'),
       Text('Home'),
       Text('Appointment'),
@@ -31,7 +32,7 @@ class _HomeState extends State<Home> {
       PersistentBottomNavBarItem(icon: Icon(Icons.summarize_outlined,color:Colors.indigo),
           inactiveIcon:  Icon(Icons.summarize_outlined , color: Colors.grey)),
       PersistentBottomNavBarItem(icon: Icon(Icons.home,color:Colors.indigo),
-          inactiveIcon:  Icon(Icons.home , color: Colors.white)),
+          inactiveIcon:  Icon(Icons.home , color: Colors.grey)),
       PersistentBottomNavBarItem(icon: Icon(Icons.calendar_month,color:Colors.indigo),
           inactiveIcon:  Icon(Icons.calendar_month , color: Colors.grey)),
       PersistentBottomNavBarItem(icon: Icon(Icons.person,color:Colors.indigo),
@@ -43,8 +44,15 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Doctor App'),
-        centerTitle: true,
+        title: Text('DocLinkr'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () async {
+              await _auth.signOut();
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -94,12 +102,14 @@ class _HomeState extends State<Home> {
               controller: PersistentTabController(initialIndex: 0),
               screens: _buildScreens(),
               items: _navBarItems(),
-              backgroundColor: Colors.lightBlue,
+              backgroundColor: Colors.white,
               decoration: NavBarDecoration(
                 borderRadius: BorderRadius.circular(5),
+
               ),
-              navBarStyle: NavBarStyle.style15,
+              navBarStyle: NavBarStyle.style14,
               onItemSelected: (int index) {
+
                 setState(() {
                   _currentIndex = index; // Update the current tab index
                 });
