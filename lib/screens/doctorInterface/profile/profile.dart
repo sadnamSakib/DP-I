@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:design_project_1/services/profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -40,7 +42,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       }else if(snapshot.hasData)
                       {
                         Map<dynamic, dynamic>? userData = snapshot.data?.data() as Map<dynamic, dynamic>?;
-                        String imageURL = userData?['imageURL'] ?? '';
+                        String imageURL = userData?['profile'] ?? '';
 
                         return SingleChildScrollView(
                           child: Column(
@@ -66,7 +68,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             )
                                         ),
                                         child: ClipOval(
-                                          child: (imageURL.isEmpty)
+
+                                          child:provider.image == null ?
+
+                                          (imageURL.isEmpty)
                                               ? Icon(Icons.person_2_outlined, size: 35)
                                               : Image.network(
                                             imageURL,
@@ -80,7 +85,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 child: Icon(Icons.error_outline, color:Colors.redAccent ,),
                                               );
                                             },
-                                          ),
+                                          ):
+
+                                              Image.file(
+                                                File(provider.image!.path).absolute
+                                              )
                                         ),
                                       ),
                                     ),
