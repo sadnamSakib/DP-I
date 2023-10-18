@@ -17,6 +17,12 @@ class ProfileController with ChangeNotifier{
 
   firebase_storage.FirebaseStorage storage = firebase_storage.FirebaseStorage.instance;
 
+  final nameController = TextEditingController();
+  final phoneContoller = TextEditingController();
+
+  final nameFocusNode = FocusNode();
+  final phoneFocusNode = FocusNode();
+
   final picker = ImagePicker();
   XFile? _image ;
   XFile? get image => _image;
@@ -125,5 +131,48 @@ class ProfileController with ChangeNotifier{
       _image = null;
     }
 
+  }
+
+  Future<void> showUserNameDialogueAlert(BuildContext context, String name) {
+
+    return showDialog(context: context,
+        builder: (context){
+      return AlertDialog(
+        title: Text('Update username'),
+        content: SingleChildScrollView(
+          child: Column(
+            children: [
+              TextField(
+                controller: nameController,
+                decoration: InputDecoration(labelText: 'New Username'),
+              ),
+            ],
+          )
+        ),
+        actions: [
+          TextButton(onPressed: (){
+            Navigator.pop(context);
+          }, child: Text('Cancel')),
+
+          TextButton(onPressed: (){
+            Navigator.pop(context);
+            String newName = nameController.text;
+            if(newName.isNotEmpty){
+              users.doc(userUID).update({
+                'name': newName,
+              }).then((_) {
+                // Username updated successfully
+                nameController.clear(); // Clear the input field
+                Navigator.pop(context); // Close the dialog
+              }).catchError((error) {
+                // Handle any errors that may occur during the update
+                print('Error updating username: $error');
+                // You can show an error message to the user if needed
+              });
+            }
+          },child: Text('OK')),
+        ],
+      );
+        });
   }
 }

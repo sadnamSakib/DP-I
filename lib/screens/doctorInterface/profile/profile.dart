@@ -70,7 +70,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         child: ClipOval(
 
                                           child:provider.image == null ?
-
                                           (imageURL.isEmpty)
                                               ? Icon(Icons.person_2_outlined, size: 35)
                                               : Image.network(
@@ -87,8 +86,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             },
                                           ):
 
-                                              Image.file(
-                                                File(provider.image!.path).absolute
+                                              Stack(
+                                                children: [
+                                                  Image.file(
+                                                    File(provider.image!.path).absolute
+                                                  ),
+                                                  Center(child: CircularProgressIndicator())
+                                                ],
                                               )
                                         ),
                                       ),
@@ -109,7 +113,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ],
                               ),
                               const SizedBox(height: 40,),
-                              ReusableRow(title: 'Username', value: userData?['name'], iconData: Icons.person_2_outlined),
+                              GestureDetector(
+                                onTap: () {
+                                  provider.showUserNameDialogueAlert(context, userData?['name'] ?? '');
+                                },
+                                child: ReusableRow(title: 'Username', value: userData?['name'], iconData: Icons.person_2_outlined),
+                              ),
                               ReusableRow(title: 'Email', value: userData?['email'], iconData: Icons.email_outlined),
                               ReusableRow(title: 'Phone', value: userData?['phone'] ?? 'xxx-xxx-xxx', iconData: Icons.phone_android),
 
