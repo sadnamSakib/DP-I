@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-
 import '../../services/auth.dart';
+import '../../squareTile.dart';
+import 'chooseRole.dart';
 import 'emailVerificationPage.dart';
 class SignUp extends StatefulWidget {
 
@@ -130,21 +131,51 @@ class _SignUpState extends State<SignUp> {
                     style: const TextStyle(color: Colors.red, fontSize: 14.0),
                   ),
                   Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center, // Aligns the children to the center horizontally
+                    child: Column(
                       children: [
-                        SizedBox(height: 20.0),
-                        Text('Already have an account?'),
-                        TextButton(
-                          onPressed: () {
-                            widget.toggleView();
-                          },
-                          child: Text('Sign In'),
-                        ),
-                      ],
-                    ),
-                  )
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center, // Aligns the children to the center horizontally
+                          children: [
+                            SizedBox(height: 20.0),
+                            Text('Already have an account?'),
+                            TextButton(
+                              onPressed: () {
+                                widget.toggleView();
+                              },
+                              child: Text('Sign In'),
+                            ),
+                          ],
 
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children:[
+                            //google button
+                           SquareTile(
+                               onTap: () async {
+                                 dynamic result = await _auth.registerWithGoogle();
+                                 if (result == null) {
+                                   setState(() {
+                                     error = 'Could not sign in with those credentials';
+                                   });
+                                 }
+                                 else{
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => RoleSelectionPage(),
+                                      ),
+                                    );
+                                 }
+                               },
+                                imagePath: 'assets/images/google.png',
+                                ),
+                          ]
+                        )
+                      ],
+
+                      )
+                    ),
                 ],
               ),
             ),

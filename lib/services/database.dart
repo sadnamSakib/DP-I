@@ -7,6 +7,7 @@ class DatabaseService {
   //collection reference
   final CollectionReference userCollection = FirebaseFirestore.instance.collection('users');
   final CollectionReference doctorCollection = FirebaseFirestore.instance.collection('doctors');
+  final CollectionReference patientCollection = FirebaseFirestore.instance.collection('patients');
   Future updateUserData(String name, String email) async {
     return await userCollection.doc(uid).set({
       'name': name,
@@ -33,7 +34,7 @@ class DatabaseService {
     DocumentSnapshot user = await userCollection.doc(uid).get();
     String name = user['name'];
     String email = user['email'];
-    return await doctorCollection.doc(uid).set({
+    return await patientCollection.doc(uid).set({
       'name': name,
       'email': email,
       'phone': phone,

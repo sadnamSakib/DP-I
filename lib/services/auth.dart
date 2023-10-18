@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:design_project_1/models/UserModel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import 'database.dart';
 class AuthService{
@@ -66,7 +67,28 @@ class AuthService{
       return null;
     }
   }
+//register with google
+  Future registerWithGoogle() async{
+      // Trigger the authentication flow
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
+      // Obtain the auth details from the request
+      final GoogleSignInAuthentication googleAuth = await googleUser!.authentication;
+
+      // Create a new credential
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      UserCredential result = await _auth.signInWithCredential(credential);
+
+      User? user = result.user;
+      await DatabaseService(uid: user!.uid).updateUserData(user.displayName.toString(), user.email.toString());
+      return _userFromFirebaseUser(user);
+
+      // return _userFromFirebaseUser(user);
+  }
 
 
   //sign in with email and password
@@ -75,6 +97,33 @@ class AuthService{
       UserCredential result = await _auth.signInWithEmailAndPassword(email: email, password: password);
       User? user = result.user;
       return _userFromFirebaseUser(user);
+    }
+    catch(e){
+      print(e.toString());
+      return null;
+    }
+  }
+
+  Future signInWithGoogle() async{
+    try{
+      // Trigger the authentication flow
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      // Obtain the auth details from the request
+      final GoogleSignInAuthentication googleAuth = await googleUser!.authentication;
+
+      // Create a new credential
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      UserCredential result = await _auth.signInWithCredential(credential);
+
+      User? user = result.user;
+      return _userFromFirebaseUser(user);
+
+      // return _userFromFirebaseUser(user);
     }
     catch(e){
       print(e.toString());
