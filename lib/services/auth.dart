@@ -71,20 +71,22 @@ class AuthService{
   Future registerWithGoogle() async{
       // Trigger the authentication flow
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      print("Jhamela1");
+
       // Obtain the auth details from the request
       final GoogleSignInAuthentication googleAuth = await googleUser!.authentication;
-      print("Jhamela2");
+
       // Create a new credential
       final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
-      print("Jhamela3");
+
       UserCredential result = await _auth.signInWithCredential(credential);
-      print("Jhamela4");
+
       User? user = result.user;
-      print(user.toString());
+      await DatabaseService(uid: user!.uid).updateUserData(user.displayName.toString(), user.email.toString());
+      return _userFromFirebaseUser(user);
+
       // return _userFromFirebaseUser(user);
   }
 
@@ -95,6 +97,33 @@ class AuthService{
       UserCredential result = await _auth.signInWithEmailAndPassword(email: email, password: password);
       User? user = result.user;
       return _userFromFirebaseUser(user);
+    }
+    catch(e){
+      print(e.toString());
+      return null;
+    }
+  }
+
+  Future signInWithGoogle() async{
+    try{
+      // Trigger the authentication flow
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      // Obtain the auth details from the request
+      final GoogleSignInAuthentication googleAuth = await googleUser!.authentication;
+
+      // Create a new credential
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      UserCredential result = await _auth.signInWithCredential(credential);
+
+      User? user = result.user;
+      return _userFromFirebaseUser(user);
+
+      // return _userFromFirebaseUser(user);
     }
     catch(e){
       print(e.toString());

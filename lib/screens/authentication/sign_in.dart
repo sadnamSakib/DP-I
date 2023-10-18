@@ -109,7 +109,14 @@ class _SignInState extends State<SignIn> {
                             //google button
                             Text("or Login with "),
                             SquareTile(
-                              onTap: () => _auth.registerWithGoogle(),
+                              onTap: () async {
+                                dynamic result = await _auth.signInWithGoogle();
+                                if (result == null) {
+                                  setState(() {
+                                    error = 'Could not sign in with those credentials';
+                                  });
+                                }
+                              },
                               imagePath: 'assets/images/google.png',
                             ),
 

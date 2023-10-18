@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../services/auth.dart';
 import '../../squareTile.dart';
+import 'chooseRole.dart';
 import 'emailVerificationPage.dart';
 class SignUp extends StatefulWidget {
 
@@ -151,7 +152,22 @@ class _SignUpState extends State<SignUp> {
                           children:[
                             //google button
                            SquareTile(
-                               onTap: () => _auth.registerWithGoogle(),
+                               onTap: () async {
+                                 dynamic result = await _auth.registerWithGoogle();
+                                 if (result == null) {
+                                   setState(() {
+                                     error = 'Could not sign in with those credentials';
+                                   });
+                                 }
+                                 else{
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => RoleSelectionPage(),
+                                      ),
+                                    );
+                                 }
+                               },
                                 imagePath: 'assets/images/google.png',
                                 ),
                           ]
