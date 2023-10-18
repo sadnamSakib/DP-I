@@ -43,6 +43,9 @@ dependencies:
   persistent_bottom_nav_bar: ^5.0.2
   intl_phone_number_input: ^0.7.3+1
   image_picker: ^1.0.4
+  file_picker: ^4.0.1
+  firebase_storage: ^11.3.0
+  fluttertoast: ^8.2.2
 
 
 dev_dependencies:
