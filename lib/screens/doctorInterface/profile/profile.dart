@@ -19,6 +19,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   String userUID = FirebaseAuth.instance.currentUser?.uid ?? '';
 
+  final AuthService _auth = AuthService();
 
   CollectionReference users = FirebaseFirestore.instance.collection('users');
   CollectionReference doctors = FirebaseFirestore.instance.collection('doctors');
@@ -44,6 +45,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Align(
+          alignment: Alignment.centerLeft,
+          child: Text('DocLinkr'),
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () async {
+              await _auth.signOut();
+            },
+          ),
+        ],
+      ),
       body: ChangeNotifierProvider(
         create: (_) => ProfileController(),
         child: Consumer<ProfileController>(
