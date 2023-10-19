@@ -21,10 +21,10 @@ class _HomeState extends State<Home> {
   int _currentIndex = 2; // Track the current tab index
   List<Widget> _buildScreens() {
     return [
-      Text('Tracker'),
-      Text('Reports'),
+      Text('Schedule'),
+      Text('Appointments'),
       Text('Home'),
-      Text('Appointment'),
+      Text('Emergency'),
       ProfileScreen(),
     ];
   }
@@ -32,20 +32,20 @@ class _HomeState extends State<Home> {
   List<PersistentBottomNavBarItem> _navBarItems() {
     return [
       PersistentBottomNavBarItem(
-        icon: Icon(Icons.track_changes, color: Colors.indigo),
-        inactiveIcon: Icon(Icons.track_changes, color: Colors.grey),
+        icon: Icon(Icons.schedule_outlined, color: Colors.indigo),
+        inactiveIcon: Icon(Icons.schedule_outlined, color: Colors.grey),
       ),
       PersistentBottomNavBarItem(
-        icon: Icon(Icons.summarize_outlined, color: Colors.indigo),
-        inactiveIcon: Icon(Icons.summarize_outlined, color: Colors.grey),
+        icon: Icon(Icons.calendar_month, color: Colors.indigo),
+        inactiveIcon: Icon(Icons.calendar_month, color: Colors.grey),
       ),
       PersistentBottomNavBarItem(
         icon: Icon(Icons.home, color: Colors.indigo),
         inactiveIcon: Icon(Icons.home, color: Colors.grey),
       ),
       PersistentBottomNavBarItem(
-        icon: Icon(Icons.calendar_month, color: Colors.indigo),
-        inactiveIcon: Icon(Icons.calendar_month, color: Colors.grey),
+        icon: Icon(Icons.emergency_outlined, color: Colors.indigo),
+        inactiveIcon: Icon(Icons.emergency_outlined, color: Colors.grey),
       ),
       PersistentBottomNavBarItem(
         icon: Icon(Icons.person, color: Colors.indigo),
@@ -60,9 +60,10 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('DocLinkr'),
-        centerTitle: true,
-        titleSpacing: 90.0,
+        title: Align(
+          alignment: Alignment.centerLeft,
+          child: Text('DocLinkr'),
+        ),
         actions: [
 
           IconButton(

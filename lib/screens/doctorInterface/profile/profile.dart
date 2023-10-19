@@ -206,51 +206,65 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
-          class ReusableRow extends StatelessWidget {
-            final String title;
-            final String? value;
-            final IconData iconData;
 
-            const ReusableRow({Key? key, required this.title, required this.iconData, this.value}) : super(key: key);
 
-            @override
-            Widget build(BuildContext context) {
-              return Container(
-                margin: EdgeInsets.only(bottom: 15),
-                padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                    color: Colors.white70,
-                    borderRadius: BorderRadius.circular(10), // Add rounded corners
-                    boxShadow: [
-                BoxShadow(
-                color: Colors.blueGrey.withOpacity(0.5), // Color of the shadow
-                spreadRadius: 1, // Spread radius
-                blurRadius: 5, // Blur radius
-                offset: Offset(0, 2), // Offset of the shadow
+class ReusableRow extends StatelessWidget {
+  final String title;
+  final String? value;
+  final IconData iconData;
 
-                )
-                    ],
+  ReusableRow({Key? key, required this.title, required this.iconData, this.value})
+      : super(key: key);
 
-              ),
-              child: ListTile(
-              title: Text(
-              title,
-              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-              ),
-              leading: Icon(
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 15),
+      decoration: BoxDecoration(
+        color: Colors.white70,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.blueGrey.withOpacity(0.5),
+            spreadRadius: 1,
+            blurRadius: 5,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Row(
+          children: [
+            Icon(
               iconData,
               color: Colors.black,
+            ),
+            SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 8),
+                  if (value != null)
+                    if (value is List)
+                      Column(
+                        children: (value as List).map((item) {
+                          return Text(item.toString());
+                        }).toList(),
+                      )
+                    else
+                      Text(value.toString()),
+                ],
               ),
-              trailing: Text(
-              value ?? 'N/A',
-              style: TextStyle(color: Colors.black),
-              ),
-              ),
-              );
-            }
-          }
-
-
-
-
-
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
