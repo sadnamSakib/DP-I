@@ -21,22 +21,31 @@ class _HomeState extends State<Home> {
       Text('Home'),
       Text('Appointment'),
       ProfileScreen(),
-
     ];
   }
 
   List<PersistentBottomNavBarItem> _navBarItems() {
     return [
-      PersistentBottomNavBarItem(icon: Icon(Icons.track_changes,color:Colors.indigo),
-          inactiveIcon:  Icon(Icons.track_changes , color: Colors.grey)),
-      PersistentBottomNavBarItem(icon: Icon(Icons.summarize_outlined,color:Colors.indigo),
-          inactiveIcon:  Icon(Icons.summarize_outlined , color: Colors.grey)),
-      PersistentBottomNavBarItem(icon: Icon(Icons.home,color:Colors.indigo),
-          inactiveIcon:  Icon(Icons.home , color: Colors.white)),
-      PersistentBottomNavBarItem(icon: Icon(Icons.calendar_month,color:Colors.indigo),
-          inactiveIcon:  Icon(Icons.calendar_month , color: Colors.grey)),
-      PersistentBottomNavBarItem(icon: Icon(Icons.person,color:Colors.indigo),
-          inactiveIcon:  Icon(Icons.person , color: Colors.grey))
+      PersistentBottomNavBarItem(
+        icon: Icon(Icons.track_changes, color: Colors.indigo),
+        inactiveIcon: Icon(Icons.track_changes, color: Colors.grey),
+      ),
+      PersistentBottomNavBarItem(
+        icon: Icon(Icons.summarize_outlined, color: Colors.indigo),
+        inactiveIcon: Icon(Icons.summarize_outlined, color: Colors.grey),
+      ),
+      PersistentBottomNavBarItem(
+        icon: Icon(Icons.home, color: Colors.indigo),
+        inactiveIcon: Icon(Icons.home, color: Colors.grey),
+      ),
+      PersistentBottomNavBarItem(
+        icon: Icon(Icons.calendar_month, color: Colors.indigo),
+        inactiveIcon: Icon(Icons.calendar_month, color: Colors.grey),
+      ),
+      PersistentBottomNavBarItem(
+        icon: Icon(Icons.person, color: Colors.indigo),
+        inactiveIcon: Icon(Icons.person, color: Colors.grey),
+      ),
     ];
   }
 
@@ -95,7 +104,7 @@ class _HomeState extends State<Home> {
               controller: PersistentTabController(initialIndex: 0),
               screens: _buildScreens(),
               items: _navBarItems(),
-              backgroundColor: Colors.lightBlue,
+              backgroundColor: Colors.white, // Make the background transparent
               decoration: NavBarDecoration(
                 borderRadius: BorderRadius.circular(5),
               ),
