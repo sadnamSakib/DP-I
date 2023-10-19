@@ -52,12 +52,14 @@ class _BloodPressureTrackerState extends State<BloodPressureTracker> {
       body: Stack(
         children: <Widget>[
           // Background image with blur
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Image.asset(
-              'assets/images/bpBackground.png', // Replace with your image path
-              fit: BoxFit.fitWidth,
+          IgnorePointer(
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Image.asset(
+                'assets/images/bpBackground.png', // Replace with your image path
+                fit: BoxFit.fitWidth,
 
+              ),
             ),
           ),
           // Blurred overlay

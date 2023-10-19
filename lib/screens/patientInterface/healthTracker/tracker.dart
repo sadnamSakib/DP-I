@@ -136,7 +136,7 @@ class _TrackerState extends State<Tracker> {
                 },
                 onTap:
                 () {
-                  Navigator.pushReplacement(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => const KidneyTracker()),
                   );
