@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:design_project_1/services/auth.dart';
 
+import '../../../services/SearchBarDelegator.dart';
+
 class Home extends StatefulWidget {
   Home({Key? key}) : super(key: key);
 
@@ -12,7 +14,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final AuthService _auth = AuthService();
-  int _currentIndex = 0; // Track the current tab index
+  int _currentIndex = 2; // Track the current tab index
 
   List<Widget> _buildScreens() {
     return [
@@ -39,7 +41,9 @@ class _HomeState extends State<Home> {
           inactiveIcon:  Icon(Icons.person , color: Colors.grey))
     ];
   }
-
+  SearchDelegate<String> createSearchBarDelegate() {
+    return SearchBarDelegate();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,6 +51,13 @@ class _HomeState extends State<Home> {
         backgroundColor: Colors.blue.shade900,
         title: Text('DocLinkr'),
         actions: [
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              // Open the search bar
+              showSearch(context: context, delegate: createSearchBarDelegate());
+            },
+          ),
           IconButton(
             icon: Icon(Icons.logout),
             onPressed: () async {
@@ -57,6 +68,39 @@ class _HomeState extends State<Home> {
       ),
       body: Column(
         children: [
+          SearchAnchor(
+            builder: (BuildContext context, SearchController controller) {
+              return SearchBar(
+                controller: controller,
+                padding: const MaterialStatePropertyAll<EdgeInsets>(
+                    EdgeInsets.symmetric(horizontal: 16.0)),
+                onTap: () {
+                  controller.openView();
+                },
+                onChanged: (_) {
+                  controller.openView();
+                },
+                leading: const Icon(Icons.search),
+              );
+            },
+            suggestionsBuilder: (BuildContext context, SearchController controller) {
+              final List<String> items = ['Neurologist','Pediatrician','Dermatologist',
+                'Oncologist','Psychiatrist'];
+
+              return items.map((String item) {
+                return ListTile(
+                  title: Text(item),
+                  onTap: () {
+                    setState(() {
+                      controller.closeView(item);
+                    });
+                  },
+                );
+              }).toList();
+            },
+
+          ),
+
           if (_currentIndex == 2) // Only show this content for the "Home" tab (index 2)
             Container(
               padding: EdgeInsets.all(16.0),

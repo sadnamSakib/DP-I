@@ -18,6 +18,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   String userUID = FirebaseAuth.instance.currentUser?.uid ?? '';
+
   final AuthService _auth = AuthService();
 
   CollectionReference users = FirebaseFirestore.instance.collection('users');
@@ -35,8 +36,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       users.doc(userUID).snapshots(),
       doctors.doc(userUID).snapshots(),
           (userSnapshot, doctorSnapshot) {
-        // You can merge and process the data from both snapshots here if needed
-        // For simplicity, you can just return one of the snapshots
+
         return userSnapshot;
       },
     );
@@ -45,6 +45,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Align(
+          alignment: Alignment.centerLeft,
+          child: Text('DocLinkr'),
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () async {
+              await _auth.signOut();
+            },
+          ),
+        ],
+      ),
       body: ChangeNotifierProvider(
         create: (_) => ProfileController(),
         child: Consumer<ProfileController>(
@@ -171,25 +185,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 }
                               },
                             ),
-                            SizedBox(height: 8),
-                            // Your Logout Button
-                            Padding(
-                              padding: EdgeInsets.only(bottom: 20),
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  await _auth.signOut();
-                                },
-                                child: Text('Logout'),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.blueGrey, // Background color
-                                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-                                  textStyle: TextStyle(fontSize: 18),
-                                ).copyWith(
-                                  minimumSize: MaterialStateProperty.all(Size(double.infinity, 60)), // Set the width to double.infinity
-                                  backgroundColor: MaterialStateProperty.all(Colors.blueGrey), // Background color
-                                ),
-                              ),
-                            ),
+                            // SizedBox(height: 8),
+                            // // Your Logout Button
+                            // Padding(
+                            //   padding: EdgeInsets.only(bottom: 20),
+                            //   child: ElevatedButton(
+                            //     onPressed: () async {
+                            //       await _auth.signOut();
+                            //     },
+                            //     child: Text('Logout'),
+                            //     style: ElevatedButton.styleFrom(
+                            //       backgroundColor: Colors.blueGrey, // Background color
+                            //       padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                            //       textStyle: TextStyle(fontSize: 18),
+                            //     ).copyWith(
+                            //       minimumSize: MaterialStateProperty.all(Size(double.infinity, 60)),
+                            //       backgroundColor: MaterialStateProperty.all(Colors.blueGrey), // Background color
+                            //     ),
+                            //   ),
+                            // ),
                           ],
                         ),
                       );
@@ -207,51 +221,65 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
-          class ReusableRow extends StatelessWidget {
-            final String title;
-            final String? value;
-            final IconData iconData;
 
-            const ReusableRow({Key? key, required this.title, required this.iconData, this.value}) : super(key: key);
 
-            @override
-            Widget build(BuildContext context) {
-              return Container(
-                margin: EdgeInsets.only(bottom: 15), // Add more space at the bottom
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                    color: Colors.blueGrey, // Change the background color to your desired color
-                    borderRadius: BorderRadius.circular(10), // Add rounded corners
-                    boxShadow: [
-                BoxShadow(
-                color: Colors.grey.withOpacity(0.5), // Color of the shadow
-                spreadRadius: 1, // Spread radius
-                blurRadius: 5, // Blur radius
-                offset: Offset(0, 2), // Offset of the shadow
+class ReusableRow extends StatelessWidget {
+  final String title;
+  final String? value;
+  final IconData iconData;
 
-                )
-                    ],
+  ReusableRow({Key? key, required this.title, required this.iconData, this.value})
+      : super(key: key);
 
-              ),
-              child: ListTile(
-              title: Text(
-              title,
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              ),
-              leading: Icon(
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 15),
+      decoration: BoxDecoration(
+        color: Colors.white70,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.blueGrey.withOpacity(0.5),
+            spreadRadius: 1,
+            blurRadius: 5,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Row(
+          children: [
+            Icon(
               iconData,
-              color: Colors.white,
+              color: Colors.black,
+            ),
+            SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 8),
+                  if (value != null)
+                    if (value is List)
+                      Column(
+                        children: (value as List).map((item) {
+                          return Text(item.toString());
+                        }).toList(),
+                      )
+                    else
+                      Text(value.toString()),
+                ],
               ),
-              trailing: Text(
-              value ?? 'N/A',
-              style: TextStyle(color: Colors.white),
-              ),
-              ),
-              );
-            }
-          }
-
-
-
-
-
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
