@@ -64,11 +64,14 @@ class _TrackerState extends State<Tracker> {
                       )),
                   onTap: () {
                     setState(() async {
-                      await diseaseDatabaseService(uid: FirebaseAuth.instance.currentUser!.uid).createDiseaseData(d.name, d.icon);
-                      _loadSelectedDiseases();
-                      availableDiseases.remove(d);
-                      Navigator.pop(context);
-
+                      if (d.name == 'Kidney Disease') {
+                        setState(() async {
+                          await diseaseDatabaseService(uid: FirebaseAuth.instance.currentUser!.uid).createKidneyDiseaseData(d.name, d.icon);
+                          _loadSelectedDiseases();
+                          availableDiseases.remove(d);
+                          Navigator.pop(context);
+                        });
+                      }
                     });
                   },
                 ),
@@ -114,7 +117,7 @@ class _TrackerState extends State<Tracker> {
                               setState(() {
                                 availableDiseases.add(selectedDiseases[index]);
                                 selectedDiseases.removeAt(index);
-                                diseaseDatabaseService(uid: FirebaseAuth.instance.currentUser!.uid).deleteDiseaseData();
+                                diseaseDatabaseService(uid: FirebaseAuth.instance.currentUser!.uid).deleteKidneyDiseaseData();
                               });
                               Navigator.of(context).pop();
                             },
@@ -133,7 +136,7 @@ class _TrackerState extends State<Tracker> {
                 },
                 onTap:
                 () {
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => const KidneyTracker()),
                   );
@@ -171,6 +174,7 @@ class _TrackerState extends State<Tracker> {
         },
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.blue.shade900,
         onPressed: () {
           _openModal(context);
         },

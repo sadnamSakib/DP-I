@@ -44,6 +44,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.blue.shade900,
         title: Text('DocLinkr'),
         actions: [
           IconButton(
