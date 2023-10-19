@@ -18,7 +18,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   String userUID = FirebaseAuth.instance.currentUser?.uid ?? '';
-  final AuthService _auth = AuthService();
+
 
   CollectionReference users = FirebaseFirestore.instance.collection('users');
   CollectionReference doctors = FirebaseFirestore.instance.collection('doctors');
@@ -35,8 +35,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       users.doc(userUID).snapshots(),
       doctors.doc(userUID).snapshots(),
           (userSnapshot, doctorSnapshot) {
-        // You can merge and process the data from both snapshots here if needed
-        // For simplicity, you can just return one of the snapshots
+
         return userSnapshot;
       },
     );
@@ -171,25 +170,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 }
                               },
                             ),
-                            SizedBox(height: 8),
-                            // Your Logout Button
-                            Padding(
-                              padding: EdgeInsets.only(bottom: 20),
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  await _auth.signOut();
-                                },
-                                child: Text('Logout'),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.blueGrey, // Background color
-                                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-                                  textStyle: TextStyle(fontSize: 18),
-                                ).copyWith(
-                                  minimumSize: MaterialStateProperty.all(Size(double.infinity, 60)), // Set the width to double.infinity
-                                  backgroundColor: MaterialStateProperty.all(Colors.blueGrey), // Background color
-                                ),
-                              ),
-                            ),
+                            // SizedBox(height: 8),
+                            // // Your Logout Button
+                            // Padding(
+                            //   padding: EdgeInsets.only(bottom: 20),
+                            //   child: ElevatedButton(
+                            //     onPressed: () async {
+                            //       await _auth.signOut();
+                            //     },
+                            //     child: Text('Logout'),
+                            //     style: ElevatedButton.styleFrom(
+                            //       backgroundColor: Colors.blueGrey, // Background color
+                            //       padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                            //       textStyle: TextStyle(fontSize: 18),
+                            //     ).copyWith(
+                            //       minimumSize: MaterialStateProperty.all(Size(double.infinity, 60)),
+                            //       backgroundColor: MaterialStateProperty.all(Colors.blueGrey), // Background color
+                            //     ),
+                            //   ),
+                            // ),
                           ],
                         ),
                       );
@@ -217,14 +216,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
             @override
             Widget build(BuildContext context) {
               return Container(
-                margin: EdgeInsets.only(bottom: 15), // Add more space at the bottom
-                padding: EdgeInsets.all(10),
+                margin: EdgeInsets.only(bottom: 15),
+                padding: EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                    color: Colors.blueGrey, // Change the background color to your desired color
+                    color: Colors.white70,
                     borderRadius: BorderRadius.circular(10), // Add rounded corners
                     boxShadow: [
                 BoxShadow(
-                color: Colors.grey.withOpacity(0.5), // Color of the shadow
+                color: Colors.blueGrey.withOpacity(0.5), // Color of the shadow
                 spreadRadius: 1, // Spread radius
                 blurRadius: 5, // Blur radius
                 offset: Offset(0, 2), // Offset of the shadow
@@ -236,15 +235,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: ListTile(
               title: Text(
               title,
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
               ),
               leading: Icon(
               iconData,
-              color: Colors.white,
+              color: Colors.black,
               ),
               trailing: Text(
               value ?? 'N/A',
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.black),
               ),
               ),
               );

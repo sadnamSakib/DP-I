@@ -1,7 +1,13 @@
+import 'package:design_project_1/screens/doctorInterface/profile/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:design_project_1/services/auth.dart';
-import '../profile/profile.dart';
+
+import '../../../services/SearchBarDelegator.dart';
+
+void main() {
+  runApp(Home());
+}
 
 class Home extends StatefulWidget {
   Home({Key? key}) : super(key: key);
@@ -13,7 +19,6 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final AuthService _auth = AuthService();
   int _currentIndex = 2; // Track the current tab index
-
   List<Widget> _buildScreens() {
     return [
       Text('Tracker'),
@@ -49,16 +54,30 @@ class _HomeState extends State<Home> {
     ];
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Doctor App'),
+        title: Text('DocLinkr'),
         centerTitle: true,
+        titleSpacing: 90.0,
+        actions: [
+
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () async {
+              await _auth.signOut();
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
-          if (_currentIndex == 2) // Only show this content for the "Home" tab (index 2)
+
+          if (_currentIndex ==
+              2) // Only show this content for the "Home" tab (index 2)
             Container(
               padding: EdgeInsets.all(16.0),
               alignment: Alignment.center,
@@ -90,7 +109,8 @@ class _HomeState extends State<Home> {
                     },
                     child: Text('Logout'),
                     style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 40, vertical: 16),
                       textStyle: TextStyle(fontSize: 18),
                     ),
                   ),
@@ -104,14 +124,14 @@ class _HomeState extends State<Home> {
               controller: PersistentTabController(initialIndex: 0),
               screens: _buildScreens(),
               items: _navBarItems(),
-              backgroundColor: Colors.white, // Make the background transparent
+              backgroundColor: Colors.white,
               decoration: NavBarDecoration(
                 borderRadius: BorderRadius.circular(5),
               ),
               navBarStyle: NavBarStyle.style15,
               onItemSelected: (int index) {
                 setState(() {
-                  _currentIndex = index; // Update the current tab index
+                  _currentIndex = index;
                 });
               },
             ),
@@ -121,3 +141,6 @@ class _HomeState extends State<Home> {
     );
   }
 }
+
+
+
