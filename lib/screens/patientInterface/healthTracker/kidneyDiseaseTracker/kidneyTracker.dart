@@ -1,3 +1,4 @@
+import 'package:design_project_1/screens/patientInterface/healthTracker/foodSelectionScreen.dart';
 import 'package:design_project_1/screens/patientInterface/healthTracker/kidneyDiseaseTracker/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -82,6 +83,9 @@ class _KidneyTrackerState extends State<KidneyTracker> {
               margin: EdgeInsets.all(10),
               child: InkWell(
                 onTap: () {
+                  if(measure == 'Food'){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) =>   FoodSelectionScreen()));
+                  }
                   // Handle tile tap
                 },
                 child: Center(
