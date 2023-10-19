@@ -48,7 +48,6 @@ dependencies:
   fluttertoast: ^8.2.2
   table_calendar: ^3.0.9
   rxdart: ^0.27.7
-  search: ^0.7.0
 
 
 dev_dependencies:

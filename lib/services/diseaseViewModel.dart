@@ -4,16 +4,16 @@ class diseaseDatabaseService {
   diseaseDatabaseService({this.uid});
 
   //collection reference
-  final CollectionReference diseaseCollection = FirebaseFirestore.instance.collection('diseases');
+  final CollectionReference diseaseCollection = FirebaseFirestore.instance.collection('KidneyDiseases');
 
-  Future createDiseaseData(String name, String icon) async {
+  Future createKidneyDiseaseData(String name, String icon) async {
     return await diseaseCollection.doc(uid).set({
       'name': name,
       'icon': icon,
 
     });
   }
-Future deleteDiseaseData() async {
+Future deleteKidneyDiseaseData() async {
     return await diseaseCollection.doc(uid).delete();
   }
   //get user doc stream
