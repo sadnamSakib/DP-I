@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:rxdart/rxdart.dart';
 import 'package:design_project_1/services/profile_controller.dart';
+import 'package:design_project_1/services/auth.dart';
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -17,6 +18,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   String userUID = FirebaseAuth.instance.currentUser?.uid ?? '';
+  final AuthService _auth = AuthService();
 
   CollectionReference users = FirebaseFirestore.instance.collection('users');
   CollectionReference doctors = FirebaseFirestore.instance.collection('doctors');
@@ -162,12 +164,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       ReusableRow(title: 'specialization', value: doctorData?['specialization'] ?? 'xxx-xxx-xxx', iconData: Icons.star), // Add more rows as needed
                                     ],
                                   );
-                                }
-                                else{
-                                  return Center(child: Text('Something went wrong', style: Theme.of(context).textTheme.displayMedium));
 
                                 }
+                                else {
+                                  return Center(child: Text('Something went wrong', style: Theme.of(context).textTheme.displayMedium));
+                                }
                               },
+                            ),
+                            SizedBox(height: 8),
+                            // Your Logout Button
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 20),
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  await _auth.signOut();
+                                },
+                                child: Text('Logout'),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blueGrey, // Background color
+                                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                                  textStyle: TextStyle(fontSize: 18),
+                                ).copyWith(
+                                  minimumSize: MaterialStateProperty.all(Size(double.infinity, 60)), // Set the width to double.infinity
+                                  backgroundColor: MaterialStateProperty.all(Colors.blueGrey), // Background color
+                                ),
+                              ),
                             ),
                           ],
                         ),
@@ -186,65 +207,51 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
-// class ReusableRow extends StatelessWidget {
-//   final String title;
-//   final String? value;
-//   final IconData iconData;
-//
-//   const ReusableRow({Key? key, required this.title, required this.iconData, this.value}) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//       children: [
-//         ListTile(
-//           title: Text(title),
-//           leading: Icon(iconData),
-//           trailing: Text(value ?? 'N/A'),
-//         ),
-//         Divider(color: Colors.white.withOpacity(0.5)),
-//       ],
-//     );
-//   }
-// }
-class ReusableRow extends StatelessWidget {
-  final String title;
-  final String? value;
-  final IconData iconData;
+          class ReusableRow extends StatelessWidget {
+            final String title;
+            final String? value;
+            final IconData iconData;
 
-  const ReusableRow({Key? key, required this.title, required this.iconData, this.value}) : super(key: key);
+            const ReusableRow({Key? key, required this.title, required this.iconData, this.value}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 15), // Add more space at the bottom
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.blueGrey, // Change the background color to your desired color
-        borderRadius: BorderRadius.circular(10), // Add rounded corners
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(1), // Color of the shadow
-            spreadRadius: 1.5, // Spread radius
-            blurRadius: 8, // Blur radius
-            offset: Offset(0, 2), // Offset of the shadow
-          ),
-        ],
-      ),
-      child: ListTile(
-        title: Text(
-          title,
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        leading: Icon(
-          iconData,
-          color: Colors.white,
-        ),
-        trailing: Text(
-          value ?? 'N/A',
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
-    );
-  }
-}
+            @override
+            Widget build(BuildContext context) {
+              return Container(
+                margin: EdgeInsets.only(bottom: 15), // Add more space at the bottom
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                    color: Colors.blueGrey, // Change the background color to your desired color
+                    borderRadius: BorderRadius.circular(10), // Add rounded corners
+                    boxShadow: [
+                BoxShadow(
+                color: Colors.grey.withOpacity(0.5), // Color of the shadow
+                spreadRadius: 1, // Spread radius
+                blurRadius: 5, // Blur radius
+                offset: Offset(0, 2), // Offset of the shadow
+
+                )
+                    ],
+
+              ),
+              child: ListTile(
+              title: Text(
+              title,
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+              leading: Icon(
+              iconData,
+              color: Colors.white,
+              ),
+              trailing: Text(
+              value ?? 'N/A',
+              style: TextStyle(color: Colors.white),
+              ),
+              ),
+              );
+            }
+          }
+
+
+
+
+
