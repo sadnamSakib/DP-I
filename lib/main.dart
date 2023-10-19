@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       initialData: UserModel(uid: ''),
 
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'DocLinkr',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
