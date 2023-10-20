@@ -43,7 +43,7 @@ final TextEditingController emailController = TextEditingController();
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Email Your Email',
+                  'Provide your email address',
                   style: TextStyle(fontSize: 30, color: Colors.white),
                 ),
                 TextFormField(

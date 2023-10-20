@@ -1,6 +1,9 @@
 import 'dart:io';
+import 'package:design_project_1/screens/authentication/Change%20Password.dart';
+import 'package:design_project_1/screens/authentication/resetPassword.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:design_project_1/services/doctor_profile_controller.dart';
+import 'package:design_project_1/services/Patient_profile_controller.dart';
 import 'package:design_project_1/services/auth.dart';
 
 import 'package:flutter/material.dart';
@@ -9,7 +12,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 
-import '../../authentication/Change Password.dart';
+import '../../wrapper.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key});
@@ -24,7 +27,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final AuthService _auth = AuthService();
 
   CollectionReference users = FirebaseFirestore.instance.collection('users');
-  CollectionReference doctors = FirebaseFirestore.instance.collection('doctors');
+  CollectionReference patients = FirebaseFirestore.instance.collection('patients');
 
   // Create a combined stream
   late Stream<DocumentSnapshot> combinedStream;
@@ -36,7 +39,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // Merge the streams using rxdart's StreamGroup
     combinedStream = Rx.combineLatest2(
       users.doc(userUID).snapshots(),
-      doctors.doc(userUID).snapshots(),
+      patients.doc(userUID).snapshots(),
           (userSnapshot, doctorSnapshot) {
 
         return userSnapshot;
@@ -167,70 +170,51 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 },
                                 child: ReusableRow(title: 'Email', value: userData?['email'], iconData: Icons.email_outlined),
                               ),
-                              GestureDetector(
-                                onTap: () {
-                                  provider.showPhoneNumberDialogueAlert(context, userData?['phone'] ?? '');
-                                },
-                                child: ReusableRow(title: 'Phone', value: userData?['phone'] ?? 'xxx-xxx-xxx', iconData: Icons.phone_android),
-                              ),
+
 
                               StreamBuilder<DocumentSnapshot>(
-                                stream: doctors.doc(userUID).snapshots(),
-                                builder: (context, doctorSnapshot) {
-                                  if (!doctorSnapshot.hasData) {
+                                stream: patients.doc(userUID).snapshots(),
+                                builder: (context, patientSnapshot) {
+                                  if (!patientSnapshot.hasData) {
                                     return Center(child: CircularProgressIndicator());
 
-                                  } else if (doctorSnapshot.hasData) {
-                                    Map<dynamic, dynamic>? doctorData = doctorSnapshot.data?.data() as Map<dynamic, dynamic>?;
-                                    List<dynamic>? degreesList = doctorData?['degrees'];
+                                  } else if (patientSnapshot.hasData) {
+                                    Map<dynamic, dynamic>? patientData = patientSnapshot.data?.data() as Map<dynamic, dynamic>?;
+                                    List<dynamic>? diseaseList = patientData?['preExistingConditions'];
 
-                                    List<String>? degrees = degreesList?.map((degree) => degree.toString()).toList();
+                                    List<String>? diseases = diseaseList?.map((degree) => degree.toString()).toList();
 
-                                    String degreesString = degrees?.join(', ') ?? 'N/A';
+                                    String diseaseString = diseases?.join(', ') ?? 'N/A';
                                     return Column(
                                       children: [
                                         GestureDetector(
-                                        onTap: () {
-                                      provider.showChamberAddressDialog(context, doctorData?['chamberAddress'] ?? '');
-                                                  },
+                                          onTap: () {
+                                            provider.showPhoneNumberDialogueAlert(context, userData?['phone'] ?? '');
+                                          },
 
-                                          child: ReusableRow(title: 'Chamber Address', value: doctorData?['chamberAddress'] ?? 'xxx-xxx-xxx', iconData: Icons.house),
+                                          child:
+                                          ReusableRow(title: 'Phone', value: patientData?['phone'] ?? 'xxx-xxx-xxx', iconData: Icons.phone_android_rounded),
                                         ),
-                                        ReusableRow(title: 'Degrees', value: degreesString, iconData: Icons.list_alt_outlined),
-                                        ReusableRow(title: 'specialization', value: doctorData?['specialization'] ?? 'xxx-xxx-xxx', iconData: Icons.star),
+                                          GestureDetector(
+                                          onTap: () {
+                                          provider.showEmergencyContactDialogueAlert(context, patientData?['emergencyPhone'] ?? '');
+                                          },
 
-
-                                        SizedBox(height: 8),
-// Your Change Password Button
-                                        Container(
-                                          child: ElevatedButton(
-                                            onPressed: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) {
-                                                    return ChangePassword();
-                                                  },
-                                                ),
-                                              );
-                                            },
-                                            child: Text(
-                                              'Change Password',
-                                              style: TextStyle(color: Colors.black), // Set the text color to black
-                                            ),
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: Colors.white70,
-                                              padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-                                              textStyle: TextStyle(fontSize: 18),
-                                            ).copyWith(
-                                              minimumSize: MaterialStateProperty.all(Size(double.infinity, 60)),
-                                              backgroundColor: MaterialStateProperty.all(Colors.white70),
-                                            ),
+                                          child:
+                                        ReusableRow(title: 'Emergency contact', value: patientData?['emergencyPhone'] ?? 'xxx-xxx-xxx', iconData: Icons.phone_android_rounded), // Add more rows as needed
                                           ),
-                                        ),
-                                        SizedBox(height: 10),
+                                          GestureDetector(
+                                          onTap: () {
+                                          provider.showAddressDialogueAlert(context, patientData?['address'] ?? '');
+                                          },
 
+                                          child:
+                                        ReusableRow(title: 'Address', value: patientData?['address'] ?? 'xxx-xxx-xxx', iconData: Icons.house), // Add more rows as needed
+                                          ),
+                                        ReusableRow(title: 'Diseases', value: diseaseString, iconData: Icons.sick_outlined),
                                       ],
+
+
                                     );
 
                                   }
@@ -239,7 +223,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   }
                                 },
                               ),
-
+                              SizedBox(height: 8),
+                              Container(
+                                child: ElevatedButton(
+                                  onPressed: ()  {
+                                    Navigator.push(
+                                      context, MaterialPageRoute(builder: (context)
+                                    {
+                                      return ChangePassword();
+                                    },
+                                    ),
+                                    );
+                                  },
+                                  child: Text(
+                                    'Change Password',
+                                    style: TextStyle(color: Colors.black), // Set the text color to black
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.white70,
+                                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                                    textStyle: TextStyle(fontSize: 18),
+                                  ).copyWith(
+                                    minimumSize: MaterialStateProperty.all(Size(double.infinity, 60)),
+                                    backgroundColor: MaterialStateProperty.all(Colors.white70),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 10),
                             ],
                           ),
                         );
@@ -248,7 +258,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       }
                     },
                   ),
-
                 ),
               );
             },
@@ -258,6 +267,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 }
+
+
 
 
 
