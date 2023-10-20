@@ -91,92 +91,102 @@ class _TrackerState extends State<Tracker> {
         title: Text('Disease Tracker'),
 
       ),
-      body: selectedDiseases.isEmpty
-          ? Center(
-        child: Text(
-          'Add diseases to track by pressing the button below',
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 20, color: Colors.grey),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            // colors: [Colors.white70, Colors.blue.shade200],
+            colors: [Colors.white70, Colors.blue.shade200],
+          ),
         ),
-      )
-          : ListView.builder(
-        itemCount: selectedDiseases.length,
-        itemBuilder: (BuildContext context, int index) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SizedBox(
-              height: 100,
-              width: 100,
-              child: GestureDetector(
-                onLongPress: () {
-                  // Show delete option
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('Delete Disease?'),
-                        content: Text('Are you sure you want to delete this disease?'),
-                        actions: <Widget>[
-                          TextButton(
-                            onPressed: () {
-                              setState(() {
-                                availableDiseases.add(selectedDiseases[index]);
-                                selectedDiseases.removeAt(index);
-                                diseaseDatabaseService(uid: FirebaseAuth.instance.currentUser!.uid).deleteKidneyDiseaseData();
-                              });
-                              Navigator.of(context).pop();
-                            },
-                            child: Text('Delete'),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text('Cancel'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
-                onTap:
-                () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const KidneyTracker()),
-                  );
-                },
-                child: Card(
-                  elevation: 5,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            selectedDiseases[index].name,
-                            style: TextStyle(
-                              fontSize: 20,
+        child: selectedDiseases.isEmpty
+            ? Center(
+          child: Text(
+            'Add diseases to track by pressing the button below',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 20, color: Colors.grey),
+          ),
+        )
+            : ListView.builder(
+          itemCount: selectedDiseases.length,
+          itemBuilder: (BuildContext context, int index) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                height: 100,
+                width: 100,
+                child: GestureDetector(
+                  onLongPress: () {
+                    // Show delete option
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Delete Disease?'),
+                          content: Text('Are you sure you want to delete this disease?'),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  availableDiseases.add(selectedDiseases[index]);
+                                  selectedDiseases.removeAt(index);
+                                  diseaseDatabaseService(uid: FirebaseAuth.instance.currentUser!.uid).deleteKidneyDiseaseData();
+                                });
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('Delete'),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('Cancel'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  onTap:
+                  () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const KidneyTracker()),
+                    );
+                  },
+                  child: Card(
+                    elevation: 5,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              selectedDiseases[index].name,
+                              style: TextStyle(
+                                fontSize: 20,
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 50, // Adjust the height as needed
-                          width: 50, // Adjust the width as needed
-                          child: Image.asset(
-                            selectedDiseases[index].icon, // Replace with your image path
-                            fit: BoxFit.cover, // Adjust the fit as needed
+                          SizedBox(
+                            height: 50, // Adjust the height as needed
+                            width: 50, // Adjust the width as needed
+                            child: Image.asset(
+                              selectedDiseases[index].icon, // Replace with your image path
+                              fit: BoxFit.cover, // Adjust the fit as needed
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
 
-              ),
-          ),
-          );
-        },
+                ),
+            ),
+            );
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.blue.shade900,

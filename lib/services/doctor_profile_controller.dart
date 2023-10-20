@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 class ProfileController with ChangeNotifier{
 
@@ -121,14 +122,14 @@ class ProfileController with ChangeNotifier{
       _image = null;
     } catch (error) {
       print(error.toString()); // Print the error for debugging
-      // Fluttertoast.showToast(
-      //   msg: 'Failed to update image',
-      //   toastLength: Toast.LENGTH_SHORT,
-      //   gravity: ToastGravity.BOTTOM,
-      //   timeInSecForIosWeb: 1,
-      //   backgroundColor: Colors.white,
-      //   textColor: Colors.red,
-      // );
+      Fluttertoast.showToast(
+        msg: 'Failed to update image',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.white,
+        textColor: Colors.red,
+      );
       setLoading(false);
       _image = null;
     }
@@ -186,36 +187,110 @@ class ProfileController with ChangeNotifier{
   }
 
 
+  // Future<void> showPhoneNumberDialogueAlert(BuildContext context, String phone) {
+  //
+  //   return showDialog(context: context,
+  //       builder: (context){
+  //         return AlertDialog(
+  //           title: Text('Update phone number'),
+  //           content: SingleChildScrollView(
+  //               child: Column(
+  //                 children: [
+  //                   TextField(
+  //                     controller: phoneController,
+  //                     decoration: InputDecoration(labelText: 'New phone number'),
+  //                   ),
+  //                 ],
+  //               )
+  //           ),
+  //           actions: [
+  //             TextButton(onPressed: (){
+  //               Navigator.pop(context);
+  //             }, child: Text('Cancel',
+  //                 style: TextStyle(color: Colors.red)),
+  //             ),
+  //
+  //             TextButton(onPressed: () async {
+  //               Navigator.pop(context);
+  //               String newphone = phoneController.text;
+  //               if (newphone.isNotEmpty) {
+  //                 try {
+  //                   await users.doc(userUID).update({'phone': newphone});
+  //                   phoneController.clear();
+  //                   Fluttertoast.showToast(
+  //                     msg: 'Phone number updated',
+  //                     toastLength: Toast.LENGTH_SHORT,
+  //                     gravity: ToastGravity.BOTTOM,
+  //                     timeInSecForIosWeb: 1,
+  //                     backgroundColor: Colors.white,
+  //                     textColor: Colors.blue,
+  //                   );
+  //                 } catch (error) {
+  //                   print('Error updating phone number: $error');
+  //
+  //                 }
+  //               }
+  //             },
+  //                 child: Text('OK')),
+  //           ],
+  //         );
+  //       });
+  // }
+
+
   Future<void> showPhoneNumberDialogueAlert(BuildContext context, String phone) {
+    PhoneNumber phoneNumber = PhoneNumber(isoCode: 'BD'); // You can set the default country ISO code
 
-    return showDialog(context: context,
-        builder: (context){
-          return AlertDialog(
-            title: Text('Update phone number'),
-            content: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    TextField(
-                      controller: phoneController,
-                      decoration: InputDecoration(labelText: 'New phone number'),
-                    ),
-                  ],
-                )
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Update phone number'),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                InternationalPhoneNumberInput(
+                  onInputChanged: (PhoneNumber number) {
+                    final formattedPhoneNumber = number.phoneNumber;
+                    if (formattedPhoneNumber != null &&
+                        formattedPhoneNumber.isNotEmpty &&
+                        formattedPhoneNumber.length == 14 &&
+                        formattedPhoneNumber.startsWith('+8801')) {
+                      phoneNumber = number;
+                    }
+                  },
+                  selectorConfig: SelectorConfig(
+                    selectorType: PhoneInputSelectorType.DIALOG,
+                  ),
+                  searchBoxDecoration: InputDecoration(
+                    hintText: 'Search for a country',
+                  ),
+                  ignoreBlank: false,
+                  autoValidateMode: AutovalidateMode.disabled,
+                  selectorTextStyle: TextStyle(color: Colors.black),
+                  initialValue: phoneNumber,
+                ),
+              ],
             ),
-            actions: [
-              TextButton(onPressed: (){
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
                 Navigator.pop(context);
-              }, child: Text('Cancel',
-                  style: TextStyle(color: Colors.red)),
+              },
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: Colors.red),
               ),
-
-              TextButton(onPressed: () async {
+            ),
+            TextButton(
+              onPressed: () async {
                 Navigator.pop(context);
-                String newphone = phoneController.text;
-                if (newphone.isNotEmpty) {
+                String? newPhoneNumber = phoneNumber.phoneNumber; // Get the valid phone number
+
+                if (newPhoneNumber != null && newPhoneNumber.isNotEmpty) {
                   try {
-                    await users.doc(userUID).update({'phone': newphone});
-                    phoneController.clear();
+                    await users.doc(userUID).update({'phone': newPhoneNumber});
                     Fluttertoast.showToast(
                       msg: 'Phone number updated',
                       toastLength: Toast.LENGTH_SHORT,
@@ -226,15 +301,27 @@ class ProfileController with ChangeNotifier{
                     );
                   } catch (error) {
                     print('Error updating phone number: $error');
-
                   }
                 }
+                else{
+                  Fluttertoast.showToast(
+                    msg: 'Invalid phone number',
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Colors.white,
+                    textColor: Colors.red,
+                  );
+                }
               },
-                  child: Text('OK')),
-            ],
-          );
-        });
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
+
 
   Future<void> showEmailDialogueAlert(BuildContext context, String email) {
     return showDialog(

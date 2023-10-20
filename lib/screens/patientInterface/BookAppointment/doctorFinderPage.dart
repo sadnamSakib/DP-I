@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-
+import '../../../services/SearchBarDelegator.dart';
 import '../../../utilities/doctorSpecialization.dart';
-
+import './makeAppointment.dart';
 class DoctorFinder extends StatefulWidget {
   const DoctorFinder({Key? key});
 
@@ -25,7 +25,9 @@ class _DoctorFinderState extends State<DoctorFinder> {
     }
     // Add more doctors if needed
   ];
-
+  SearchDelegate<String> createSearchBarDelegate() {
+    return SearchBarDelegate();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,6 +52,13 @@ class _DoctorFinderState extends State<DoctorFinder> {
             Padding(
               padding: EdgeInsets.all(20.0),
               child: TextFormField(
+                readOnly: true,
+                onTap: (){
+                  showSearch(
+                    context: context,
+                    delegate: createSearchBarDelegate(),
+                  );
+                },
                 decoration: InputDecoration(
                   labelText: 'Search by Doctor\'s Name',
                 ),
@@ -62,12 +71,15 @@ class _DoctorFinderState extends State<DoctorFinder> {
                 style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
               ),
             ),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: specializations.map((category) {
-                  return CategoryTile(category: category);
-                }).toList(),
+            Container(
+              height: 120,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: specializations.map((category) {
+                    return CategoryTile(category: category);
+                  }).toList(),
+                ),
               ),
             ),
             Padding(
@@ -79,43 +91,50 @@ class _DoctorFinderState extends State<DoctorFinder> {
             ),
             SizedBox(height: 20),
             Container(
-              height: 200,
+              height: 220,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: doctors.length,
                 itemBuilder: (context, index) {
                   final doctor = doctors[index];
-                  return Card(
-                    elevation: 5.0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    margin: EdgeInsets.all(20.0),
-                    child: Container(
-                      width: 150,
-                      height: 100,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: 80,
-                            height: 80,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(40.0),
-                              image: DecorationImage(
-                                image: AssetImage(doctor['profileImage']),
-                                fit: BoxFit.cover,
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (context) => BookAppointmentPage(doctorID: '1')));
+                    },
+                    child: Card(
+                      elevation: 5.0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      margin: EdgeInsets.all(20.0),
+                      child: Container(
+                        width: 150,
+                        height: 100,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 80,
+                              height: 80,
+
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(40.0),
+                                image: DecorationImage(
+                                  image: AssetImage(doctor['profileImage']),
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(height: 5),
-                          Text(
-                            doctor['name'],
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 15),
-                          ),
-                        ],
+                            SizedBox(height: 5),
+                            Text(
+                              doctor['name'],
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 15),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   );
@@ -137,7 +156,7 @@ class CategoryTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 200,
+      width: 170,
       height: 100,
       margin: EdgeInsets.all(15.0),
       padding: EdgeInsets.all(15.0),
