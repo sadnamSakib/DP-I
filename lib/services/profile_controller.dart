@@ -14,14 +14,16 @@ class ProfileController with ChangeNotifier{
   String userUID = FirebaseAuth.instance.currentUser?.uid ?? '';
 
   CollectionReference users = FirebaseFirestore.instance.collection('users');
+  CollectionReference doctors = FirebaseFirestore.instance.collection('doctors');
 
-  // firebase_storage.FirebaseStorage storage = firebase_storage.FirebaseStorage.instance;
+  firebase_storage.FirebaseStorage storage = firebase_storage.FirebaseStorage.instance;
 
   final nameController = TextEditingController();
-  final phoneContoller = TextEditingController();
+  final phoneController = TextEditingController();
+  final addressController = TextEditingController();
+  // final degreeController = TextEditingController();
 
-  final nameFocusNode = FocusNode();
-  final phoneFocusNode = FocusNode();
+
 
   final picker = ImagePicker();
   XFile? _image ;
@@ -194,7 +196,7 @@ class ProfileController with ChangeNotifier{
                 child: Column(
                   children: [
                     TextField(
-                      controller: phoneContoller,
+                      controller: phoneController,
                       decoration: InputDecoration(labelText: 'New phone number'),
                     ),
                   ],
@@ -209,11 +211,11 @@ class ProfileController with ChangeNotifier{
 
               TextButton(onPressed: () async {
                 Navigator.pop(context);
-                String newphone = phoneContoller.text;
+                String newphone = phoneController.text;
                 if (newphone.isNotEmpty) {
                   try {
                     await users.doc(userUID).update({'phone': newphone});
-                    phoneContoller.clear();
+                    phoneController.clear();
                     Fluttertoast.showToast(
                       msg: 'Phone number updated',
                       toastLength: Toast.LENGTH_SHORT,
@@ -252,6 +254,62 @@ class ProfileController with ChangeNotifier{
         );
       },
     );
+  }
+
+
+  Future<void> showChamberAddressDialog(BuildContext context, String address) {
+
+    return showDialog(context: context,
+        builder: (context){
+          return AlertDialog(
+            title: Text('Update chamber address'),
+            content: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    TextField(
+                      controller: addressController,
+                      decoration: InputDecoration(labelText: 'New address'),
+                    ),
+                  ],
+                )
+            ),
+            actions: [
+              TextButton(onPressed: (){
+                Navigator.pop(context);
+              }, child: Text('Cancel',
+                  style: TextStyle(color: Colors.red)),
+              ),
+
+              TextButton(onPressed: () async {
+                Navigator.pop(context);
+                String newaddress = addressController.text;
+                if (newaddress.isNotEmpty) {
+                  try {
+                    await doctors.doc(userUID).update({'chamberAddress': newaddress});
+                    addressController.clear();
+                    Fluttertoast.showToast(
+                      msg: 'Address updated',
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.white,
+                      textColor: Colors.blue,
+                    );
+                  } catch (error) {
+                    print('Error updating address: $error');
+
+                  }
+                }
+              },
+                  child: Text('OK')),
+            ],
+          );
+        });
+
+
+
+
+
   }
 
 }
