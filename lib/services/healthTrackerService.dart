@@ -175,20 +175,55 @@ Future <List <BloodPressure>> getBPData() async{
     }
   }
 
+  Future<List<BloodPressure>> getBPDataWithDate(String formattedDate) async {
+
+
+    final docRef = kidneyDiseaseCollection.doc(uid);
+
+    final docSnapshot = await docRef.collection('records').doc(formattedDate).get();
+    if (docSnapshot.exists && docSnapshot.data()!['BP'] != null) {
+      List<BloodPressure> records = [];
+      for (var record in docSnapshot.data()!['BP']) {
+        records.add(BloodPressure(
+          systolic: record['systolic'],
+          diastolic: record['diastolic'],
+          time: record['time'],
+        ));
+      }
+      return records;
+    } else {
+      return [];
+    }
+  }
+
+  Future<int> getWaterDataWithDate(String formattedDate) async {
+
+
+    final docRef = kidneyDiseaseCollection.doc(uid);
+
+    final docSnapshot = await docRef.collection('records').doc(formattedDate).get();
+    if (docSnapshot.exists && docSnapshot.data()!['water'] != null) {
+      return docSnapshot.data()!['water'];
+    } else {
+      return 0;
+    }
+  }
+
+  Future<double> getProteinDataWithDate(String formattedDate) async {
+
+    final docRef = kidneyDiseaseCollection.doc(uid);
+
+    final docSnapshot = await docRef.collection('records').doc(formattedDate).get();
+    if (docSnapshot.exists && docSnapshot.data()!['protein'] != null) {
+      print(docSnapshot.data()!['protein']);
+      return docSnapshot.data()!['protein'].toDouble();
+    } else {
+      print(0);
+      return 0;
+    }
+  }
 
 
 
-// Future deleteKidneyDiseaseData() async {
-  //   return await diseaseCollection.doc(uid).delete();
-  // }
-  // //get user doc stream
-  // Stream<DocumentSnapshot> get diseaseDoc {
-  //   return diseaseCollection.doc(uid).snapshots();
-  // }
-
-//get user data stream
-// Stream<QuerySnapshot> get users {
-//   return userCollection.snapshots();
-// }
 }
 
