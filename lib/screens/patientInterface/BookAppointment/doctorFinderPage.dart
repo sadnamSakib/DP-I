@@ -71,12 +71,15 @@ class _DoctorFinderState extends State<DoctorFinder> {
                 style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
               ),
             ),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: specializations.map((category) {
-                  return CategoryTile(category: category);
-                }).toList(),
+            Container(
+              height: 120,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: specializations.map((category) {
+                    return CategoryTile(category: category);
+                  }).toList(),
+                ),
               ),
             ),
             Padding(
@@ -88,7 +91,7 @@ class _DoctorFinderState extends State<DoctorFinder> {
             ),
             SizedBox(height: 20),
             Container(
-              height: 200,
+              height: 220,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: doctors.length,
@@ -153,7 +156,7 @@ class CategoryTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 200,
+      width: 170,
       height: 100,
       margin: EdgeInsets.all(15.0),
       padding: EdgeInsets.all(15.0),
