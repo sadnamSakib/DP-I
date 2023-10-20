@@ -55,6 +55,10 @@ class _FoodSelectionScreenState extends State<FoodSelectionScreen> {
   @override
   Widget build(BuildContext context) {
         return Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.blue.shade900,
+            title: Text('Food Selection'),
+          ),
           body: SingleChildScrollView(
             child: Column(
               children: [
