@@ -22,8 +22,7 @@ class DataVisualizer extends StatelessWidget {
           title,
           style: TextStyle(
             color: Colors.black, // Customize title text color.
-            fontWeight: FontWeight.bold, // Add any desired title text styles.
-            fontSize: 18.0, // Add your desired title font size.
+            fontSize: 16.0, // Add your desired title font size.
           ),
         ),
         SizedBox(height: 8), // Adjust the space between title and circle.
