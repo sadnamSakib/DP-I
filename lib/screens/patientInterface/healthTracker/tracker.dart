@@ -86,6 +86,11 @@ class _TrackerState extends State<Tracker> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.blue.shade900,
+        title: Text('Disease Tracker'),
+
+      ),
       body: selectedDiseases.isEmpty
           ? Center(
         child: Text(

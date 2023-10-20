@@ -166,55 +166,49 @@ class _KidneyTrackerState extends State<KidneyTracker> {
               crossAxisCount: 2,
               children:[
                 for (measurement measure in Measurements)
-                  Card(
-                    elevation: 5,
-                    margin: EdgeInsets.all(10),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10), // Optional: Add border radius
-                      child: Stack(
-                        children: [
-                          // Image (takes 70% of the card)
-                          FractionallySizedBox(
-                            heightFactor: 0.7,
-                            widthFactor: 1.0,
-                            child: Image.asset(
-                              measure.icon, // Access the image URL from the measurement object
-                              fit: BoxFit.fitHeight,
+                  GestureDetector(
+                    onTap: () {
+                      if (measure.name == 'Food') {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => FoodSelectionScreen()),
+                        );
+                      } else if (measure.name == 'Water') {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => WaterTrackerPage()),
+                        );
+                      } else if (measure.name == 'Blood Pressure') {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => BloodPressureTracker()),
+                        );
+                      }
+                    },
+                    child: Card(
+                      elevation: 5,
+                      margin: EdgeInsets.all(10),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10), // Optional: Add border radius
+                        child: Stack(
+                          children: [
+                            // Image (takes 70% of the card)
+                            FractionallySizedBox(
+                              heightFactor: 0.7,
+                              widthFactor: 1.0,
+                              child: Image.asset(
+                                measure.icon, // Access the image URL from the measurement object
+                                fit: BoxFit.fitHeight,
+                              ),
                             ),
-                          ),
-                          // White background for the name
-                          Positioned(
-                            bottom: 0,
-                            left: 0,
-                            right: 0,
-                            child: Container(
-                              color: Colors.white,
-                              padding: EdgeInsets.all(10),
-                              child: InkWell(
-                                onTap: () {
-                                  if (measure.name == 'Food') {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => FoodSelectionScreen()),
-                                    );
-                                  }
-                                  // Handle tile tap
-                                  else if(measure.name== 'Water'){
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => WaterTrackerPage()),
-                                    );
-
-                                  }
-                                  else if(measure.name== 'Blood Pressure'){
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => BloodPressureTracker()),
-                                    );
-                                  }
-                                },
-
-
+                            // White background for the name
+                            Positioned(
+                              bottom: 0,
+                              left: 0,
+                              right: 0,
+                              child: Container(
+                                color: Colors.white,
+                                padding: EdgeInsets.all(10),
                                 child: Center(
                                   child: Text(
                                     measure.name,
@@ -223,11 +217,12 @@ class _KidneyTrackerState extends State<KidneyTracker> {
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  )
+                  ),
+
 
 
 
