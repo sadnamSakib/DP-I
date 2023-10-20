@@ -1,4 +1,7 @@
 import 'dart:io';
+import 'package:design_project_1/screens/authentication/Change%20Password.dart';
+import 'package:design_project_1/screens/authentication/resetPassword.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:design_project_1/services/Patient_profile_controller.dart';
 import 'package:design_project_1/services/auth.dart';
@@ -8,6 +11,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
+
+import '../../wrapper.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key});
@@ -208,6 +213,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           ),
                                         ReusableRow(title: 'Diseases', value: diseaseString, iconData: Icons.sick_outlined),
                                       ],
+
+
                                     );
 
                                   }
@@ -216,25 +223,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   }
                                 },
                               ),
-                              // SizedBox(height: 8),
-                              // // Your Logout Button
-                              // Padding(
-                              //   padding: EdgeInsets.only(bottom: 20),
-                              //   child: ElevatedButton(
-                              //     onPressed: () async {
-                              //       await _auth.signOut();
-                              //     },
-                              //     child: Text('Logout'),
-                              //     style: ElevatedButton.styleFrom(
-                              //       backgroundColor: Colors.blueGrey, // Background color
-                              //       padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-                              //       textStyle: TextStyle(fontSize: 18),
-                              //     ).copyWith(
-                              //       minimumSize: MaterialStateProperty.all(Size(double.infinity, 60)),
-                              //       backgroundColor: MaterialStateProperty.all(Colors.blueGrey), // Background color
-                              //     ),
-                              //   ),
-                              // ),
+                              SizedBox(height: 8),
+                              Container(
+                                child: ElevatedButton(
+                                  onPressed: ()  {
+                                    Navigator.push(
+                                      context, MaterialPageRoute(builder: (context)
+                                    {
+                                      return ChangePassword();
+                                    },
+                                    ),
+                                    );
+                                  },
+                                  child: Text(
+                                    'Change Password',
+                                    style: TextStyle(color: Colors.black), // Set the text color to black
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.white70,
+                                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                                    textStyle: TextStyle(fontSize: 18),
+                                  ).copyWith(
+                                    minimumSize: MaterialStateProperty.all(Size(double.infinity, 60)),
+                                    backgroundColor: MaterialStateProperty.all(Colors.white70),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 10),
                             ],
                           ),
                         );
@@ -252,6 +267,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 }
+
+
 
 
 

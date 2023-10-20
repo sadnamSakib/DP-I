@@ -9,6 +9,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 
+import '../../authentication/Change Password.dart';
+
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key});
 
@@ -195,7 +197,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           child: ReusableRow(title: 'Chamber Address', value: doctorData?['chamberAddress'] ?? 'xxx-xxx-xxx', iconData: Icons.house),
                                         ),
                                         ReusableRow(title: 'Degrees', value: degreesString, iconData: Icons.list_alt_outlined),
-                                        ReusableRow(title: 'specialization', value: doctorData?['specialization'] ?? 'xxx-xxx-xxx', iconData: Icons.star), // Add more rows as needed
+                                        ReusableRow(title: 'specialization', value: doctorData?['specialization'] ?? 'xxx-xxx-xxx', iconData: Icons.star),
+
+
+                                        SizedBox(height: 8),
+// Your Change Password Button
+                                        Container(
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) {
+                                                    return ChangePassword();
+                                                  },
+                                                ),
+                                              );
+                                            },
+                                            child: Text(
+                                              'Change Password',
+                                              style: TextStyle(color: Colors.black), // Set the text color to black
+                                            ),
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.white70,
+                                              padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                                              textStyle: TextStyle(fontSize: 18),
+                                            ).copyWith(
+                                              minimumSize: MaterialStateProperty.all(Size(double.infinity, 60)),
+                                              backgroundColor: MaterialStateProperty.all(Colors.white70),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(height: 10),
+
                                       ],
                                     );
 
@@ -205,25 +239,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   }
                                 },
                               ),
-                              // SizedBox(height: 8),
-                              // // Your Logout Button
-                              // Padding(
-                              //   padding: EdgeInsets.only(bottom: 20),
-                              //   child: ElevatedButton(
-                              //     onPressed: () async {
-                              //       await _auth.signOut();
-                              //     },
-                              //     child: Text('Logout'),
-                              //     style: ElevatedButton.styleFrom(
-                              //       backgroundColor: Colors.blueGrey, // Background color
-                              //       padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-                              //       textStyle: TextStyle(fontSize: 18),
-                              //     ).copyWith(
-                              //       minimumSize: MaterialStateProperty.all(Size(double.infinity, 60)),
-                              //       backgroundColor: MaterialStateProperty.all(Colors.blueGrey), // Background color
-                              //     ),
-                              //   ),
-                              // ),
+
                             ],
                           ),
                         );
@@ -232,6 +248,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       }
                     },
                   ),
+
                 ),
               );
             },

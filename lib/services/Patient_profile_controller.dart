@@ -343,10 +343,6 @@ class ProfileController with ChangeNotifier{
           );
         });
 
-
-
-
-
   }
 
 
@@ -435,60 +431,6 @@ class ProfileController with ChangeNotifier{
   }
 
 
-// Future<void> showEmergencyContactDialogueAlert(BuildContext context, String newcontact) {
-  //
-  //   return showDialog(context: context,
-  //       builder: (context){
-  //         return AlertDialog(
-  //           title: Text('Update emergency contact'),
-  //           content: SingleChildScrollView(
-  //               child: Column(
-  //                 children: [
-  //                   TextField(
-  //                     controller: contactController,
-  //                     decoration: InputDecoration(labelText: 'New contact'),
-  //                   ),
-  //                 ],
-  //               )
-  //           ),
-  //           actions: [
-  //             TextButton(onPressed: (){
-  //               Navigator.pop(context);
-  //             }, child: Text('Cancel',
-  //                 style: TextStyle(color: Colors.red)),
-  //             ),
-  //
-  //             TextButton(onPressed: () async {
-  //               Navigator.pop(context);
-  //               String newcontact = contactController.text;
-  //               if (newcontact.isNotEmpty) {
-  //                 try {
-  //                   await patients.doc(userUID).update({'emergencyPhone': newcontact});
-  //                   contactController.clear();
-  //                   Fluttertoast.showToast(
-  //                     msg: 'Contact updated',
-  //                     toastLength: Toast.LENGTH_SHORT,
-  //                     gravity: ToastGravity.BOTTOM,
-  //                     timeInSecForIosWeb: 1,
-  //                     backgroundColor: Colors.white,
-  //                     textColor: Colors.blue,
-  //                   );
-  //                 } catch (error) {
-  //                   print('Error updating contact: $error');
-  //
-  //                 }
-  //               }
-  //             },
-  //                 child: Text('OK')),
-  //           ],
-  //         );
-  //       });
-  //
-  //
-  //
-  //
-  //
-  // }
 
 
 }
