@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:design_project_1/services/auth.dart';
 
-import '../schedule/weekly_calender.dart';
+// import '../schedule/weekly_calender.dart';
 import 'Feed.dart';
 
 void main() {
@@ -37,7 +37,7 @@ class _HomeState extends State<Home> {
       Container(
         color: Colors.transparent,
         // child: Text('Schedule'),
-        child: CalendarPage(),
+        // child: CalendarPage(),
       ),
       Container(
         color: Colors.transparent,
