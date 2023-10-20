@@ -68,6 +68,7 @@ class _HomeState extends State<Home> {
         ],
       )
           : null,
+      resizeToAvoidBottomInset: false,
       body: Column(
         children: [
           Expanded(
