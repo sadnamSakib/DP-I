@@ -27,7 +27,6 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
       }// Replace with your home page
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,24 +37,68 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            ElevatedButton(
+            RoleCard(
+              role: 'Doctor',
+              imagePath: 'assets/images/doctor.png',
               onPressed: () => _selectRole('doctor'),
-              child: Text('I am a Doctor'),
             ),
-            ElevatedButton(
+            SizedBox(height: 40),
+            RoleCard(
+              role: 'Patient',
+              imagePath: 'assets/images/patient.png',
               onPressed: () => _selectRole('patient'),
-              child: Text('I am a Patientt'),
             ),
-            const SizedBox(height: 30),
-            ElevatedButton(
-              onPressed: () async {
-                await _auth.signOut();
-                // Add your navigation logic here
-              },
-              child: Text('Logout'),
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-                textStyle: TextStyle(fontSize: 18),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class RoleCard extends StatelessWidget {
+  final String role;
+  final String imagePath;
+  final VoidCallback onPressed;
+
+  RoleCard({required this.role, required this.imagePath, required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onPressed,
+      child: Card(
+        elevation: 6.0,
+        color: Colors.white,// Adjust the elevation for a slight shadow effect
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        child: Column(
+          children: [
+            Container(
+              height: 250,
+              width: 350,// Set the desired image height
+              child: Transform(
+
+                transform: Matrix4.identity()..rotateZ(0.0),
+                alignment: FractionalOffset.center,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12.0),
+                  child: Image.asset(
+                    imagePath,
+                    fit: BoxFit.fitHeight,
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Text(
+                'Continue as $role',
+                style: TextStyle(fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red),
+
+
               ),
             ),
           ],

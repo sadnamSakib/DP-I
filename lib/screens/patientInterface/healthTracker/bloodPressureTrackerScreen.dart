@@ -49,6 +49,10 @@ class _BloodPressureTrackerState extends State<BloodPressureTracker> {
       //   ),
       //   title: Text('Blood Pressure Tracker'),
       // ),
+      appBar: AppBar(
+        backgroundColor: Colors.blue.shade900,
+        title: Text('Blood Pressure Tracker'),
+      ),
       body: Stack(
         children: <Widget>[
           // Background image with blur
