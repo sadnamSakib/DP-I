@@ -1,10 +1,13 @@
 import 'dart:ui';
-
+import 'package:design_project_1/models/bloodPressureModel.dart';
+import 'package:design_project_1/screens/patientInterface/healthTracker/DataVisualizer.dart';
 import 'package:design_project_1/screens/patientInterface/healthTracker/foodSelectionScreen.dart';
 import 'package:design_project_1/screens/patientInterface/healthTracker/kidneyDiseaseTracker/utils.dart';
 import 'package:design_project_1/screens/patientInterface/healthTracker/waterTracker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:design_project_1/services/healthTrackerService.dart';
 
 import '../bloodPressureTrackerScreen.dart';
 
@@ -24,8 +27,52 @@ class _KidneyTrackerState extends State<KidneyTracker> {
   CalendarFormat _calendarFormat = CalendarFormat.week;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
+  String formattedDate = "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
   List<measurement> Measurements = [(measurement('Food', 'assets/images/food.png')), measurement('Blood Pressure', 'assets/images/bloodPressure.png'), measurement('Weight', 'assets/images/weight.png'), measurement('Blood Sugar', 'assets/images/bloodSugar.png'), measurement('Water', 'assets/images/water.png')];
+  String proteinIntake = '0';
+  String waterIntake = '0';
+  String bloodPressure = '0/0';
+  String weight = '0';
+  String bloodSugar = '0';
+  @override
+  void initState() {
+    loadProteinData();
+    loadWaterData();
+    loadBloodPressureData();
+    // loadWeightData();
+    // loadBloodSugarData();
+  }
 
+  void loadData(){
+    print("ekhane ashe");
+    loadProteinData();
+    loadWaterData();
+    loadBloodPressureData();
+    // loadWeightData();
+    // loadBloodSugarData();
+  }
+  void loadProteinData() async {
+    print(formattedDate);
+    double proteinData = await healthTrackerService(uid: FirebaseAuth.instance.currentUser!.uid).getProteinDataWithDate(formattedDate);
+    print(proteinData.toString());
+    setState(() {
+      proteinIntake = proteinData.toString() + 'g';
+    });
+  }
+  void loadWaterData() async {
+    int waterData = await healthTrackerService(uid: FirebaseAuth.instance.currentUser!.uid).getWaterDataWithDate(formattedDate);
+    setState(() {
+      waterIntake = waterData.toString() + 'ml';
+    });
+  }
+  void loadBloodPressureData() async {
+    List<BloodPressure> bpData = await healthTrackerService(uid: FirebaseAuth.instance.currentUser!.uid).getBPDataWithDate(formattedDate);
+    setState(() {
+      if(bpData.length > 0)
+      bloodPressure = bpData.last.systolic.toString() + '/' + bpData[0].diastolic.toString();
+      else bloodPressure = '0/0';
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,7 +107,13 @@ class _KidneyTrackerState extends State<KidneyTracker> {
                     setState(() {
                       _selectedDay = selectedDay;
                       _focusedDay = focusedDay;
+
                     });
+                    setState(() {
+
+                      formattedDate = "${_selectedDay!.year}-${_selectedDay!.month}-${_selectedDay!.day}";
+                    });
+                    loadData();
                   }
                 },
                 onFormatChanged: (format) {
@@ -83,8 +136,29 @@ class _KidneyTrackerState extends State<KidneyTracker> {
           Container(
             height: 200, // Adjust the height as needed
             color: Colors.blue[100],
-            // Add your visualizer here
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: <Widget>[
+                // VisualizerWidget(), // Your custom visualizer widget
+                // VisualizerWidget(),
+                // VisualizerWidget(),
+                Padding(padding: EdgeInsets.all(10)),
+                DataVisualizer(data: proteinIntake, title: 'Protein Intake', circleColor: Colors.blue, radius: 50.0),
+                Padding(padding: EdgeInsets.all(10)),
+                DataVisualizer(title: 'Water Intake', data: waterIntake, circleColor: Colors.red, radius: 50.0),
+                Padding(padding: EdgeInsets.all(10)),
+                DataVisualizer(data: bloodPressure, title:'Blood Pressure', circleColor: Colors.green, radius: 50.0),
+                Padding(padding: EdgeInsets.all(10)),
+                DataVisualizer(data : weight, title: 'Weight', circleColor: Colors.grey, radius: 50.0),
+                Padding(padding: EdgeInsets.all(10)),
+                DataVisualizer(data: bloodSugar, title: 'Blood Sugar', circleColor: Colors.purple, radius: 50.0),
+                Padding(padding: EdgeInsets.all(10)),
+
+                // Add more VisualizerWidget() as needed
+              ],
+            ),
           ),
+
 
           // Fitness Measures
           Expanded(
