@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/bloodPressureModel.dart';
+import '../models/foodModel.dart';
 
 class healthTrackerService {
   final String? uid;
@@ -31,6 +35,32 @@ class healthTrackerService {
       }
     });
   }
+
+  Future <void> updateProteinData(double protein) async {
+    final now = DateTime.now();
+    final formattedDate = "${now.year}-${now.month}-${now.day}";
+
+    final docRef = kidneyDiseaseCollection.doc(uid);
+
+    return FirebaseFirestore.instance.runTransaction((transaction) async {
+      final docSnapshot = await transaction.get(docRef);
+
+      // Check if the subcollection already exists for the given date
+      final subCollectionRef = docRef.collection('records').doc(formattedDate);
+      final subCollectionSnapshot = await transaction.get(subCollectionRef);
+
+      if (subCollectionSnapshot.exists) {
+        // Subcollection exists, update the attribute
+        await transaction.update(subCollectionRef, {'protein': protein});
+      } else {
+        // Subcollection doesn't exist, create it
+        await transaction.set(subCollectionRef, {'protein': protein});
+      }
+    });
+  }
+
+
+
   Future<void> updateBPData(List<BloodPressure>BP) async {
     final now = DateTime.now();
     final formattedDate = "${now.year}-${now.month}-${now.day}";
@@ -90,7 +120,65 @@ Future <List <BloodPressure>> getBPData() async{
       return 0;
     }
   }
-  // Future deleteKidneyDiseaseData() async {
+
+  Future getProteinData() async {
+    final now = DateTime.now();
+    final formattedDate = "${now.year}-${now.month}-${now.day}";
+
+    final docRef = kidneyDiseaseCollection.doc(uid);
+
+    final docSnapshot = await docRef.collection('records').doc(formattedDate).get();
+    if(docSnapshot.exists){
+      return docSnapshot.data()!['protein'];
+    }
+    else{
+      return 0;
+    }
+  }
+
+  // Function to save the selected foods to shared preferences for the current date
+  Future<void> saveSelectedFoods(List<Food> foods) async {
+    print("Entering saveSelectedFoods"); // This should print
+
+    final prefs = await SharedPreferences.getInstance();
+    print("After getting SharedPreferences"); // This should also print
+
+    final currentDate = DateTime.now();
+    final key = 'selected_foods_${currentDate.year}-${currentDate.month}-${currentDate.day}';
+    final foodsJson = foods.map((food) => food.toJson()).toList();
+    await prefs.setString(key, jsonEncode(foodsJson));
+
+    print("Saved selected foods with key: $key"); // This should print
+  }
+
+  Future<List<Food>> loadSelectedFoods() async {
+    print("Entering loadSelectedFoods"); // This should print
+
+    final prefs = await SharedPreferences.getInstance();
+    print("After getting SharedPreferences"); // This should also print
+
+    final currentDate = DateTime.now();
+    final key = 'selected_foods_${currentDate.year}-${currentDate.month}-${currentDate.day}';
+    final foodsJson = prefs.getString(key);
+
+    if (foodsJson != null) {
+      final decoded = jsonDecode(foodsJson) as List;
+      final foods = decoded.map((data) => Food.fromJson(data)).toList();
+      List<Food> loadedFood = [];
+      for (var food in foods) {
+        loadedFood.add(food);
+      }
+      print("Loaded selected foods with key: $key"); // This should print
+      return loadedFood;
+    } else {
+      return [];
+    }
+  }
+
+
+
+
+// Future deleteKidneyDiseaseData() async {
   //   return await diseaseCollection.doc(uid).delete();
   // }
   // //get user doc stream
