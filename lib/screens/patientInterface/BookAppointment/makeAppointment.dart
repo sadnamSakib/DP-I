@@ -151,14 +151,26 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                             color: selectedTimeSlot == timeSlot ? Colors.blue.shade900 : Colors.grey.shade200,
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: Text(
-                            timeSlot,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: selectedTimeSlot == timeSlot ? FontWeight.bold : FontWeight.normal,
-                              color: selectedTimeSlot == timeSlot ? Colors.white : Colors.black,
-                            ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                timeSlot,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: selectedTimeSlot == timeSlot ? FontWeight.bold : FontWeight.normal,
+                                  color: selectedTimeSlot == timeSlot ? Colors.white : Colors.black,
+                                ),
+                              ),
+                              Text(
+                                'Online', // Add 'Online' or 'Offline' based on doctor availability along with timeslot
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       );
