@@ -67,7 +67,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           color: Colors.lightBlue.shade50,
 
           image: DecorationImage(
-            image: AssetImage('assets/images/doc.png'), // Replace with your image path
+            image: AssetImage('assets/images/doc.png'), //
             fit: BoxFit.fitHeight,
             opacity: .2,
           ),
@@ -189,7 +189,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       children: [
                                         GestureDetector(
                                         onTap: () {
-                                      provider.showChamberAddressDialog(context, userData?['phone'] ?? '');
+                                      provider.showChamberAddressDialog(context, doctorData?['chamberAddress'] ?? '');
                                                   },
 
                                           child: ReusableRow(title: 'Chamber Address', value: doctorData?['chamberAddress'] ?? 'xxx-xxx-xxx', iconData: Icons.house),

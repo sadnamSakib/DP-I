@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:design_project_1/services/auth.dart';
 
+import '../schedule/weekly_calender.dart';
 import 'Feed.dart';
 
 void main() {
@@ -35,7 +36,8 @@ class _HomeState extends State<Home> {
     return [
       Container(
         color: Colors.transparent,
-        child: Text('Schedule'),
+        // child: Text('Schedule'),
+        child: CalendarPage(),
       ),
       Container(
         color: Colors.transparent,
@@ -97,7 +99,7 @@ class _HomeState extends State<Home> {
             decoration: NavBarDecoration(
               borderRadius: BorderRadius.circular(5),
             ),
-            navBarStyle: NavBarStyle.style15,
+            navBarStyle: NavBarStyle.style14,
             onItemSelected: (int index) {
               setState(() {
                 _currentIndex = index;
