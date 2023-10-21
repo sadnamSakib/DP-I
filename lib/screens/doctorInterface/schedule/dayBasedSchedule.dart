@@ -1,8 +1,11 @@
+import 'package:design_project_1/screens/doctorInterface/schedule/SetSchedule.dart';
 import 'package:flutter/material.dart';
 
 class DayBasedScheduleScreen extends StatefulWidget {
-  const DayBasedScheduleScreen({Key? key});
+  final String selectedDay;
 
+  const DayBasedScheduleScreen({Key? key, required this.selectedDay})
+      : super(key: key);
   @override
   State<DayBasedScheduleScreen> createState() => _DayBasedScheduleScreenState();
 }
@@ -92,6 +95,18 @@ class _DayBasedScheduleScreenState extends State<DayBasedScheduleScreen> {
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       _addSession();
+                      final SelectedDay = widget.selectedDay;
+                      final setScheduleInstance = SetSchedule(
+                        selectedDay: SelectedDay,
+                        startTime: _startTime != null
+                            ? '${_startTime!.hour}:${_startTime!.minute}'
+                            : '', // Format the time if available
+                        endTime: _endTime != null
+                            ? '${_endTime!.hour}:${_endTime!.minute}'
+                            : '', // Format the time if available
+                        sessionType: _sessionType ?? '',
+                      );
+                      setScheduleInstance.AddSchedule();
                       setState(() {
                         _startTime = null;
                         _endTime = null;
