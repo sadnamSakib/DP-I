@@ -62,10 +62,10 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       }
 
       // Add the schedule for this day to the list
-      setState(() {
+      // setState(() {
 
       schedule.add(ScheduleDay(day: day, items: dayItems));
-      });
+      // });
     }
 
     return schedule;
@@ -93,10 +93,10 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     if (hasSchedule) {
 
       fetchedSchedule = await fetchSchedule();
-      setState(() async {
-        fetchedSchedule = await fetchSchedule(); // Update the class-level list
-
-      });
+      // setState(() async {
+      //   fetchedSchedule = await fetchSchedule(); // Update the class-level list
+      //
+      // });
     }
       for (final slots in fetchedSchedule) {
 
@@ -119,6 +119,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       context: context,
       builder: (BuildContext context) {
         return Container(
+
           height: 200,
           child: ListView(
             children: <Widget>[
@@ -167,21 +168,58 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             final day = fetchedSchedule[index];
 
             return Card(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Day: ${day.day}'),
-                  for (final item in day.items)
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Start Time: ${item.startTime}'),
-                        Text('End Time: ${item.endTime}'),
-                        Text('Session Type: ${item.sessionType}'),
-                        Text('Number of Patients: ${item.numberOfPatients}'),
-                      ],
+              elevation: 5.0,
+              margin: EdgeInsets.all(20.0),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Container(
+                padding: EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  color: Colors.lightBlue[50],
+                  borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey,
+                      offset: Offset(0, 2),
+                      blurRadius: 6,
                     ),
-                ],
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ListTile(
+                      title: Text('Day: ${day.day}'),
+                    ),
+                    for (final item in day.items)
+                      Container(
+                        margin: EdgeInsets.symmetric(vertical: 8.0),
+                        padding: EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                          color: Colors.lightBlue[100],
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ListTile(
+                              title: Text('Start Time: ${item.startTime}'),
+                            ),
+                            ListTile(
+                              title: Text('End Time: ${item.endTime}'),
+                            ),
+                            ListTile(
+                              title: Text('Session Type: ${item.sessionType}'),
+                            ),
+                            ListTile(
+                              title: Text('Number of Patients: ${item.numberOfPatients}'),
+                            ),
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
               ),
             );
           },
@@ -329,3 +367,4 @@ class ScheduleDay {
     required this.items,
   });
 }
+
