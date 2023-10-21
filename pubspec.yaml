@@ -52,6 +52,7 @@ dependencies:
   shared_preferences: ^2.2.2
   android_alarm_manager_plus: ^3.0.3
   intl: ^0.18.0
+  vertical_weight_slider: ^2.5.1
 
 
 
