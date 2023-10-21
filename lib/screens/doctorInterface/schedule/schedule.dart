@@ -110,43 +110,27 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
 
   void _openModal(BuildContext context) {
-    List<String> daysInSchedule = [];
-    for (var day in fetchedSchedule) {
-      daysInSchedule.add(day.day);
-    }
-
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
         return Container(
-
           height: 200,
           child: ListView(
             children: <Widget>[
               for (String d in availableDays)
-                if (hasSchedule && !daysInSchedule.contains(d)) // Check if day is in schedule
-                  ListTile(
-                    title: Text(d, style: TextStyle(fontSize: 20)),
-                    onTap: () {
-                      setState(() {
-                        availableDays.remove(d);
-                        selectedDays.add(d);
-                      });
-                      Navigator.of(context).pop();
-                    },
-                  ),
-              if (!hasSchedule)
-                for (String d in availableDays)
-                  ListTile(
-                    title: Text(d, style: TextStyle(fontSize: 20)),
-                    onTap: () {
-                      setState(() {
-                        availableDays.remove(d);
-                        selectedDays.add(d);
-                      });
-                      Navigator.of(context).pop();
-                    },
-                  ),
+                ListTile(
+                  title: Text(d,
+                      style: TextStyle(
+                        fontSize: 20,
+                      )),
+                  onTap: () {
+                    setState(()  {
+                      availableDays.remove(d);
+                      selectedDays.add(d);
+                    });
+                    Navigator.of(context).pop();
+                  },
+                ),
             ],
           ),
         );
@@ -154,10 +138,10 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     if (hasSchedule) {
+
       return Scaffold(
         appBar: AppBar(
           title: Text('Your Schedules'),
@@ -220,9 +204,11 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                       ),
                   ],
                 ),
+
               ),
             );
-          },
+
+            },
         ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.blue.shade900,
