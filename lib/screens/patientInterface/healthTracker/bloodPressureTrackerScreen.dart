@@ -40,125 +40,125 @@ class _BloodPressureTrackerState extends State<BloodPressureTracker> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   leading: IconButton(
-      //     icon: Icon(Icons.arrow_back),
-      //     onPressed: () {
-      //       Navigator.of(context).pop();
-      //     },
-      //   ),
-      //   title: Text('Blood Pressure Tracker'),
-      // ),
       appBar: AppBar(
         backgroundColor: Colors.blue.shade900,
         title: Text('Blood Pressure Tracker'),
       ),
-      body: Stack(
-        children: <Widget>[
-          // Background image with blur
-          IgnorePointer(
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Image.asset(
-                'assets/images/bpBackground.png', // Replace with your image path
-                fit: BoxFit.fitWidth,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.white70, Colors.blue.shade300],
+          ),
+        ),
+        child: Stack(
+          children: <Widget>[
+            // Background image with blur
+            IgnorePointer(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Image.asset(
+                  'assets/images/bpBackground.png', // Replace with your image path
+                  fit: BoxFit.fitWidth,
 
+                ),
               ),
             ),
-          ),
-          // Blurred overlay
-          Container(
-            color: Colors.white.withOpacity(0.8),
-          ),
-          Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                SizedBox(height: 20),
-                Text(
-                  'Systolic: ',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  textAlign: TextAlign.center,
-                  '$systolic mmHg',
-                  style: TextStyle(fontSize: 24, color: Colors.red.shade900),
-                ),
-                Slider(
-                  value: systolic.toDouble(),
-                  min: 80,
-                  max: 200,
-                  divisions: 24,
-                  onChanged: (value) {
-                    setState(() {
-                      systolic = value.toInt();
-                    });
-                  },
-                  activeColor: Colors.red,
-                  inactiveColor: Colors.grey[300],
-                ),
-                SizedBox(height: 20),
-                Text(
-                  'Diastolic: ',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  textAlign: TextAlign.center,
-                  '$diastolic mmHg',
-                  style: TextStyle(fontSize: 24, color: Colors.red.shade900),
-                ),
-                Slider(
-                  value: diastolic.toDouble(),
-                  min: 40,
-                  max: 120,
-                  divisions: 16,
-                  onChanged: (value) {
-                    setState(() {
-                      diastolic = value.toInt();
-                    });
-                  },
-                  activeColor: Colors.red,
-                  inactiveColor: Colors.grey[300],
-                ),
-
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: addRecord,
-                  child: Text('Add Record'),
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.green,
-                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-                    textStyle: TextStyle(fontSize: 18),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 25.0),
-                  child: Text(
-                    'Measured:',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-
-                  ),
-
-                ),
-                SizedBox(height: 10),
-                Container(
-                  height: 240,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: records.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Text("Systolic: ${records[index].systolic} mmHg, Diastolic: ${records[index].diastolic} mmHg at ${records[index].time}"),
-                        subtitle: Text('Time: ${records[index].time}'),
-                      );
-                    },
-                  ),
-                ),
-              ],
+            // Blurred overlay
+            Container(
+              color: Colors.white.withOpacity(0.8),
             ),
-          ),
-        ],
+            Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  SizedBox(height: 20),
+                  Text(
+                    'Systolic: ',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    textAlign: TextAlign.center,
+                    '$systolic mmHg',
+                    style: TextStyle(fontSize: 24, color: Colors.red.shade900),
+                  ),
+                  Slider(
+                    value: systolic.toDouble(),
+                    min: 80,
+                    max: 200,
+                    divisions: 24,
+                    onChanged: (value) {
+                      setState(() {
+                        systolic = value.toInt();
+                      });
+                    },
+                    activeColor: Colors.red,
+                    inactiveColor: Colors.grey[300],
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    'Diastolic: ',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    textAlign: TextAlign.center,
+                    '$diastolic mmHg',
+                    style: TextStyle(fontSize: 24, color: Colors.red.shade900),
+                  ),
+                  Slider(
+                    value: diastolic.toDouble(),
+                    min: 40,
+                    max: 120,
+                    divisions: 16,
+                    onChanged: (value) {
+                      setState(() {
+                        diastolic = value.toInt();
+                      });
+                    },
+                    activeColor: Colors.red,
+                    inactiveColor: Colors.grey[300],
+                  ),
+
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: addRecord,
+                    child: Text('Add Record'),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.green,
+                      padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                      textStyle: TextStyle(fontSize: 18),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 25.0),
+                    child: Text(
+                      'Measured:',
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+
+                    ),
+
+                  ),
+                  SizedBox(height: 10),
+                  Container(
+                    height: 240,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: records.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          title: Text("Systolic: ${records[index].systolic} mmHg, Diastolic: ${records[index].diastolic} mmHg at ${records[index].time}"),
+                          subtitle: Text('Time: ${records[index].time}'),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

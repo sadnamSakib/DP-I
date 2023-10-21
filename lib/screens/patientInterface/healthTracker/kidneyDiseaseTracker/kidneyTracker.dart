@@ -82,156 +82,166 @@ class _KidneyTrackerState extends State<KidneyTracker> {
         title: Text('Kidney Disease Tracker'),
       ),
 
-      body: Column(
-        children: <Widget>[
-          // Weekly Calendar
-          Container(
-            // Adjust the height as needed
-            color: Colors.grey[200],
-              child: TableCalendar(
-                firstDay: kFirstDay,
-                lastDay: kLastDay,
-                focusedDay: _focusedDay,
-                calendarFormat: _calendarFormat,
-                selectedDayPredicate: (day) {
-                  // Use `selectedDayPredicate` to determine which day is currently selected.
-                  // If this returns true, then `day` will be marked as selected.
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            // colors: [Colors.white70, Colors.blue.shade200],
+            colors: [Colors.white70, Colors.blue.shade200],
+          ),
+        ),
+        child: Column(
+          children: <Widget>[
+            // Weekly Calendar
+            Container(
+              // Adjust the height as needed
+              color: Colors.grey[200],
+                child: TableCalendar(
+                  firstDay: kFirstDay,
+                  lastDay: kLastDay,
+                  focusedDay: _focusedDay,
+                  calendarFormat: _calendarFormat,
+                  selectedDayPredicate: (day) {
+                    // Use `selectedDayPredicate` to determine which day is currently selected.
+                    // If this returns true, then `day` will be marked as selected.
 
-                  // Using `isSameDay` is recommended to disregard
-                  // the time-part of compared DateTime objects.
-                  return isSameDay(_selectedDay, day);
-                },
-                onDaySelected: (selectedDay, focusedDay) {
-                  if (!isSameDay(_selectedDay, selectedDay)) {
-                    // Call `setState()` when updating the selected day
-                    setState(() {
-                      _selectedDay = selectedDay;
-                      _focusedDay = focusedDay;
+                    // Using `isSameDay` is recommended to disregard
+                    // the time-part of compared DateTime objects.
+                    return isSameDay(_selectedDay, day);
+                  },
+                  onDaySelected: (selectedDay, focusedDay) {
+                    if (!isSameDay(_selectedDay, selectedDay)) {
+                      // Call `setState()` when updating the selected day
+                      setState(() {
+                        _selectedDay = selectedDay;
+                        _focusedDay = focusedDay;
 
-                    });
-                    setState(() {
+                      });
+                      setState(() {
 
-                      formattedDate = "${_selectedDay!.year}-${_selectedDay!.month}-${_selectedDay!.day}";
-                    });
-                    loadData();
-                  }
-                },
-                onFormatChanged: (format) {
-                  if (_calendarFormat != format) {
-                    // Call `setState()` when updating calendar format
-                    setState(() {
-                      _calendarFormat = format;
-                    });
-                  }
-                },
-                onPageChanged: (focusedDay) {
-                  // No need to call `setState()` here
-                  _focusedDay = focusedDay;
-                },
+                        formattedDate = "${_selectedDay!.year}-${_selectedDay!.month}-${_selectedDay!.day}";
+                      });
+                      loadData();
+                    }
+                  },
+                  onFormatChanged: (format) {
+                    if (_calendarFormat != format) {
+                      // Call `setState()` when updating calendar format
+                      setState(() {
+                        _calendarFormat = format;
+                      });
+                    }
+                  },
+                  onPageChanged: (focusedDay) {
+                    // No need to call `setState()` here
+                    _focusedDay = focusedDay;
+                  },
+                ),
+              ),
+
+
+            // Visualizer
+            Container(
+              height: 200, // Adjust the height as needed
+              color: Colors.blue[50],
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: <Widget>[
+                  // VisualizerWidget(), // Your custom visualizer widget
+                  // VisualizerWidget(),
+                  // VisualizerWidget(),
+                  Padding(padding: EdgeInsets.all(10)),
+                  DataVisualizer(data: proteinIntake, title: 'Protein Intake', circleColor: Colors.blue, radius: 50.0),
+                  Padding(padding: EdgeInsets.all(10)),
+                  DataVisualizer(title: 'Water Intake', data: waterIntake, circleColor: Colors.red, radius: 50.0),
+                  Padding(padding: EdgeInsets.all(10)),
+                  DataVisualizer(data: bloodPressure, title:'Blood Pressure', circleColor: Colors.green, radius: 50.0),
+                  Padding(padding: EdgeInsets.all(10)),
+                  DataVisualizer(data : weight, title: 'Weight', circleColor: Colors.grey, radius: 50.0),
+                  Padding(padding: EdgeInsets.all(10)),
+                  DataVisualizer(data: bloodSugar, title: 'Blood Sugar', circleColor: Colors.purple, radius: 50.0),
+                  Padding(padding: EdgeInsets.all(10)),
+
+                  // Add more VisualizerWidget() as needed
+                ],
               ),
             ),
 
 
-          // Visualizer
-          Container(
-            height: 200, // Adjust the height as needed
-            color: Colors.blue[100],
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: <Widget>[
-                // VisualizerWidget(), // Your custom visualizer widget
-                // VisualizerWidget(),
-                // VisualizerWidget(),
-                Padding(padding: EdgeInsets.all(10)),
-                DataVisualizer(data: proteinIntake, title: 'Protein Intake', circleColor: Colors.blue, radius: 50.0),
-                Padding(padding: EdgeInsets.all(10)),
-                DataVisualizer(title: 'Water Intake', data: waterIntake, circleColor: Colors.red, radius: 50.0),
-                Padding(padding: EdgeInsets.all(10)),
-                DataVisualizer(data: bloodPressure, title:'Blood Pressure', circleColor: Colors.green, radius: 50.0),
-                Padding(padding: EdgeInsets.all(10)),
-                DataVisualizer(data : weight, title: 'Weight', circleColor: Colors.grey, radius: 50.0),
-                Padding(padding: EdgeInsets.all(10)),
-                DataVisualizer(data: bloodSugar, title: 'Blood Sugar', circleColor: Colors.purple, radius: 50.0),
-                Padding(padding: EdgeInsets.all(10)),
-
-                // Add more VisualizerWidget() as needed
-              ],
-            ),
-          ),
-
-
-          // Fitness Measures
-          Expanded(
-            child: GridView.count(
-              crossAxisCount: 2,
-              children:[
-                for (measurement measure in Measurements)
-                  GestureDetector(
-                    onTap: () {
-                      if (measure.name == 'Food') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => FoodSelectionScreen()),
-                        );
-                      } else if (measure.name == 'Water') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => WaterTrackerPage()),
-                        );
-                      } else if (measure.name == 'Blood Pressure') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => BloodPressureTracker()),
-                        );
-                      }
-                    },
-                    child: Card(
-                      elevation: 5,
-                      margin: EdgeInsets.all(10),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10), // Optional: Add border radius
-                        child: Stack(
-                          children: [
-                            // Image (takes 70% of the card)
-                            FractionallySizedBox(
-                              heightFactor: 0.7,
-                              widthFactor: 1.0,
-                              child: Image.asset(
-                                measure.icon, // Access the image URL from the measurement object
-                                fit: BoxFit.fitHeight,
+            // Fitness Measures
+            Expanded(
+              child: GridView.count(
+                crossAxisCount: 2,
+                children:[
+                  for (measurement measure in Measurements)
+                    GestureDetector(
+                      onTap: () {
+                        if (measure.name == 'Food') {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => FoodSelectionScreen()),
+                          );
+                        } else if (measure.name == 'Water') {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => WaterTrackerPage()),
+                          );
+                        } else if (measure.name == 'Blood Pressure') {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => BloodPressureTracker()),
+                          );
+                        }
+                      },
+                      child: Card(
+                        elevation: 5,
+                        margin: EdgeInsets.all(10),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10), // Optional: Add border radius
+                          child: Stack(
+                            children: [
+                              // Image (takes 70% of the card)
+                              FractionallySizedBox(
+                                heightFactor: 0.7,
+                                widthFactor: 1.0,
+                                child: Image.asset(
+                                  measure.icon, // Access the image URL from the measurement object
+                                  fit: BoxFit.fitHeight,
+                                ),
                               ),
-                            ),
-                            // White background for the name
-                            Positioned(
-                              bottom: 0,
-                              left: 0,
-                              right: 0,
-                              child: Container(
-                                color: Colors.white,
-                                padding: EdgeInsets.all(10),
-                                child: Center(
-                                  child: Text(
-                                    measure.name,
-                                    style: TextStyle(fontSize: 20, color: Colors.black),
+                              // White background for the name
+                              Positioned(
+                                bottom: 0,
+                                left: 0,
+                                right: 0,
+                                child: Container(
+                                  color: Colors.white,
+                                  padding: EdgeInsets.all(10),
+                                  child: Center(
+                                    child: Text(
+                                      measure.name,
+                                      style: TextStyle(fontSize: 20, color: Colors.black),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
 
 
 
 
 
-              ]
+                ]
 
-          ),
-                  ),
-        ],
+            ),
+                    ),
+          ],
+        ),
       ),
     );
   }
