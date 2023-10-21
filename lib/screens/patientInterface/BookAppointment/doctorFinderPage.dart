@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../../../services/SearchBarDelegator.dart';
 import '../../../utilities/doctorSpecialization.dart';
 import './makeAppointment.dart';
+
 class DoctorFinder extends StatefulWidget {
   const DoctorFinder({Key? key});
 
@@ -10,24 +12,23 @@ class DoctorFinder extends StatefulWidget {
 }
 
 class _DoctorFinderState extends State<DoctorFinder> {
-  List<Map<String, dynamic>> doctors = [
-    {
-      'name': 'Dr. John Doe',
-      'profileImage': 'assets/images/doctor.png',
-    },
-    {
-      'name': 'Dr. Jane Smith',
-      'profileImage': 'assets/images/doctor.png',
-    },
-    {
-      'name': 'Dr. John Doe',
-      'profileImage': 'assets/images/doctor.png',
-    }
-    // Add more doctors if needed
-  ];
+  CollectionReference usersCollection =
+  FirebaseFirestore.instance.collection('users');
+  CollectionReference doctorsCollection =
+  FirebaseFirestore.instance.collection('doctors');
+
+  Future<QuerySnapshot> fetchUserData() {
+    return usersCollection.get();
+  }
+
+  Future<QuerySnapshot> fetchDoctorData() {
+    return doctorsCollection.get();
+  }
+
   SearchDelegate<String> createSearchBarDelegate() {
     return SearchBarDelegate();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +44,7 @@ class _DoctorFinderState extends State<DoctorFinder> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.only(bottom: 20.0, top: 20.0, left: 20.0),
+              padding: EdgeInsets.all(20.0),
               child: Text(
                 'Find your desired specialist',
                 style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
@@ -53,7 +54,7 @@ class _DoctorFinderState extends State<DoctorFinder> {
               padding: EdgeInsets.all(20.0),
               child: TextFormField(
                 readOnly: true,
-                onTap: (){
+                onTap: () {
                   showSearch(
                     context: context,
                     delegate: createSearchBarDelegate(),
@@ -65,7 +66,7 @@ class _DoctorFinderState extends State<DoctorFinder> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(bottom: 20.0, top: 20.0, left: 20.0),
+              padding: EdgeInsets.all(20.0),
               child: Text(
                 'Categories',
                 style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
@@ -83,60 +84,82 @@ class _DoctorFinderState extends State<DoctorFinder> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(bottom: 10.0, top: 20.0, left: 20.0),
+              padding: EdgeInsets.all(20.0),
               child: Text(
                 'Top rated Doctors',
                 style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
               ),
             ),
-            SizedBox(height: 20),
-            Container(
-              height: 220,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: doctors.length,
-                itemBuilder: (context, index) {
-                  final doctor = doctors[index];
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(context, MaterialPageRoute(
-                          builder: (context) => BookAppointmentPage(doctorID: '1')));
-                    },
-                    child: Card(
-                      elevation: 5.0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      margin: EdgeInsets.all(20.0),
-                      child: Container(
-                        width: 150,
-                        height: 100,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: 80,
-                              height: 80,
+            Expanded(
+              child: FutureBuilder(
+                future: Future.wait([fetchUserData(), fetchDoctorData()]),
+                builder: (context, AsyncSnapshot<List<QuerySnapshot>> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
 
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(40.0),
-                                image: DecorationImage(
-                                  image: AssetImage(doctor['profileImage']),
-                                  fit: BoxFit.cover,
+                  if (snapshot.hasError) {
+                    print('Error: ${snapshot.error}');
+                  }
+
+                  final userData = snapshot.data?[0].docs;
+                  final doctorData = snapshot.data?[1].docs;
+                  final doctorDocumentID = '';
+                  final doctors = userData?.where((userDoc) {
+                    final userData = userDoc.data() as Map<String, dynamic>;
+                    return userData['role'] == 'doctor';
+                  }).toList();
+
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: doctors?.length ?? 0,
+                    itemBuilder: (context, index) {
+                      final user = doctors?[index].data() as Map<String, dynamic>;
+                      final userDocumentID = doctors?[index].id;
+
+                      final userDoctors = doctorData?.where((doc) {
+                        final doctorDocumentID = doc.id;
+                        return userDocumentID == doctorDocumentID;
+                      }).toList();
+
+                      if (userDoctors!.isNotEmpty) {
+
+                        return
+                          InkWell(
+
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => BookAppointmentPage(doctorID: '1'),
                                 ),
+                              );
+                            },
+
+                            child: Container(
+                              height: 220,
+                              child: SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: userDoctors.map((doctor) {
+                                      String imageURL = user['profile'] as String? ?? '';
+                                      return DoctorCard(
+                                        name: user['name'] as String? ?? '',
+                                        profileImage: imageURL,
+                                        specialization: doctor['specialization'] as String? ?? '',
+                                      );
+                                    }).toList(),
+                                  ),
+                                ],
                               ),
-                            ),
-                            SizedBox(height: 5),
-                            Text(
-                              doctor['name'],
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontSize: 15),
-                            ),
-                          ],
                         ),
-                      ),
-                    ),
+                            ),
+                          );
+                      } else {
+                        return SizedBox();
+                      }
+                    },
                   );
                 },
               ),
@@ -168,6 +191,69 @@ class CategoryTile extends StatelessWidget {
         category,
         style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.white),
         textAlign: TextAlign.center,
+      ),
+    );
+  }
+}
+
+class DoctorCard extends StatelessWidget {
+  final String name;
+  final String profileImage;
+  final String specialization;
+  final defaultImage = Image.asset('assets/images/doctor.png').image;
+
+  DoctorCard({
+    required this.name,
+    required this.profileImage,
+    required this.specialization,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Card(
+        elevation: 5.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        margin: EdgeInsets.all(20.0),
+        child: Container(
+          width: 180,
+          height: 150,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(40.0),
+                child: Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: profileImage.isEmpty
+                          ? defaultImage
+                          : NetworkImage(profileImage),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 5),
+              Text(
+                name,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 15),
+              ),
+              SizedBox(height: 5),
+              Text(
+                specialization,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 15),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -290,7 +290,7 @@ class ProfileController with ChangeNotifier{
 
                 if (newPhoneNumber != null && newPhoneNumber.isNotEmpty) {
                   try {
-                    await users.doc(userUID).update({'phone': newPhoneNumber});
+                    await doctors.doc(userUID).update({'phone': newPhoneNumber});
                     Fluttertoast.showToast(
                       msg: 'Phone number updated',
                       toastLength: Toast.LENGTH_SHORT,

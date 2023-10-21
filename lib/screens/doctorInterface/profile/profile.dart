@@ -208,12 +208,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 },
                                 child: ReusableRow(title: 'Email', value: userData?['email'], iconData: Icons.email_outlined),
                               ),
-                              GestureDetector(
-                                onTap: () {
-                                  provider.showPhoneNumberDialogueAlert(context, userData?['phone'] ?? '');
-                                },
-                                child: ReusableRow(title: 'Phone', value: userData?['phone'] ?? 'xxx-xxx-xxx', iconData: Icons.phone_android),
-                              ),
+
 
                               StreamBuilder<DocumentSnapshot>(
                                 stream: doctors.doc(userUID).snapshots(),
@@ -230,6 +225,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     String degreesString = degrees?.join(', ') ?? 'N/A';
                                     return Column(
                                       children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            provider.showPhoneNumberDialogueAlert(context, doctorData?['phone'] ?? '');
+                                          },
+                                          child: ReusableRow(title: 'Phone', value: doctorData?['phone'] ?? 'xxx-xxx-xxx', iconData: Icons.phone_android),
+                                        ),
                                         GestureDetector(
                                         onTap: () {
                                       provider.showChamberAddressDialog(context, doctorData?['chamberAddress'] ?? '');
