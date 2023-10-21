@@ -61,6 +61,8 @@ class Slot {
   });
 }
 
+
+
 void addDay(String userUID, String dayName, List<Slot> slots) {
   CollectionReference daysCollection =
   FirebaseFirestore.instance.collection('Schedule').doc(userUID).collection('Days');
@@ -86,3 +88,4 @@ class _SetScheduleState extends State<SetSchedule> {
     return const Placeholder();
   }
 }
+
