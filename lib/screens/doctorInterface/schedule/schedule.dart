@@ -27,40 +27,44 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
 
 
+
   Future<List<ScheduleDay>> fetchSchedule() async {
-    final userUID = FirebaseAuth.instance.currentUser?.uid;
     final scheduleCollection = FirebaseFirestore.instance.collection('Schedule');
+    final userUID = FirebaseAuth.instance.currentUser?.uid;
+    final scheduleQuery = await scheduleCollection.doc(userUID);
 
-    final scheduleQuery = await scheduleCollection.doc(userUID).collection('Days').get();
+    // Initialize the list to hold the schedules
+    List<ScheduleDay> schedule = [];
 
-    // schedule.clear();
+    // Define the days you want to access
+    final daysToAccess = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-    for (final dayDoc in scheduleQuery.docs) {
-      final dayId = dayDoc.id;
-      print(dayId);
-      final data = dayDoc.data() as Map<String, dynamic>;
+    for (final day in daysToAccess) {
+      final dayScheduleQuery = await scheduleQuery.collection('Days').doc(day).collection('Slots').get();
 
-      final startTime = data['Start Time'];
-      print(startTime);
-      final endTime = data['End Time'];
-      print(endTime);
+      List<ScheduleItem> dayItems = [];
 
-      final sessionType = data['Session Type'];
-      print(sessionType);
+      for (final slotDoc in dayScheduleQuery.docs) {
+        final startTime = slotDoc['Start Time'];
+        final endTime = slotDoc['End Time'];
+        final sessionType = slotDoc['Session Type'];
+        final numberOfPatients = slotDoc['Number of Patients'];
 
-
-      setState(() {
-
-      schedule.add(ScheduleDay(
-        day: dayId,
-        items: [
-          ScheduleItem(
+        setState(() {
+          dayItems.add(ScheduleItem(
             startTime: startTime,
             endTime: endTime,
             sessionType: sessionType,
-          ),
-        ],
-      ));
+            numberOfPatients: numberOfPatients,
+          ));
+        });
+
+      }
+
+      // Add the schedule for this day to the list
+      setState(() {
+
+      schedule.add(ScheduleDay(day: day, items: dayItems));
       });
     }
 
@@ -70,44 +74,40 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
   Future<void> checkForSchedules() async {
     final userUID = FirebaseAuth.instance.currentUser?.uid;
-    final userDocument = await FirebaseFirestore.instance.collection('users')
-        .doc(userUID)
-        .get();
 
-    if (userDocument.id != null) {
       final scheduleDocument = await FirebaseFirestore.instance
           .collection('Schedule') // Outer collection
           .doc(userUID) // Document within the outer collection
           ; // Subcollection
       print(scheduleDocument.id);
+      print(userUID);
 
       if ((scheduleDocument.id) == userUID) {
+
         setState(() {
           hasSchedule = true;
         });
       }
 
-      print(userUID);
-    }
 
     if (hasSchedule) {
-      // fetchedSchedule = await fetchSchedule();
+
+      fetchedSchedule = await fetchSchedule();
       setState(() async {
         fetchedSchedule = await fetchSchedule(); // Update the class-level list
 
       });
-      // print('Fetched Schedule:');
-      // for (final day in fetchedSchedule) {
-      //   print('Day: ${day.day}');
-      //   for (final item in day.items) {
-      //     print('Start Time: ${item.startTime}');
-      //     print('End Time: ${item.endTime}');
-      //     print('Session Type: ${item.sessionType}');
-      //   }
-      //   print('ggggggggggggggggggggggghasSchedul');
-      // }
     }
-  }
+      for (final slots in fetchedSchedule) {
+
+        for (final item in slots.items) {
+          print('Start Time: ${item.startTime}');
+          print('End Time: ${item.endTime}');
+          print('Session Type: ${item.sessionType}');
+        }
+      }
+    }
+
 
   void _openModal(BuildContext context) {
     List<String> daysInSchedule = [];
@@ -164,9 +164,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
         body: ListView.builder(
           itemCount: fetchedSchedule.length,
           itemBuilder: (context, index) {
-            print(fetchedSchedule.length);
             final day = fetchedSchedule[index];
-            print('Day: ${day.day}'); // Debug print
 
             return Card(
               child: Column(
@@ -180,6 +178,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                         Text('Start Time: ${item.startTime}'),
                         Text('End Time: ${item.endTime}'),
                         Text('Session Type: ${item.sessionType}'),
+                        Text('Number of Patients: ${item.numberOfPatients}'),
                       ],
                     ),
                 ],
@@ -187,7 +186,6 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             );
           },
         ),
-
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.blue.shade900,
           onPressed: () {
@@ -196,15 +194,11 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
           child: Icon(Icons.add),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-
-
-
-
       );
     }
 
-    else{
 
+    else{
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue.shade900,
@@ -244,7 +238,6 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                                 selectedDays.removeAt(index);
                               });
                               Navigator.of(context).pop();
-
                             },
                             child: Text('Delete'),
                           ),
@@ -261,10 +254,12 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                 },
                 onTap: () {
                   Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => DayBasedScheduleScreen(selectedDay: selectedDays[index]),
-                  )
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            DayBasedScheduleScreen(
+                                selectedDay: selectedDays[index]),
+                      )
                   );
                 },
                 child: Card(
@@ -305,21 +300,23 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
-    }
+  }
+    // }
   }
 }
-
 
 
 class ScheduleItem {
   final String startTime;
   final String endTime;
   final String sessionType;
+  final String numberOfPatients; // Add the 'numberOfPatients' field
 
   ScheduleItem({
     required this.startTime,
     required this.endTime,
     required this.sessionType,
+    required this.numberOfPatients,
   });
 }
 

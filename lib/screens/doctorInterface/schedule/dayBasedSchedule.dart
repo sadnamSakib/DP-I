@@ -15,6 +15,7 @@ class _DayBasedScheduleScreenState extends State<DayBasedScheduleScreen> {
   TimeOfDay? _startTime;
   TimeOfDay? _endTime;
   String? _sessionType;
+  String? _NumberOfPatients;
 
   List<Session> _sessions = [];
 
@@ -87,6 +88,18 @@ class _DayBasedScheduleScreenState extends State<DayBasedScheduleScreen> {
                       },
                       decoration: InputDecoration(labelText: "Session Type"),
                     ),
+
+
+                    TextFormField(
+                      keyboardType: TextInputType.text, // Input type as number
+                      decoration: InputDecoration(labelText: "Number of Patients"),
+                      onSaved: (value) {
+                        _NumberOfPatients = value;
+                      },
+                    ),
+
+
+
                   ],
                 ),
               ),
@@ -105,12 +118,14 @@ class _DayBasedScheduleScreenState extends State<DayBasedScheduleScreen> {
                             ? '${_endTime!.hour}:${_endTime!.minute}'
                             : '', // Format the time if available
                         sessionType: _sessionType ?? '',
+                         numberofPatients: _NumberOfPatients ?? '',
                       );
                       setScheduleInstance.AddSchedule();
                       setState(() {
                         _startTime = null;
                         _endTime = null;
                         _sessionType = null;
+                        _NumberOfPatients = null;
                       });
                       Navigator.of(context).pop();
                     }
@@ -126,11 +141,12 @@ class _DayBasedScheduleScreenState extends State<DayBasedScheduleScreen> {
   }
 
   void _addSession() {
-    if (_startTime != null && _endTime != null && _sessionType != null) {
+    if (_startTime != null && _endTime != null && _NumberOfPatients != null && _sessionType != null) {
       final session = Session(
         startTime: _startTime!,
         endTime: _endTime!,
         sessionType: _sessionType!,
+        NumberOfPatients: _NumberOfPatients!,
       );
 
       setState(() {
@@ -160,6 +176,8 @@ class _DayBasedScheduleScreenState extends State<DayBasedScheduleScreen> {
                       style : TextStyle(fontSize: 20)),
                       SizedBox(width: 8), // Add some spacing
                       Text(session.sessionType, style: TextStyle(color: Colors.grey, fontSize: 20),),
+                      Text(session.NumberOfPatients, style: TextStyle(color: Colors.grey, fontSize: 20),),
+
                       SizedBox(width: 10),
                       Container(
                         width: 20,
@@ -188,10 +206,12 @@ class Session {
   final TimeOfDay startTime;
   final TimeOfDay endTime;
   final String sessionType;
+  final String NumberOfPatients;
 
   Session({
     required this.startTime,
     required this.endTime,
     required this.sessionType,
+    required this.NumberOfPatients,
   });
 }
