@@ -23,6 +23,8 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   String userUID = FirebaseAuth.instance.currentUser?.uid ?? '';
+  String userName = '';
+  String userInitial = '';
 
   final AuthService _auth = AuthService();
 
@@ -35,6 +37,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
+    fetchUserName();
 
     // Merge the streams using rxdart's StreamGroup
     combinedStream = Rx.combineLatest2(
@@ -47,14 +50,56 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  Future<void> fetchUserName() async {
+    try {
+      final DocumentSnapshot userSnapshot = await users.doc(userUID).get();
+
+      if (userSnapshot.exists) {
+        final userData = userSnapshot.data() as Map<String, dynamic>;
+        final username = userData['name'];
+        if (username != null) {
+          setState(() {
+            userName = username;
+            userInitial = username[0].toUpperCase();
+
+          });
+        }
+      }
+    } catch (e) {
+      print('Error fetching username: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Align(
-          alignment: Alignment.centerLeft,
-          child: Text('DocLinkr'),
+        backgroundColor: Colors.blue.shade800,
+        title: Row(
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: Colors.black,
+                shape: BoxShape.circle,
+              ),
+              child: Text(
+                userInitial,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            SizedBox(width: 8),
+            Text('Welcome $userName'),
+          ],
         ),
+
+
+
         actions: [
           IconButton(
             icon: Icon(Icons.logout),
