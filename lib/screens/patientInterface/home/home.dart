@@ -1,4 +1,4 @@
-import 'package:design_project_1/screens/doctorInterface/profile/profile.dart';
+import 'package:design_project_1/screens/patientInterface/profile/profile.dart';
 import 'package:design_project_1/screens/patientInterface/BookAppointment/doctorFinderPage.dart';
 import 'package:design_project_1/screens/patientInterface/healthTracker/tracker.dart';
 import 'package:flutter/material.dart';

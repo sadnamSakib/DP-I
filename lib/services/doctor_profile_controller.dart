@@ -22,7 +22,7 @@ class ProfileController with ChangeNotifier{
   final nameController = TextEditingController();
   final phoneController = TextEditingController();
   final addressController = TextEditingController();
-  // final degreeController = TextEditingController();
+  final degreeController = TextEditingController();
 
 
 
@@ -398,5 +398,7 @@ class ProfileController with ChangeNotifier{
 
 
   }
+
+
 
 }
