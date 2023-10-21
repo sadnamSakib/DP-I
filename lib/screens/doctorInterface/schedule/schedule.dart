@@ -20,6 +20,8 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   bool hasSchedule=false;
   List<ScheduleDay> schedule = []; // Declare schedule here
   List<ScheduleDay> fetchedSchedule =[];
+
+
   @override
   void initState() {
     super.initState();
@@ -34,6 +36,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
 
   Future<List<ScheduleDay>> fetchSchedule() async {
+    selectedDays.clear();
     final scheduleCollection = FirebaseFirestore.instance.collection('Schedule');
     final userUID = FirebaseAuth.instance.currentUser?.uid;
     final scheduleQuery = await scheduleCollection.doc(userUID);
@@ -116,6 +119,28 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     }
     }
 
+  Future<void> delete(String Day) async {
+    try {
+      final scheduleCollection = FirebaseFirestore.instance.collection('Schedule');
+      final userUID = FirebaseAuth.instance.currentUser?.uid;
+      final scheduleQuery = scheduleCollection.doc(userUID);
+      final slotsCollection = scheduleQuery.collection('Days').doc(Day).collection('Slots');
+
+      final slotsQuery = await slotsCollection.get();
+
+      for (final slotDoc in slotsQuery.docs) {
+        await slotDoc.reference.delete();
+      }
+
+      setState(() {
+        fetchSchedule();
+      });
+
+      print('All documents in Slots collection for $Day deleted successfully.');
+    } catch (e) {
+      print('Error deleting documents: $e');
+    }
+  }
 
   void _openModal(BuildContext context) {
     showModalBottomSheet(
@@ -188,8 +213,9 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                           TextButton(
                             onPressed: () {
                               setState(() {
-                                availableDays.add(selectedDays[index]);
-                                selectedDays.removeAt(index);
+                                delete(selectedDays[index]);
+                                // availableDays.add(selectedDays[index]);
+                                // selectedDays.removeAt(index);
                               });
                               Navigator.of(context).pop();
                             },
