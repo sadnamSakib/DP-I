@@ -23,33 +23,33 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
     // Add more time slots as needed
   ];
   String? selectedTimeSlot;
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime.now(),
-      lastDate: DateTime(2101),
-    );
+  // Future<void> _selectDate(BuildContext context) async {
+  //   final DateTime? picked = await showDatePicker(
+  //     context: context,
+  //     initialDate: selectedDate,
+  //     firstDate: DateTime.now(),
+  //     lastDate: DateTime(2101),
+  //   );
+  //
+  //   if (picked != null && picked != selectedDate) {
+  //     setState(() {
+  //       selectedDate = picked;
+  //     });
+  //   }
+  // }
 
-    if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
-      });
-    }
-  }
-
-  Future<void> _selectTime(BuildContext context) async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: selectedTime,
-    );
-
-    if (picked != null && picked != selectedTime) {
-      setState(() {
-        selectedTime = picked;
-      });
-    }
-  }
+  // Future<void> _selectTime(BuildContext context) async {
+  //   final TimeOfDay? picked = await showTimePicker(
+  //     context: context,
+  //     initialTime: selectedTime,
+  //   );
+  //
+  //   if (picked != null && picked != selectedTime) {
+  //     setState(() {
+  //       selectedTime = picked;
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -120,10 +120,6 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                         _focusedDay = focusedDay;
                       });
                     },
-                    calendarStyle: CalendarStyle(
-                      // Add background color property here
-                      outsideDaysVisible: false, // Optional: hide the days outside the range
-                    ),
                   ),
                 ),
                 SizedBox(height: 20),
@@ -201,7 +197,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                   child: Text('Book Appointment',
                   style: TextStyle(fontSize: 16),
                 )
-        )
+                )
               ],
             ),
           ),
