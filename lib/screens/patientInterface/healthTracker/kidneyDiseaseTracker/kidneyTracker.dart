@@ -9,7 +9,11 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:design_project_1/services/healthTrackerService.dart';
 
+import '../../../../models/UrineModel.dart';
+import '../../../../models/weightModel.dart';
 import '../bloodPressureTrackerScreen.dart';
+import '../weightTracker.dart';
+import 'UrineTracker.dart';
 
 class KidneyTracker extends StatefulWidget {
   const KidneyTracker({super.key});
@@ -28,19 +32,19 @@ class _KidneyTrackerState extends State<KidneyTracker> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   String formattedDate = "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
-  List<measurement> Measurements = [(measurement('Food', 'assets/images/food.png')), measurement('Blood Pressure', 'assets/images/bloodPressure.png'), measurement('Weight', 'assets/images/weight.png'), measurement('Blood Sugar', 'assets/images/bloodSugar.png'), measurement('Water', 'assets/images/water.png')];
+  List<measurement> Measurements = [(measurement('Food', 'assets/images/food.png')), measurement('Blood Pressure', 'assets/images/bloodPressure.png'), measurement('Weight', 'assets/images/weight.png'), measurement('Urine', 'assets/images/urine.png'), measurement('Water', 'assets/images/water.png')];
   String proteinIntake = '0';
   String waterIntake = '0';
   String bloodPressure = '0/0';
   String weight = '0';
-  String bloodSugar = '0';
+  String urine = '0';
   @override
   void initState() {
     loadProteinData();
     loadWaterData();
     loadBloodPressureData();
-    // loadWeightData();
-    // loadBloodSugarData();
+    loadWeightData();
+    loadUrineData();
   }
 
   void loadData(){
@@ -48,8 +52,8 @@ class _KidneyTrackerState extends State<KidneyTracker> {
     loadProteinData();
     loadWaterData();
     loadBloodPressureData();
-    // loadWeightData();
-    // loadBloodSugarData();
+    loadWeightData();
+    loadUrineData();
   }
   void loadProteinData() async {
     print(formattedDate);
@@ -71,6 +75,24 @@ class _KidneyTrackerState extends State<KidneyTracker> {
       if(bpData.length > 0)
       bloodPressure = bpData.last.systolic.toString() + '/' + bpData[0].diastolic.toString();
       else bloodPressure = '0/0';
+    });
+  }
+  void loadWeightData() async {
+    Weight weightData = await healthTrackerService(uid: FirebaseAuth.instance.currentUser!.uid).getWeightDataWithDate(formattedDate);
+    setState(() {
+      weight = weightData.beforeMeal.toString() + 'kg' + ' / ' + weightData.afterMeal.toString() + 'kg';
+    });
+
+
+  }
+  void loadUrineData() async{
+    List<Urine> urineData = await healthTrackerService(uid: FirebaseAuth.instance.currentUser!.uid).getUrineDataWithDate(formattedDate);
+    double totalUrineVolume = 0.0;
+    for(Urine u in urineData){
+      totalUrineVolume += u.volume;
+    }
+    setState(() {
+      urine = totalUrineVolume.toString() + 'ml';
     });
   }
   @override
@@ -160,7 +182,7 @@ class _KidneyTrackerState extends State<KidneyTracker> {
                   Padding(padding: EdgeInsets.all(10)),
                   DataVisualizer(data : weight, title: 'Weight', circleColor: Colors.grey, radius: 50.0),
                   Padding(padding: EdgeInsets.all(10)),
-                  DataVisualizer(data: bloodSugar, title: 'Blood Sugar', circleColor: Colors.purple, radius: 50.0),
+                  DataVisualizer(data: urine, title: 'Urine', circleColor: Colors.purple, radius: 50.0),
                   Padding(padding: EdgeInsets.all(10)),
 
                   // Add more VisualizerWidget() as needed
@@ -191,6 +213,18 @@ class _KidneyTrackerState extends State<KidneyTracker> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => BloodPressureTracker()),
+                          );
+                        }
+                        else if (measure.name == 'Weight') {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => WeightTracker()),
+                          );
+                        }
+                        else if (measure.name == 'Urine') {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => UrineTracker()),
                           );
                         }
                       },
@@ -231,11 +265,6 @@ class _KidneyTrackerState extends State<KidneyTracker> {
                         ),
                       ),
                     ),
-
-
-
-
-
                 ]
 
             ),

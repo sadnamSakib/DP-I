@@ -41,6 +41,7 @@ class DataVisualizer extends StatelessWidget {
           ),
           child: Center(
             child: Text(
+              textAlign: TextAlign.center,
               data,
               style: TextStyle(
                 color: Colors.white, // Customize data text color.
