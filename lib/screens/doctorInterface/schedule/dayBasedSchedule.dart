@@ -408,26 +408,37 @@ void initState() {
         body: Column(
           children: [
             Expanded(
-              child: ListView(
+              child:
+              ListView(
                 children: <Widget>[
-                  // for (final day in schedule)
-                    for (final slots in dayItems)
-                      Card(
-                        color: Colors.blue.shade200,
+                  for (final slots in dayItems)
+                    Material(
+                      elevation: 6,
+                      child: Card(
+                        color: Colors.blue.shade50,
                         margin: EdgeInsets.all(8),
                         child: ListTile(
-                          title: Text('Day: ${widget.selectedDay}',
-                              style: TextStyle(fontSize: 20)),
+                          title: Text(
+                            'Day: ${widget.selectedDay}',
+                            style: TextStyle(fontSize: 20),
+                            textAlign: TextAlign.left, // Align title to the left
+                          ),
+                          isThreeLine: true, // Make ListTile three-line
                           subtitle: Column(
-
+                            crossAxisAlignment: CrossAxisAlignment.start, // Align subtitle to the left
                             children: [
-                              Text('Start Time: ${slots.startTime}',
-                                  style: TextStyle(fontSize: 20)),
-                              Text('End Time: ${slots.endTime}',
-                                  style: TextStyle(fontSize: 20)),
+                              Text(
+                                'Start Time: ${slots.startTime}',
+                                style: TextStyle(fontSize: 20),
+                              ),
+                              Text(
+                                'End Time: ${slots.endTime}',
+                                style: TextStyle(fontSize: 20),
+                              ),
                             ],
                           ),
-                          onTap: (){
+                          contentPadding: EdgeInsets.all(16), // Add more padding to the ListTile
+                          onTap: () {
                             _showUpdateSessionDialog(slots.ID);
                           },
                           onLongPress: () {
@@ -456,14 +467,13 @@ void initState() {
                                 );
                               },
                             );
-
-                          }
-                          ,
+                          },
                         ),
                       ),
-
+                    ),
                 ],
-              ),
+              )
+                ,
             ),
             // Expanded(
               // child: ListView(
