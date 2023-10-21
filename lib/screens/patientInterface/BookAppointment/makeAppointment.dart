@@ -116,7 +116,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                       child: TableCalendar(
                         calendarFormat: CalendarFormat.week,
                         firstDay: DateTime.now(),
-                        lastDay: DateTime.now().add(Duration(days: 7)),
+                        lastDay: DateTime.now().add(Duration(days: 6)),
                         focusedDay: _focusedDay,
                         selectedDayPredicate: (day) {
                           return isSameDay(_selectedDay, day);
@@ -212,6 +212,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                           // Add logic to book appointment
                           print('Selected Date: $selectedDate');
                           print('Selected Time Slot: $selectedTimeSlot');
+                          print('Health Issue: $healthIssue');
                         }
                       },
                       style: ButtonStyle(
