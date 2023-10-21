@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:design_project_1/screens/doctorInterface/appointments/appointments.dart';
 import 'package:design_project_1/screens/doctorInterface/profile/profile.dart';
 import 'package:design_project_1/screens/doctorInterface/schedule/schedule.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -36,10 +37,7 @@ class _HomeState extends State<Home> {
   List<Widget> _buildScreens() {
     return [
       ScheduleScreen(),
-      Container(
-        color: Colors.transparent,
-        child: Text('Appointments'),
-      ),
+      AppointmentScreen(),
       Container(
         color: Colors.transparent,
         child: Feed(),
