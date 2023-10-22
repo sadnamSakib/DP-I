@@ -30,11 +30,12 @@ class DatabaseService {
     });
   }
 
-  Future updatePatientData(String phone,String emergencyPhone, String address,  List<String> preExistingConditions) async {
+  Future updatePatientData(String gender,String phone,String emergencyPhone, String address,  List<String> preExistingConditions) async {
     DocumentSnapshot user = await userCollection.doc(uid).get();
     String name = user['name'];
     String email = user['email'];
     return await patientCollection.doc(uid).set({
+      'gender' : gender,
       'name': name,
       'email': email,
       'phone': phone,
