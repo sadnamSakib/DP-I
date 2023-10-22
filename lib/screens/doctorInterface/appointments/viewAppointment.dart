@@ -1,4 +1,6 @@
+import 'package:design_project_1/screens/doctorInterface/appointments/viewPatientDetails.dart';
 import 'package:flutter/material.dart';
+import 'package:design_project_1/models/AppointmentModel.dart';
 
 class ViewAppointmentScreen extends StatefulWidget {
   const ViewAppointmentScreen({Key? key}) : super(key: key);
@@ -10,8 +12,28 @@ class ViewAppointmentScreen extends StatefulWidget {
 class _ViewAppointmentScreenState extends State<ViewAppointmentScreen> {
   // Simulated list of appointments. Replace this with your actual appointment data.
   final List<Appointment> appointments = [
-    Appointment(patientName: "John Doe", time: "10:00 AM", isPaid: true, issue: 'Fever'),
-    Appointment(patientName: "Alice Smith", time: "11:30 AM", isPaid: false, issue: 'Headache'),
+    Appointment(
+      patientId: '1',
+      patientName: 'John Doe',
+      issue: 'Fever',
+      date : '22-10-2023',
+      startTime : '10:00',
+      endTime : '10:30',
+      isPaid: true,
+      doctorId: '1',
+      sessionType: 'Online'
+    ),
+    Appointment(
+        patientId: '2',
+        patientName: 'Jane Doe',
+        issue: 'Headache',
+        date : '22-10-2023',
+        startTime : '10:00',
+        endTime : '10:30',
+        isPaid: false,
+        doctorId: '1',
+        sessionType: 'Online'
+    ),
     // Add more appointments here
   ];
 
@@ -30,6 +52,9 @@ class _ViewAppointmentScreenState extends State<ViewAppointmentScreen> {
             subtitle:
 
                 Text('Issue: ${appointment.issue}'),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => AppointmentDetailScreen(appointment: appointment)));
+            },
 
 
             trailing: Row(
@@ -122,11 +147,4 @@ class _ViewAppointmentScreenState extends State<ViewAppointmentScreen> {
   }
 }
 
-class Appointment {
-  final String patientName;
-  final String time;
-  final bool isPaid;
-  final String issue;
 
-  Appointment({required this.patientName, required this.time, required this.isPaid, this.issue = ''});
-}
