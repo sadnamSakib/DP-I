@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:design_project_1/screens/patientInterface/home/home.dart';
 import 'package:design_project_1/services/BookAppointement.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -170,12 +171,18 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                         height: 150,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(0.0),
-                          image: DecorationImage(
+                          image: docUserData['profile'] != null
+                              ? DecorationImage(
+                            image: NetworkImage(docUserData['profile']),
+                            fit: BoxFit.cover,
+                          )
+                              : DecorationImage(
                             image: AssetImage('assets/images/doctor.png'),
                             fit: BoxFit.cover,
                           ),
                         ),
                       ),
+
                       SizedBox(width: 20),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -334,7 +341,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  AppointmentListPage(),
+                                  Home(),
                             )
                           );
                         }
