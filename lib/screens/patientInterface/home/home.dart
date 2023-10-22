@@ -1,6 +1,7 @@
 import 'package:design_project_1/screens/patientInterface/profile/profile.dart';
 import 'package:design_project_1/screens/patientInterface/BookAppointment/doctorFinderPage.dart';
 import 'package:design_project_1/screens/patientInterface/healthTracker/tracker.dart';
+import 'package:design_project_1/screens/patientInterface/viewAppointment/appointmentList.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:design_project_1/services/auth.dart';
@@ -28,7 +29,7 @@ class _HomeState extends State<Home> {
       Tracker(),
       Text('Reports'),
       DoctorFinder(),
-      Text('Appointment'),
+      AppointmentListPage(),
       ProfileScreen(),
 
     ];

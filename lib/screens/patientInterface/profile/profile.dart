@@ -74,7 +74,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue.shade800,
+        backgroundColor: Colors.blue.shade900,
         title: Row(
           children: [
             Container(

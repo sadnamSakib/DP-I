@@ -82,32 +82,40 @@ Future<void> saveWeight() async {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Card(
-              margin: EdgeInsets.all(8.0),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-                side: BorderSide(color: Colors.transparent),
-              ),
-              child: Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Text(
-                  'Before Meal Weight: $_beforeMealWeight kg',
-                  style: TextStyle(fontSize: 16),
+            Container(
+              height: 80,
+              child: Card(
+                margin: EdgeInsets.all(8.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                  side: BorderSide(color: Colors.transparent),
+                ),
+                elevation: 4,
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Text(
+                    'Before Meal Weight: $_beforeMealWeight kg',
+                    style: TextStyle(fontSize: 18),
+                  ),
                 ),
               ),
             ),
-            Card(
-              margin: EdgeInsets.all(8.0),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
+            Container(
+              height: 80,
+              child: Card(
+                margin: EdgeInsets.all(8.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
 
-                side: BorderSide(color: Colors.transparent),
-              ),
-              child: Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Text(
-                  'After Meal Weight: $_afterMealWeight kg',
-                  style: TextStyle(fontSize: 16),
+                  side: BorderSide(color: Colors.transparent),
+                ),
+                elevation: 4,
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Text(
+                    'After Meal Weight: $_afterMealWeight kg',
+                    style: TextStyle(fontSize: 18),
+                  ),
                 ),
               ),
             ),

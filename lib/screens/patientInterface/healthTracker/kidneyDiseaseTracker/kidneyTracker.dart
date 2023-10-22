@@ -32,7 +32,7 @@ class _KidneyTrackerState extends State<KidneyTracker> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   String formattedDate = "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
-  List<measurement> Measurements = [(measurement('Food', 'assets/images/food.png')), measurement('Blood Pressure', 'assets/images/bloodPressure.png'), measurement('Weight', 'assets/images/weight.png'), measurement('Urine', 'assets/images/urine.png'), measurement('Water', 'assets/images/water.png')];
+  List<measurement> Measurements = [(measurement('Protein', 'assets/images/food.png')), measurement('Blood Pressure', 'assets/images/bloodPressure.png'), measurement('Weight', 'assets/images/weight.png'), measurement('Urine', 'assets/images/urine.png'), measurement('Water', 'assets/images/water.png')];
   String proteinIntake = '0';
   String waterIntake = '0';
   String bloodPressure = '0/0';
@@ -199,7 +199,7 @@ class _KidneyTrackerState extends State<KidneyTracker> {
                   for (measurement measure in Measurements)
                     GestureDetector(
                       onTap: () {
-                        if (measure.name == 'Food') {
+                        if (measure.name == 'Protein') {
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => FoodSelectionScreen()),
