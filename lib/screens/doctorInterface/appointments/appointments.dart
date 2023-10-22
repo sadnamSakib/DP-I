@@ -24,7 +24,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
   DateTime? _selectedDay;
   late DateTime _firstDay;
   late DateTime _lastDay;
-
+DateTime? selectedDay;
 List<Appointments> appointments=[];
 
 
@@ -47,12 +47,12 @@ List<Appointments> appointments=[];
 
 
     for (final slots in dayScheduleQuery.docs) {
-      print('looooooooooooooopppppppppppppppppppp');
       final id = slots.id;
       final startTime = slots['Start Time'];
       final endTime = slots['End Time'];
       final sessionType = slots['Session Type'];
       final numberOfPatients = slots['Number of Patients'];
+      print(id);
       print(startTime);
       setState(() {
         dayItems.add(ScheduleItem(
@@ -137,6 +137,7 @@ List<Appointments> appointments=[];
         },
         onDaySelected: (selectedDay, focusedDay) {
           setState(() {
+            selectedDay = selectedDay;
             fetchSchedule(selectedDay);
             _selectedDay = selectedDay;
             _focusedDay = focusedDay;
@@ -158,52 +159,87 @@ List<Appointments> appointments=[];
   Widget _buildAppointmentsForDate(DateTime date) {
 
 
-    void _cancelAppointment(ScheduleItem schedule, String cancellationReason) {
+    void addCanceledAppointment(String appointmentID, String slotID, String cancellationReason) async {
+      final collection = FirebaseFirestore.instance.collection('DeletedAppointment');
 
-//       final scheduleCollection = FirebaseFirestore.instance.collection(
-//           'Schedule');
-//       final userUID = FirebaseAuth.instance.currentUser?.uid;
-//       final scheduleQuery = scheduleCollection.doc(userUID);
-//       final dayScheduleQuery = await scheduleQuery.collection(searchForDay).doc().collection('Slots').get();
-//
-//
-//         final appointmentsCollection = FirebaseFirestore.instance.collection('Schedules').doc();
-//         final appointmentReference = appointmentsCollection.doc(schedule.ID);
-//
-//         final deletedAppointmentsCollection = FirebaseFirestore.instance.collection('DeletedAppointment');
-//
-//         deletedAppointmentsCollection
-//             .add({
-//           'appointmentId': appointment.id,
-//           'cancellationReason': cancellationReason,
-//         })
-//             .then((documentReference) {
-//
-//         })
-//             .catchError((error) {
-//
-//           print("Error creating deleted appointment document: $error");
-//         });
-//
-//         appointmentReference.delete().then((value) {
-//
-//           Fluttertoast.showToast(
-//             msg: 'Appointment deleted',
-//             toastLength: Toast.LENGTH_SHORT,
-//             gravity: ToastGravity.BOTTOM,
-//             timeInSecForIosWeb: 1,
-//             backgroundColor: Colors.white,
-//             textColor: Colors.blue,
-//           );
-//
-//         }).catchError((error) {
-//
-//           print("Error deleting appointment: $error");
-//         });
-// initState();
+      try {
+        await collection.add({
+          'appointmentID': appointmentID ?? '',
+          'slotID': slotID,
+          'cancellationReason': cancellationReason ?? '',
+        });
+        print('Canceled appointment added to DeletedAppointment collection.');
+      } catch (e) {
+        print('Error adding canceled appointment: $e');
+      }
     }
 
+    Future<void> deleteSlot(String id) async {
+      print('looooooooooooooopppppppppppppppppppp');
+      String searchForDay = DateFormat('EEEE').format(_selectedDay!);
+
+      print(searchForDay);
+
+      try {
+        print(id);
+
+
+        final scheduleCollection = FirebaseFirestore.instance.collection('Schedule');
+        final userUID = FirebaseAuth.instance.currentUser?.uid;
+        final scheduleQuery = scheduleCollection.doc(userUID);
+        final slotReference = scheduleQuery
+            .collection('Days')
+            .doc(searchForDay)
+            .collection('Slots')
+            .doc(id);
+
+        await slotReference.delete();
+        setState(() {
+          dayItems.removeWhere((item) => item.ID == id);
+        });
+
+        print('Document with ID $id deleted successfully.');
+      } catch (e) {
+        print('Error deleting document: $e');
+      }
+    }
+
+
+    void _cancelAppointment(ScheduleItem schedule, String cancellationReason) {
+
+
+      // Reference to the Appointments collection
+      final appointmentsCollection = FirebaseFirestore.instance.collection('Appointments');
+
+      // Define a query to find the appointments with matching slotID
+      final query = appointmentsCollection.where('slotID', isEqualTo: schedule.ID);
+
+      // Use the query to retrieve matching documents
+      query.get().then((querySnapshot) {
+        querySnapshot.docs.forEach((doc) {
+
+          // Reference to the document to delete
+          final docReference = appointmentsCollection.doc(doc.id);
+
+          addCanceledAppointment(doc.id, schedule.ID, cancellationReason);
+
+          // Delete the document
+          docReference.delete().then((_) {
+            // The appointment has been deleted
+            print('Appointment with ID ${doc.id} has been deleted for the schedule with ID: ${schedule.ID}');
+          }).catchError((error) {
+            print('Error deleting appointment: $error');
+          });
+        });
+      });
+
+      deleteSlot(schedule.ID);
+      fetchSchedule(DateTime.now());
+    }
+
+
     void _showCancellationDialog(BuildContext context, ScheduleItem scheduleItem) {
+
       String cancellationReason = '';
 
       showDialog(
