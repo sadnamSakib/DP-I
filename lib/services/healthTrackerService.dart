@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../models/UrineModel.dart';
 import '../models/bloodPressureModel.dart';
 import '../models/foodModel.dart';
+import '../models/weightModel.dart';
 
 class healthTrackerService {
   final String? uid;
@@ -32,6 +34,28 @@ class healthTrackerService {
       } else {
         // Subcollection doesn't exist, create it
         await transaction.set(subCollectionRef, {'water': water});
+      }
+    });
+  }
+  Future<void> updateWeightData(Weight weight) async {
+    final now = DateTime.now();
+    final formattedDate = "${now.year}-${now.month}-${now.day}";
+
+    final docRef = kidneyDiseaseCollection.doc(uid);
+
+    return FirebaseFirestore.instance.runTransaction((transaction) async {
+      final docSnapshot = await transaction.get(docRef);
+
+      // Check if the subcollection already exists for the given date
+      final subCollectionRef = docRef.collection('records').doc(formattedDate);
+      final subCollectionSnapshot = await transaction.get(subCollectionRef);
+
+      if (subCollectionSnapshot.exists) {
+        // Subcollection exists, update the attribute
+        await transaction.update(subCollectionRef, {'weight': weight.toMap()});
+      } else {
+        // Subcollection doesn't exist, create it
+        await transaction.set(subCollectionRef, {'weight': weight.toMap()});
       }
     });
   }
@@ -87,7 +111,29 @@ class healthTrackerService {
       }
     });
   }
-Future <List <BloodPressure>> getBPData() async{
+  Future<void> updateUrineData(Urine urine) async {
+    final now = DateTime.now();
+    final formattedDate = "${now.year}-${now.month}-${now.day}";
+
+    final docRef = kidneyDiseaseCollection.doc(uid);
+
+    return FirebaseFirestore.instance.runTransaction((transaction) async {
+      final docSnapshot = await transaction.get(docRef);
+
+      // Check if the subcollection already exists for the given date
+      final subCollectionRef = docRef.collection('records').doc(formattedDate);
+      final subCollectionSnapshot = await transaction.get(subCollectionRef);
+
+      if (subCollectionSnapshot.exists) {
+        // Subcollection exists, update the attribute
+        await transaction.update(subCollectionRef, {'urine': FieldValue.arrayUnion([urine.toMap()])});
+      } else {
+        // Subcollection doesn't exist, create it
+        await transaction.set(subCollectionRef, {'urine': FieldValue.arrayUnion([urine.toMap()])});
+      }
+    });
+  }
+  Future <List <BloodPressure>> getBPData() async{
     final now = DateTime.now();
     final formattedDate = "${now.year}-${now.month}-${now.day}";
 
@@ -105,7 +151,24 @@ Future <List <BloodPressure>> getBPData() async{
       return [];
     }
   }
+  Future<List<Urine>> getUrineData() async {
+    final now = DateTime.now();
+    final formattedDate = "${now.year}-${now.month}-${now.day}";
 
+    final docRef = kidneyDiseaseCollection.doc(uid);
+
+    final docSnapshot = await docRef.collection('records').doc(formattedDate).get();
+    if(docSnapshot.exists){
+      List<Urine> records = [];
+      for(var record in docSnapshot.data()!['urine']){
+        records.add(Urine(volume: record['volume'], color: record['color'], time: record['time']));
+      }
+      return records;
+    }
+    else{
+      return [];
+    }
+  }
   Future getWaterData() async {
     final now = DateTime.now();
     final formattedDate = "${now.year}-${now.month}-${now.day}";
@@ -118,6 +181,20 @@ Future <List <BloodPressure>> getBPData() async{
     }
     else{
       return 0;
+    }
+  }
+  Future<Weight> getWeightData() async {
+    final now = DateTime.now();
+    final formattedDate = "${now.year}-${now.month}-${now.day}";
+
+    final docRef = kidneyDiseaseCollection.doc(uid);
+
+    final docSnapshot = await docRef.collection('records').doc(formattedDate).get();
+    if(docSnapshot.exists){
+      return Weight(beforeMeal: docSnapshot.data()!['weight']['beforeMeal'], afterMeal: docSnapshot.data()!['weight']['afterMeal']);
+    }
+    else{
+      return Weight(beforeMeal: 0, afterMeal: 0);
     }
   }
 
@@ -220,6 +297,36 @@ Future <List <BloodPressure>> getBPData() async{
     } else {
       print(0);
       return 0;
+    }
+  }
+  Future getWeightDataWithDate(String formattedDate) async {
+
+      final docRef = kidneyDiseaseCollection.doc(uid);
+
+      final docSnapshot = await docRef.collection('records').doc(formattedDate).get();
+      if (docSnapshot.exists && docSnapshot.data()!['weight'] != null) {
+        return Weight(beforeMeal: docSnapshot.data()!['weight']['beforeMeal'], afterMeal: docSnapshot.data()!['weight']['afterMeal']);
+      } else {
+        return Weight(beforeMeal: 0, afterMeal: 0);
+      }
+  }
+  Future getUrineDataWithDate(String formattedDate) async {
+
+    final docRef = kidneyDiseaseCollection.doc(uid);
+
+    final docSnapshot = await docRef.collection('records').doc(formattedDate).get();
+    if (docSnapshot.exists && docSnapshot.data()!['urine'] != null) {
+      List<Urine> records = [];
+      for (var record in docSnapshot.data()!['urine']) {
+        records.add(Urine(
+          volume: record['volume'],
+          color: record['color'],
+          time: record['time'],
+        ));
+      }
+      return records;
+    } else {
+      return [];
     }
   }
 
