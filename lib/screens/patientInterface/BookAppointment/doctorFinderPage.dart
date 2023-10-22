@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../../../services/SearchBarDelegator.dart';
+import '../../../services/auth.dart';
 import '../../../utilities/doctorSpecialization.dart';
 import './makeAppointment.dart';
 
@@ -12,6 +13,8 @@ class DoctorFinder extends StatefulWidget {
 }
 
 class _DoctorFinderState extends State<DoctorFinder> {
+  final AuthService _auth = AuthService();
+
   CollectionReference usersCollection =
   FirebaseFirestore.instance.collection('users');
   CollectionReference doctorsCollection =
@@ -32,6 +35,21 @@ class _DoctorFinderState extends State<DoctorFinder> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
+      appBar: AppBar(
+        title: Align(
+          alignment: Alignment.centerLeft,
+          child: Text('DocLinkr'),
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () async {
+              await _auth.signOut();
+            },
+          ),
+        ],
+      ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -122,23 +140,21 @@ class _DoctorFinderState extends State<DoctorFinder> {
                         return userDocumentID == doctorDocumentID;
                       }).toList();
 
-                      if (userDoctors!.isNotEmpty) {
-
-                        return
-                          InkWell(
-
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => BookAppointmentPage(doctorID: '1'),
-                                ),
-                              );
-                            },
-
-                            child: Container(
-                              height: 220,
-                              child: SingleChildScrollView(
+                      if (userDoctors != null && userDoctors.isNotEmpty) {
+                        return InkWell(
+                          onTap: () {
+                            final doctorDocumentID = userDocumentID; // Assign userDocumentID to doctorDocumentID
+                            print(doctorDocumentID);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => BookAppointmentPage(doctorID: doctorDocumentID),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            height: 220,
+                            child: SingleChildScrollView(
                               child: Column(
                                 children: [
                                   Row(
@@ -153,9 +169,9 @@ class _DoctorFinderState extends State<DoctorFinder> {
                                   ),
                                 ],
                               ),
-                        ),
                             ),
-                          );
+                          ),
+                        );
                       } else {
                         return SizedBox();
                       }
