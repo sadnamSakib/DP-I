@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -108,6 +109,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
   DateTime? _selectedDay;
   TimeSlots? selectedTimeSlot;
   String? healthIssue;
+  String? Day;
   // Future<void> _selectDate(BuildContext context) async {
   //   final DateTime? picked = await showDatePicker(
   //     context: context,
@@ -210,6 +212,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                         },
                         onDaySelected: (selectedDay, focusedDay) {
                           setState(() {
+                            Day = DateFormat('EEEE').format(selectedDay);
                             fetchTimeSlots(selectedDay);
                             _selectedDay = selectedDay;
                             _focusedDay = focusedDay;
@@ -314,34 +317,45 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                     maxLines: 2, // Adjust the number of lines as needed
                   ),
                   SizedBox(height: 20),
-                  // Center(
-                  //   child: ElevatedButton(
-                  //
-                  //     onPressed: () {
-                  //       if (selectedDate != null && selectedTimeSlot != null) {
-                  //         // Add logic to book appointment
-                  //         print('Selected Date: $selectedDate');
-                  //         print('Selected Time Slot: $selectedTimeSlot');
-                  //         print('Health Issue: $healthIssue');
-                  //       }
-                  //     },
-                  //     style: ButtonStyle(
-                  //       fixedSize: MaterialStateProperty.all<Size>(Size(200, 50)),
-                  //       backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                  //             (Set<MaterialState> states) {
-                  //           if (selectedTimeSlot != null) {
-                  //             return Colors.green; // Change the color when a time slot is selected
-                  //           }
-                  //           return Colors.blue.shade900; // Default color
-                  //         },
-                  //       ),
-                  //
-                  //   ),
-                  //     child: Text('Book Appointment',
-                  //     style: TextStyle(fontSize: 16),
-                  //   )
-                  //   ),
-                  // )
+                  Center(
+                    child: ElevatedButton(
+
+                      onPressed: () {
+                        if (selectedDate != null && selectedTimeSlot != null ) {
+                          BookAppointment();
+                          // Add logic to book appointment
+                          print('Selected Date: $selectedDate');
+                          print('Selected Time Slot: $Day');
+                          print('Health Issue: $healthIssue');
+                        }
+                        else{
+                          Fluttertoast.showToast(
+                            msg: 'Please select a day and slot to book an appointemnt',
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: Colors.white,
+                            textColor: Colors.red,
+                          );
+                        }
+                      },
+                      style: ButtonStyle(
+                        fixedSize: MaterialStateProperty.all<Size>(Size(200, 50)),
+                        backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                              (Set<MaterialState> states) {
+                            if (selectedTimeSlot != null) {
+                              return Colors.green; // Change the color when a time slot is selected
+                            }
+                            return Colors.blue.shade900; // Default color
+                          },
+                        ),
+
+                    ),
+                      child: Text('Book Appointment',
+                      style: TextStyle(fontSize: 16),
+                    )
+                    ),
+                  )
                 ],
               ),
             ),
