@@ -54,20 +54,19 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _currentIndex == 2
-          ? AppBar(
-        backgroundColor: Colors.blue.shade900,
-        title: Text('DocLinkr'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.logout),
-            onPressed: () async {
-              await _auth.signOut();
-            },
-          ),
-        ],
-      )
-          : null,
+      // appBar:  AppBar(
+      //   backgroundColor: Colors.blue.shade900,
+      //   title: Text('DocLinkr'),
+      //   actions: [
+      //     IconButton(
+      //       icon: Icon(Icons.logout),
+      //       onPressed: () async {
+      //         await _auth.signOut();
+      //       },
+      //     ),
+      //   ],
+      // )
+      //     ,
       resizeToAvoidBottomInset: false,
       body: Column(
         children: [
