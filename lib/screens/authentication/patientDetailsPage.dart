@@ -19,6 +19,14 @@ class _PatientDetailsPageState extends State<PatientDetailsPage> {
   String emergencyPhone = '';
   String error = '';
   String address = '';
+  String gender ='';
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      gender="Male";
+    });
+  }
   List<String> preExistingConditions = [];
   List<String> commonConditions = [
     'Hypertension (High Blood Pressure)',
@@ -131,6 +139,45 @@ class _PatientDetailsPageState extends State<PatientDetailsPage> {
                     setState(() => address = val);
                   },
                 ),
+                SizedBox(height: 10.0),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Select your gender:',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                Wrap(
+                  children: [
+                    ChoiceChip(
+                      label: Text('Male'),
+                      selected: gender == 'Male',
+                      selectedColor: Colors.blue,
+                      onSelected: (selected) {
+                        setState(() {
+                          gender = 'Male';
+                          print("On selecting male : " + gender);
+                        });
+                      },
+
+                    ),
+                    ChoiceChip(
+                      label: Text('Female'),
+                      selected: gender == 'Female',
+                      selectedColor: Colors.blue,
+                      onSelected: (selected) {
+                        setState(() {
+                          gender = 'Female';
+                          print("On selecting Female : " + gender);
+                        });
+                      },
+
+                    ),
+                  ],
+                ),
+
+              ],
+            ),
 
                 SizedBox(height: 10.0),
                 ElevatedButton(
@@ -148,7 +195,7 @@ class _PatientDetailsPageState extends State<PatientDetailsPage> {
                   onPressed: () async {
                     // Submit the form and handle doctor registration here
                     if (_formKey.currentState!.validate()) {
-                      await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid).updatePatientData(
+                      await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid).updatePatientData(gender,
                           phone, address, emergencyPhone, preExistingConditions);
                       SnackBar snackBar = SnackBar(content: Text('Registration Successful.Please log in to your account.'));
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);

@@ -1,6 +1,7 @@
 import 'package:design_project_1/screens/doctorInterface/appointments/viewAppointment.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:design_project_1/models/AppointmentModel.dart';
 
 class AppointmentScreen extends StatefulWidget {
   const AppointmentScreen({Key? key}) : super(key: key);
@@ -8,19 +9,7 @@ class AppointmentScreen extends StatefulWidget {
   @override
   _AppointmentScreenState createState() => _AppointmentScreenState();
 }
-class Appointment {
-  final DateTime startTime;
-  final DateTime endTime;
-  final AppointmentType type;
 
-  Appointment({
-    required this.startTime,
-    required this.endTime,
-    required this.type,
-  });
-}
-
-enum AppointmentType { online, offline }
 
 class _AppointmentScreenState extends State<AppointmentScreen> {
   CalendarFormat _calendarFormat = CalendarFormat.week;
@@ -94,16 +83,28 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
 
 
     // Simulated list of appointments. Replace this with your actual data.
-     List<Appointment> appointments = [
+    final List<Appointment> appointments = [
       Appointment(
-        startTime: DateTime(date.year, date.month, date.day, 09, 00),
-        endTime: DateTime(date.year, date.month, date.day, 10, 30),
-        type: AppointmentType.online,
+          patientId: '1',
+          patientName: 'John Doe',
+          issue: 'Fever',
+          date : '22-10-2023',
+          startTime : '10:00',
+          endTime : '10:30',
+          isPaid: true,
+          doctorId: '1',
+          sessionType: 'Online'
       ),
       Appointment(
-        startTime: DateTime(date.year, date.month, date.day, 14, 00),
-        endTime: DateTime(date.year, date.month, date.day, 15, 30),
-        type: AppointmentType.offline,
+          patientId: '2',
+          patientName: 'Jane Doe',
+          issue: 'Headache',
+          date : '22-10-2023',
+          startTime : '10:00',
+          endTime : '10:30',
+          isPaid: false,
+          doctorId: '1',
+          sessionType: 'Online'
       ),
       // Add more appointments here
     ];
@@ -170,28 +171,28 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
         margin: EdgeInsets.all(8),
         child: ListTile(
             title: Text(
-              'Start Time: ${_formatTime(appointment.startTime)}',
+              'Start Time: ${appointment.startTime}',
               style: TextStyle(fontSize: 16), // Adjust the font size as needed
             ),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'End Time: ${_formatTime(appointment.endTime)}',
+                  'End Time: ${appointment.endTime}',
                   style: TextStyle(fontSize: 16), // Adjust the font size as needed
                 ),
                 Row(
                   children: [
                     Text(
-                      'Type: ${appointment.type == AppointmentType.online ? 'Online' : 'Offline'}',
+                      'Type: ${appointment.sessionType == 'Online' ? 'Online' : 'Offline'}',
                       style: TextStyle(fontSize: 16), // Adjust the font size as needed
                     ),
                     SizedBox(width: 8),
                     Icon(
-                      appointment.type == AppointmentType.online
+                      appointment.sessionType == 'Online'
                           ? Icons.circle
                           : Icons.circle,
-                      color: appointment.type == AppointmentType.online
+                      color: appointment.sessionType == 'Online'
                           ? Colors.blue
                           : Colors.red,
                       size: 16, // Adjust the icon size as needed
