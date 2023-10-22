@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:design_project_1/squareTile.dart';
 import 'package:design_project_1/services/diseaseViewModel.dart';
 
+import 'kidneyTrackerSummary/kidneyTrackerSummaryScreen.dart';
+
 
 class HealthTrackersScreen extends StatefulWidget {
   final patientId;
@@ -52,7 +54,7 @@ class _HealthTrackersScreenState extends State<HealthTrackersScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue.shade900,
-        title: Text('Disease HealthTrackersScreen'),
+        title: Text('Disease Health Tracker'),
 
       ),
       body: Container(
@@ -83,11 +85,10 @@ class _HealthTrackersScreenState extends State<HealthTrackersScreen> {
                 child: GestureDetector(
                   onTap:
                       () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => const KidneyHealthTrackersScreen()),
-                    // );
-                      Text("Tracker");
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => KidneyTrackerSummaryScreen()),
+                    );
                   },
                   child: Card(
                     elevation: 5,

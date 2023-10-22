@@ -114,12 +114,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       Container(
         decoration: BoxDecoration(
-          color: Colors.lightBlue.shade50,
-
-          image: DecorationImage(
-            image: AssetImage('assets/images/doc.png'), //
-            fit: BoxFit.fitHeight,
-            opacity: .2,
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            // colors: [Colors.white70, Colors.blue.shade200],
+            colors: [Colors.white70, Colors.blue.shade200],
           ),
         ),
 
@@ -255,7 +254,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                                           child:
                                         ReusableRow(title: 'Address', value: patientData?['address'] ?? 'xxx-xxx-xxx', iconData: Icons.house), // Add more rows as needed
+                                             // Add more rows as needed
                                           ),
+                                        ReusableRow(
+                                          title: 'Gender',
+                                          value: patientData?['gender'] ?? 'xxx-xxx-xxx',
+                                          iconData: patientData?['gender'] == 'Male' ? Icons.male : Icons.female,
+                                        ),
+
                                         ReusableRow(title: 'Diseases', value: diseaseString, iconData: Icons.sick_outlined),
                                       ],
 
