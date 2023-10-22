@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import '../../../models/AppointmentModel.dart';
 class ViewAppointmentDetailsPage extends StatefulWidget {
   final Appointment appointment;
+  final String docname;
 
-  ViewAppointmentDetailsPage({super.key, required this.appointment});
+  ViewAppointmentDetailsPage({super.key, required this.appointment,
+  required this.docname});
 
 
   @override

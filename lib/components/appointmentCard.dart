@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../models/AppointmentModel.dart';
@@ -5,15 +6,20 @@ import '../screens/patientInterface/viewAppointment/viewAppointmentDetails.dart'
 
 class AppointmentCard extends StatelessWidget {
   final Appointment appointment;
+  final String docName;
 
-  AppointmentCard({required this.appointment});
+  AppointmentCard({required this.appointment,
+  required this.docName});
+
+
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () { Navigator.push(context,
         MaterialPageRoute(
-          builder: (context) => ViewAppointmentDetailsPage(appointment: appointment),
+          builder: (context) => ViewAppointmentDetailsPage(appointment: appointment,
+              docname: docName),
         ),
       );
       },
@@ -26,7 +32,7 @@ class AppointmentCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                'Doctor: ${appointment.doctorId}',
+                'Doctor: ${docName}',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               Text(
