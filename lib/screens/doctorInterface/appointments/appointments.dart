@@ -85,7 +85,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
     // Simulated list of appointments. Replace this with your actual data.
     final List<Appointment> appointments = [
       Appointment(
-          patientId: '1',
+          patientId: 'YmYYfIC919OAlJ9zV9eYhnyQ1Pt2',
           patientName: 'John Doe',
           issue: 'Fever',
           date : '22-10-2023',
