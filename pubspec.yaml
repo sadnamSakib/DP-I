@@ -53,6 +53,7 @@ dependencies:
   android_alarm_manager_plus: ^3.0.3
   intl: ^0.18.0
   vertical_weight_slider: ^2.5.1
+  fl_chart: ^0.64.0
 
 
 
