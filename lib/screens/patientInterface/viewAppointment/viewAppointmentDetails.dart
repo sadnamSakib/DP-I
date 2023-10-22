@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../models/AppointmentModel.dart';
@@ -15,6 +16,8 @@ class ViewAppointmentDetailsPage extends StatefulWidget {
 class _ViewAppointmentDetailsPageState extends State<ViewAppointmentDetailsPage> {
 
   late  Map<String, dynamic>? doctorData ;
+  late  Map<String, dynamic>? patientData ;
+
   Future<void> fetchDocInfo()
   async {
     doctorData = null;
@@ -31,16 +34,18 @@ class _ViewAppointmentDetailsPageState extends State<ViewAppointmentDetailsPage>
   }
 
 
-  Future<void> fetchpatientInfo()
+  Future<void> fetchPatientInfo()
   async {
-    doctorData = null;
-    final doctorReference = FirebaseFirestore.instance.collection('doctors').doc(widget.appointment.doctorId);
-    final doctorSnapshot = await doctorReference.get();
+    patientData = null;
+    final patientReference = FirebaseFirestore.instance.collection('patients').
+    doc(FirebaseAuth.instance.currentUser?.uid ?? ''
+    );
+    final patientSnapshot = await patientReference.get();
 
-    if (doctorSnapshot.exists) {
+    if (patientSnapshot.exists) {
       setState(() {
 
-        doctorData = doctorSnapshot.data() as Map<String, dynamic>;
+        patientData = patientSnapshot.data() as Map<String, dynamic>;
       });
 
     }
@@ -51,6 +56,7 @@ class _ViewAppointmentDetailsPageState extends State<ViewAppointmentDetailsPage>
   void initState()
   {
     fetchDocInfo();
+    fetchPatientInfo();
   }
   Appointment get appointment => widget.appointment;
   @override
@@ -80,7 +86,13 @@ class _ViewAppointmentDetailsPageState extends State<ViewAppointmentDetailsPage>
               ),
               ListTile(
                 leading: Icon(Icons.medical_services),
-                title: Text('Health Issue: ${appointment.issue}'),
+                title: Text('Health Issue: ${appointment.issue.isNotEmpty ? appointment.issue :  'No issue specified'}'),
+
+              ),
+              ListTile(
+                leading: Icon(Icons.health_and_safety),
+                title: Text('Pre existing medical conditions: ${patientData?['preExistingConditions']?.join(', ')}'),
+
               ),
               ListTile(
                 leading: Icon(Icons.person),
