@@ -4,7 +4,8 @@ import '../../../../components/barChart/bar_graph.dart';
 import '../../../../services/healthTrackerService.dart';
 class WaterSummary extends StatefulWidget {
   final patientId;
-  const WaterSummary({super.key, this.patientId});
+  final days;
+  const WaterSummary({super.key, this.patientId, this.days});
 
   @override
   State<WaterSummary> createState() => _WaterSummaryState();
@@ -12,6 +13,8 @@ class WaterSummary extends StatefulWidget {
 
 class _WaterSummaryState extends State<WaterSummary> {
   List<double> waterList = [];
+  double averageWaterIntake = 0;
+  String averageWater = "";
   @override
   void initState() {
     super.initState();
@@ -19,26 +22,35 @@ class _WaterSummaryState extends State<WaterSummary> {
   }
 
   Future<void> getWaterData() async {
-    List<double> waterData =
-    (await healthTrackerService(uid: widget.patientId).getPastWaterData(7)).cast<double>();
+    List<double> waterData = await healthTrackerService(uid: widget.patientId).getPastWaterData(widget.days);
     setState(() {
       waterList = waterData;
+      for(var data in waterList){
+        averageWaterIntake += data;
+      }
+      averageWaterIntake = (averageWaterIntake / waterList.length);
+      averageWater = averageWaterIntake.toStringAsFixed(2);
     });
   }
 
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: waterList.isEmpty // Check if the data is empty
-            ? CircularProgressIndicator() // Show loading indicator
-            : SizedBox(
-          height: 400,
-          child: BarGraph(
-            values1: waterList,
-            values2 : List.filled(waterList.length, 10),
+    return Column(
+        children: <Widget>[
+          SizedBox(height: 20),
+          Text("Water Intake Summary"),
+          waterList.isEmpty // Check if the data is empty
+              ? CircularProgressIndicator() // Show loading indicator
+              : SizedBox(
+            height: 300,
+            width: 400,
+            child: BarGraph(
+              values1: waterList,
+              values2 : List.filled(waterList.length, 0),
+            ),
           ),
-        ),
-      ),
+          SizedBox(height: 20),
+          Text("Average Water Intake: $averageWater ml "),
+        ],
     );
   }
 }

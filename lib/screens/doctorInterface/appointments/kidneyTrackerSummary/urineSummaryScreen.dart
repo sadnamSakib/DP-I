@@ -5,7 +5,8 @@ import '../../../../models/UrineModel.dart';
 import '../../../../services/healthTrackerService.dart';
 class UrineSummary extends StatefulWidget {
   final patientId;
-  const UrineSummary({super.key, this.patientId});
+  final days;
+  UrineSummary({super.key, this.patientId, this.days});
 
   @override
   State<UrineSummary> createState() => _UrineSummaryState();
@@ -13,6 +14,10 @@ class UrineSummary extends StatefulWidget {
 
 class _UrineSummaryState extends State<UrineSummary> {
   List<double> urineList = [];
+  double averageUrineVolume = 0;
+  Map<String, double> dayBasedUrineVolume = {};
+  Map<String, int> colorFrequency = {};
+  String mostFrequentColor = "";
   @override
   void initState() {
     super.initState();
@@ -21,28 +26,62 @@ class _UrineSummaryState extends State<UrineSummary> {
 
   Future<void> getUrineData() async {
     List<Urine> urineData =
-    await healthTrackerService(uid: widget.patientId).getPastUrineData(7);
+    await healthTrackerService(uid: widget.patientId).getPastUrineData(widget.days);
 
     setState(() {
-      for(int i = 0; i < urineData.length; i++){
+      for (int i = 0; i < urineData.length; i++) {
         urineList.add(urineData[i].volume);
+
+        if (dayBasedUrineVolume[urineData[i].date] == null) {
+          dayBasedUrineVolume[urineData[i].date] = urineData[i].volume;
+        } else {
+          dayBasedUrineVolume[urineData[i].date] = (dayBasedUrineVolume[urineData[i].date] ?? 0) + urineData[i].volume;
+        }
+        if (colorFrequency[urineData[i].color] == null) {
+          colorFrequency[urineData[i].color] = 1;
+        } else {
+          colorFrequency[urineData[i].color] = (colorFrequency[urineData[i].color] ?? 0) + 1;
+        }
+
       }
+      for(var data in dayBasedUrineVolume.values){
+        averageUrineVolume += data;
+
+      }
+      averageUrineVolume = averageUrineVolume / dayBasedUrineVolume.length;
+      int max = 0;
+      for(var data in colorFrequency.entries){
+        if(data.value > max){
+          max = data.value;
+          mostFrequentColor = data.key;
+        }
+      }
+
     });
   }
 
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: urineList.isEmpty // Check if the data is empty
-            ? CircularProgressIndicator() // Show loading indicator
-            : SizedBox(
-          height: 400,
-          child: BarGraph(
-            values1: urineList,
-            values2 : List.filled(urineList.length, 10),
+    return Column(
+      children: <Widget>[
+        SizedBox(height: 20),
+        Text("Urine Summary"),
+        if (urineList.isEmpty)
+          CircularProgressIndicator()
+        else
+          SizedBox(
+            height: 300,
+            width: 400,
+            child: BarGraph(
+              values1: urineList,
+              values2: List.filled(urineList.length, 10),
+            ),
           ),
-        ),
-      ),
+        SizedBox(height: 20),
+        Text("Average Urine Volume: $averageUrineVolume"),
+        SizedBox(height: 20),
+        Text("Most Frequent Colored Urine: $mostFrequentColor"),
+      ],
     );
+
   }
 }
