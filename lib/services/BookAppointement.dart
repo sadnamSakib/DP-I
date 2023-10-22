@@ -46,16 +46,9 @@ class BookAppointment{
     CollectionReference appointments = _firestore.collection('Appointments');
     try{
       await appointments.add(newAppointment.toMap());
+print('Appointtment');
 
 
-      Fluttertoast.showToast(
-        msg: 'Appointment booked',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.white,
-        textColor: Colors.blue,
-      );
       String numofpatients = slotData['Number of Patients'].toString();
       int numberOfPatients = int.parse(numofpatients) ;
 

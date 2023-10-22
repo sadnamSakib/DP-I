@@ -110,41 +110,15 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
     fetchDoctorName(widget.doctorID);
   }
 
-  DateTime selectedDate = DateTime.now();
-  TimeOfDay selectedTime = TimeOfDay.now();
+  late DateTime selectedDate ;
+  late TimeOfDay selectedTime ;
   CalendarFormat _calendarFormat = CalendarFormat.week;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   TimeSlots? selectedTimeSlot;
   String? healthIssue;
   String? Day;
-  // Future<void> _selectDate(BuildContext context) async {
-  //   final DateTime? picked = await showDatePicker(
-  //     context: context,
-  //     initialDate: selectedDate,
-  //     firstDate: DateTime.now(),
-  //     lastDate: DateTime(2101),
-  //   );
-  //
-  //   if (picked != null && picked != selectedDate) {
-  //     setState(() {
-  //       selectedDate = picked;
-  //     });
-  //   }
-  // }
 
-  // Future<void> _selectTime(BuildContext context) async {
-  //   final TimeOfDay? picked = await showTimePicker(
-  //     context: context,
-  //     initialTime: selectedTime,
-  //   );
-  //
-  //   if (picked != null && picked != selectedTime) {
-  //     setState(() {
-  //       selectedTime = picked;
-  //     });
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -226,6 +200,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                         },
                         onDaySelected: (selectedDay, focusedDay) {
                           setState(() {
+                            selectedDate = selectedDay;
                             Day = DateFormat('EEEE').format(selectedDay);
                             fetchTimeSlots(selectedDay);
                             _selectedDay = selectedDay;
@@ -338,6 +313,14 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                         if (selectedDate != null && selectedTimeSlot != null && Day != null) {
                           BookAppointment().bookAppointment(widget.doctorID,FirebaseAuth.instance.currentUser?.uid ?? '',
                               selectedTimeSlot!.id , healthIssue ?? '' ,selectedDate, Day ?? '');
+                          Fluttertoast.showToast(
+                            msg: 'Appointment booked',
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: Colors.white,
+                            textColor: Colors.blue,
+                          );
                           print('Selected Date: $selectedDate');
                           print('Selected Time Slot: $Day');
                           print( selectedTimeSlot?.id);
