@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/UrineModel.dart';
@@ -310,6 +311,7 @@ class healthTrackerService {
         return Weight(beforeMeal: 0, afterMeal: 0);
       }
   }
+
   Future getUrineDataWithDate(String formattedDate) async {
 
     final docRef = kidneyDiseaseCollection.doc(uid);
@@ -329,6 +331,161 @@ class healthTrackerService {
       return [];
     }
   }
+
+  Future<List<BloodPressure>> getPastBpData(int days) async {
+    // Calculate the end date for the past week (today)
+    final now = DateTime.now();
+    var endFormattedDate = DateFormat('yyyy-MM-dd').format(now);
+
+    // Calculate the start date for the past week (7 days ago)
+    final startFormattedDate = DateFormat('yyyy-MM-dd').format(now.subtract(Duration(days: days)));
+
+    final docRef = kidneyDiseaseCollection.doc(uid);
+    List<BloodPressure> records = [];
+
+    while (endFormattedDate != startFormattedDate) {
+      final docSnapshot = await docRef.collection('records').doc(endFormattedDate).get();
+
+      if (docSnapshot.exists && docSnapshot.data() != null && docSnapshot.data()!['BP'] != null) {
+        for (var record in docSnapshot.data()!['BP']) {
+          records.add(BloodPressure(
+            systolic: record['systolic'],
+            diastolic: record['diastolic'],
+            time: record['time'],
+          ));
+        }
+      }
+
+      // Decrement the date to get data for the previous day
+      final currentDate = DateFormat('yyyy-MM-dd').parse(endFormattedDate);
+      final previousDate = currentDate.subtract(Duration(days: 1));
+      endFormattedDate = DateFormat('yyyy-MM-dd').format(previousDate);
+    }
+
+    return records;
+  }
+
+  Future<List<Urine>> getPastUrineData(int days) async {
+    // Calculate the end date for the past week (today)
+    final now = DateTime.now();
+    var endFormattedDate = DateFormat('yyyy-MM-dd').format(now);
+
+    // Calculate the start date for the past week (7 days ago)
+    final startFormattedDate = DateFormat('yyyy-MM-dd').format(now.subtract(Duration(days: days)));
+
+    final docRef = kidneyDiseaseCollection.doc(uid);
+    List<Urine> records = [];
+
+    while (endFormattedDate != startFormattedDate) {
+      final docSnapshot = await docRef.collection('records').doc(endFormattedDate).get();
+
+      if (docSnapshot.exists && docSnapshot.data() != null && docSnapshot.data()!['urine'] != null) {
+        for (var record in docSnapshot.data()!['urine']) {
+          records.add(Urine(
+            volume: record['volume'],
+            color: record['color'],
+            time: record['time'],
+          ));
+        }
+      }
+
+      // Decrement the date to get data for the previous day
+      final currentDate = DateFormat('yyyy-MM-dd').parse(endFormattedDate);
+      final previousDate = currentDate.subtract(Duration(days: 1));
+      endFormattedDate = DateFormat('yyyy-MM-dd').format(previousDate);
+    }
+
+    return records;
+  }
+
+  Future<List<Weight>> getPastWeightData(int days) async {
+    // Calculate the end date for the past week (today)
+    final now = DateTime.now();
+    var endFormattedDate = DateFormat('yyyy-MM-dd').format(now);
+
+    // Calculate the start date for the past week (7 days ago)
+    final startFormattedDate = DateFormat('yyyy-MM-dd').format(now.subtract(Duration(days: days)));
+
+    final docRef = kidneyDiseaseCollection.doc(uid);
+    List<Weight> records = [];
+
+    while (endFormattedDate != startFormattedDate) {
+      final docSnapshot = await docRef.collection('records').doc(endFormattedDate).get();
+
+      if (docSnapshot.exists && docSnapshot.data() != null && docSnapshot.data()!['weight'] != null) {
+        records.add(Weight(
+          beforeMeal: docSnapshot.data()!['weight']['beforeMeal'],
+          afterMeal: docSnapshot.data()!['weight']['afterMeal'],
+        ));
+      }
+
+      // Decrement the date to get data for the previous day
+      final currentDate = DateFormat('yyyy-MM-dd').parse(endFormattedDate);
+      final previousDate = currentDate.subtract(Duration(days: 1));
+      endFormattedDate = DateFormat('yyyy-MM-dd').format(previousDate);
+    }
+
+    return records;
+  }
+
+  Future<List<int>> getPastWaterData(int days) async {
+    // Calculate the end date for the past week (today)
+    final now = DateTime.now();
+    var endFormattedDate = DateFormat('yyyy-MM-dd').format(now);
+
+    // Calculate the start date for the past week (7 days ago)
+    final startFormattedDate = DateFormat('yyyy-MM-dd').format(now.subtract(Duration(days: days)));
+
+    final docRef = kidneyDiseaseCollection.doc(uid);
+    List<int> records = [];
+
+    while (endFormattedDate != startFormattedDate) {
+      final docSnapshot = await docRef.collection('records').doc(endFormattedDate).get();
+
+      if (docSnapshot.exists && docSnapshot.data() != null && docSnapshot.data()!['water'] != null) {
+        records.add(docSnapshot.data()!['water']);
+      }
+
+      // Decrement the date to get data for the previous day
+      final currentDate = DateFormat('yyyy-MM-dd').parse(endFormattedDate);
+      final previousDate = currentDate.subtract(Duration(days: 1));
+      endFormattedDate = DateFormat('yyyy-MM-dd').format(previousDate);
+    }
+
+    return records;
+  }
+
+  Future<List<double>> getPastProteinData(int days) async {
+    // Calculate the end date for the past week (today)
+    final now = DateTime.now();
+    var endFormattedDate = DateFormat('yyyy-MM-dd').format(now);
+
+    // Calculate the start date for the past week (7 days ago)
+    final startFormattedDate = DateFormat('yyyy-MM-dd').format(now.subtract(Duration(days: days)));
+
+    final docRef = kidneyDiseaseCollection.doc(uid);
+
+    print(docRef.toString());
+    List<double> records = [];
+
+    while (endFormattedDate != startFormattedDate) {
+      final docSnapshot = await docRef.collection('records').doc(endFormattedDate).get();
+      if (docSnapshot.exists && docSnapshot.data() != null && docSnapshot.data()!['protein'] != null) {
+        records.add(docSnapshot.data()!['protein'].toDouble());
+      }
+
+      // Decrement the date to get data for the previous day
+      final currentDate = DateFormat('yyyy-MM-dd').parse(endFormattedDate);
+      final previousDate = currentDate.subtract(Duration(days: 1));
+      endFormattedDate = DateFormat('yyyy-MM-dd').format(previousDate);
+    }
+
+    return records;
+  }
+
+
+
+
 
 
 
