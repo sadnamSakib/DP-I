@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:design_project_1/services/BookAppointement.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import '../viewAppointment/appointmentList.dart';
 import 'Slots.dart';
 
 class BookAppointmentPage extends StatefulWidget {
@@ -44,6 +46,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
         final _sessionType = slots['Session Type'];
         print(_StartTime);
         TimeSlots timeSlot = TimeSlots(
+          id: slots.id,
           startTime: _StartTime,
           endTime: _endTime,
           sessionType: _sessionType,
@@ -321,16 +324,23 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                     child: ElevatedButton(
 
                       onPressed: () {
-                        if (selectedDate != null && selectedTimeSlot != null ) {
-                          BookAppointment();
-                          // Add logic to book appointment
+                        if (selectedDate != null && selectedTimeSlot != null && Day != null) {
+                          BookAppointment().bookAppointment(widget.doctorID,FirebaseAuth.instance.currentUser?.uid ?? '',
+                              selectedTimeSlot!.id , healthIssue ?? '' ,selectedDate, Day ?? '');
                           print('Selected Date: $selectedDate');
                           print('Selected Time Slot: $Day');
-                          print('Health Issue: $healthIssue');
+                          print( selectedTimeSlot?.id);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  AppointmentListPage(),
+                            )
+                          );
                         }
                         else{
                           Fluttertoast.showToast(
-                            msg: 'Please select a day and slot to book an appointemnt',
+                            msg: 'Please select a day and slot to book an appointment',
                             toastLength: Toast.LENGTH_SHORT,
                             gravity: ToastGravity.BOTTOM,
                             timeInSecForIosWeb: 1,
