@@ -45,33 +45,44 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('View Appointments'),
+        backgroundColor: Colors.blue.shade900,
       ),
-      body: Column(
-        children: [
-          TableCalendar(
-            calendarFormat: CalendarFormat.week,
-            firstDay: DateTime.now(),
-            lastDay: DateTime.now().add(Duration(days: 6)),
-            focusedDay: _focusedDay,
-            selectedDayPredicate: (day) {
-              return isSameDay(_selectedDay, day);
-            },
-            onDaySelected: (selectedDay, focusedDay) {
-              setState(() {
-                _selectedDay = selectedDay;
-                _focusedDay = focusedDay;
-              });
-            },
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            // colors: [Colors.white70, Colors.blue.shade200],
+            colors: [Colors.white70, Colors.blue.shade200],
           ),
-          Expanded(
-            child: ListView(
-              children: <Widget>[
-                for (var appointment in appointments)
-                  AppointmentCard(appointment: appointment),
-              ],
+        ),
+        child: Column(
+          children: [
+            TableCalendar(
+              calendarFormat: CalendarFormat.week,
+              firstDay: DateTime.now(),
+              lastDay: DateTime.now().add(Duration(days: 6)),
+              focusedDay: _focusedDay,
+              selectedDayPredicate: (day) {
+                return isSameDay(_selectedDay, day);
+              },
+              onDaySelected: (selectedDay, focusedDay) {
+                setState(() {
+                  _selectedDay = selectedDay;
+                  _focusedDay = focusedDay;
+                });
+              },
             ),
-          ),
-        ],
+            Expanded(
+              child: ListView(
+                children: <Widget>[
+                  for (var appointment in appointments)
+                    AppointmentCard(appointment: appointment),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
