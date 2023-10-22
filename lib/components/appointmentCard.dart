@@ -18,8 +18,7 @@ class AppointmentCard extends StatelessWidget {
     return GestureDetector(
       onTap: () { Navigator.push(context,
         MaterialPageRoute(
-          builder: (context) => ViewAppointmentDetailsPage(appointment: appointment,
-              docname: docName),
+          builder: (context) => ViewAppointmentDetailsPage(appointment: appointment),
         ),
       );
       },

@@ -1,12 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../../../models/AppointmentModel.dart';
 class ViewAppointmentDetailsPage extends StatefulWidget {
   final Appointment appointment;
-  final String docname;
 
-  ViewAppointmentDetailsPage({super.key, required this.appointment,
-  required this.docname});
+  ViewAppointmentDetailsPage({super.key, required this.appointment});
 
 
   @override
@@ -15,6 +14,44 @@ class ViewAppointmentDetailsPage extends StatefulWidget {
 
 class _ViewAppointmentDetailsPageState extends State<ViewAppointmentDetailsPage> {
 
+  late  Map<String, dynamic>? doctorData ;
+  Future<void> fetchDocInfo()
+  async {
+    doctorData = null;
+    final doctorReference = FirebaseFirestore.instance.collection('doctors').doc(widget.appointment.doctorId);
+    final doctorSnapshot = await doctorReference.get();
+
+    if (doctorSnapshot.exists) {
+      setState(() {
+
+       doctorData = doctorSnapshot.data() as Map<String, dynamic>;
+      });
+
+    }
+  }
+
+
+  Future<void> fetchpatientInfo()
+  async {
+    doctorData = null;
+    final doctorReference = FirebaseFirestore.instance.collection('doctors').doc(widget.appointment.doctorId);
+    final doctorSnapshot = await doctorReference.get();
+
+    if (doctorSnapshot.exists) {
+      setState(() {
+
+        doctorData = doctorSnapshot.data() as Map<String, dynamic>;
+      });
+
+    }
+  }
+
+
+  @override
+  void initState()
+  {
+    fetchDocInfo();
+  }
   Appointment get appointment => widget.appointment;
   @override
   Widget build(BuildContext context) {
@@ -47,7 +84,7 @@ class _ViewAppointmentDetailsPageState extends State<ViewAppointmentDetailsPage>
               ),
               ListTile(
                 leading: Icon(Icons.person),
-                title: Text('Doctor ID: ${appointment.doctorId}'),
+                title: Text('Doctor Name: ${doctorData?['name']}'),
               ),
               ListTile(
                 leading: Icon(Icons.timer),
@@ -88,7 +125,7 @@ class _ViewAppointmentDetailsPageState extends State<ViewAppointmentDetailsPage>
               if (appointment.sessionType == 'Offline')
                 ListTile(
                   leading: Icon(Icons.location_on),
-                  title: Text('Chamber Address: '),
+                  title: Text('Chamber Address : ${doctorData?['chamberAddress']}'),
                 ),
 
             ],
