@@ -42,6 +42,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
     setState(() {
     for(final slots in dayScheduleQuery.docs)
       {
+        if(!(slots['Number of Patients']== '0')){
         final _StartTime = slots['Start Time'];
         final _endTime = slots['End Time'];
         final _sessionType = slots['Session Type'];
@@ -53,6 +54,9 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
           sessionType: _sessionType,
         );
         timeSlots.add(timeSlot);
+
+        }
+
       }
 
     });
@@ -337,12 +341,8 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                           print('Selected Date: $selectedDate');
                           print('Selected Time Slot: $Day');
                           print( selectedTimeSlot?.id);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  Home(),
-                            )
+                          Navigator.pop(
+                            context
                           );
                         }
                         else{

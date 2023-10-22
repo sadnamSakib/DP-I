@@ -47,6 +47,7 @@ class BookAppointment{
     try{
       await appointments.add(newAppointment.toMap());
 
+
       Fluttertoast.showToast(
         msg: 'Appointment booked',
         toastLength: Toast.LENGTH_SHORT,
@@ -55,6 +56,27 @@ class BookAppointment{
         backgroundColor: Colors.white,
         textColor: Colors.blue,
       );
+      String numofpatients = slotData['Number of Patients'].toString();
+      int numberOfPatients = int.parse(numofpatients) ;
+
+      numberOfPatients--;
+      print(numofpatients);
+
+      DocumentReference slotReference = FirebaseFirestore.instance.collection('Schedule').doc(doctorID)
+          .collection('Days').doc(day).collection('Slots').doc(slotID);
+
+      try{
+        print(slotReference);
+        await slotReference.update({'Number of Patients': numberOfPatients.toString()});
+
+      }catch(e)
+    {
+      print(e);
+    }
+
+      print(numberOfPatients); // Print the updated value
+
+
     }
     catch(e)
 
