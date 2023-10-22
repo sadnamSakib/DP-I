@@ -8,6 +8,7 @@ class Appointment {
   final String startTime;
   final String endTime;
   final String sessionType;
+  final String slotID;
 
 
   Appointment({
@@ -20,6 +21,7 @@ class Appointment {
     required this.startTime,
     required this.endTime,
     required this.sessionType,
+    required this.slotID,
   });
 
   Map<String, dynamic> toMap() {
@@ -33,6 +35,7 @@ class Appointment {
       'startTime': startTime,
       'endTime': endTime,
       'sessionType': sessionType,
+      'slotID' : slotID,
     };
   }
 }

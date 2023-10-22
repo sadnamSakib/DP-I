@@ -39,6 +39,7 @@ class BookAppointment{
       startTime: slotData['Start Time'],
       endTime: slotData['End Time'],
       sessionType: slotData['Session Type'],
+      slotID: slotID,
     );
 
 
