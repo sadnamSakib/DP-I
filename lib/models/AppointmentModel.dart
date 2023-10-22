@@ -21,4 +21,18 @@ class Appointment {
     required this.endTime,
     required this.sessionType,
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'patientId': patientId,
+      'patientName': patientName,
+      'isPaid': isPaid,
+      'issue': issue,
+      'doctorId': doctorId,
+      'date': date,
+      'startTime': startTime,
+      'endTime': endTime,
+      'sessionType': sessionType,
+    };
+  }
 }

@@ -87,7 +87,7 @@ class _HealthTrackersScreenState extends State<HealthTrackersScreen> {
                       () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => KidneyTrackerSummaryScreen()),
+                      MaterialPageRoute(builder: (context) => KidneyTrackerSummaryScreen(patientId : widget.patientId)),
                     );
                   },
                   child: Card(

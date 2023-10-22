@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../models/AppointmentModel.dart';
@@ -13,6 +15,49 @@ class ViewAppointmentDetailsPage extends StatefulWidget {
 
 class _ViewAppointmentDetailsPageState extends State<ViewAppointmentDetailsPage> {
 
+  late  Map<String, dynamic>? doctorData ;
+  late  Map<String, dynamic>? patientData ;
+
+  Future<void> fetchDocInfo()
+  async {
+    doctorData = null;
+    final doctorReference = FirebaseFirestore.instance.collection('doctors').doc(widget.appointment.doctorId);
+    final doctorSnapshot = await doctorReference.get();
+
+    if (doctorSnapshot.exists) {
+      setState(() {
+
+       doctorData = doctorSnapshot.data() as Map<String, dynamic>;
+      });
+
+    }
+  }
+
+
+  Future<void> fetchPatientInfo()
+  async {
+    patientData = null;
+    final patientReference = FirebaseFirestore.instance.collection('patients').
+    doc(FirebaseAuth.instance.currentUser?.uid ?? ''
+    );
+    final patientSnapshot = await patientReference.get();
+
+    if (patientSnapshot.exists) {
+      setState(() {
+
+        patientData = patientSnapshot.data() as Map<String, dynamic>;
+      });
+
+    }
+  }
+
+
+  @override
+  void initState()
+  {
+    fetchDocInfo();
+    fetchPatientInfo();
+  }
   Appointment get appointment => widget.appointment;
   @override
   Widget build(BuildContext context) {
@@ -41,11 +86,17 @@ class _ViewAppointmentDetailsPageState extends State<ViewAppointmentDetailsPage>
               ),
               ListTile(
                 leading: Icon(Icons.medical_services),
-                title: Text('Health Issue: ${appointment.issue}'),
+                title: Text('Health Issue: ${appointment.issue.isNotEmpty ? appointment.issue :  'No issue specified'}'),
+
+              ),
+              ListTile(
+                leading: Icon(Icons.health_and_safety),
+                title: Text('Pre existing medical conditions: ${patientData?['preExistingConditions']?.join(', ')}'),
+
               ),
               ListTile(
                 leading: Icon(Icons.person),
-                title: Text('Doctor ID: ${appointment.doctorId}'),
+                title: Text('Doctor Name: ${doctorData?['name']}'),
               ),
               ListTile(
                 leading: Icon(Icons.timer),
@@ -86,7 +137,7 @@ class _ViewAppointmentDetailsPageState extends State<ViewAppointmentDetailsPage>
               if (appointment.sessionType == 'Offline')
                 ListTile(
                   leading: Icon(Icons.location_on),
-                  title: Text('Chamber Address: '),
+                  title: Text('Chamber Address : ${doctorData?['chamberAddress']}'),
                 ),
 
             ],

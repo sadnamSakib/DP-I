@@ -1,8 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:design_project_1/screens/patientInterface/home/home.dart';
+import 'package:design_project_1/services/BookAppointement.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import '../viewAppointment/appointmentList.dart';
+import 'Slots.dart';
+
 class BookAppointmentPage extends StatefulWidget {
-  final String doctorID;
+  final doctorID;
 
   BookAppointmentPage({required this.doctorID});
 
@@ -11,50 +20,110 @@ class BookAppointmentPage extends StatefulWidget {
 }
 
 class _BookAppointmentPageState extends State<BookAppointmentPage> {
-  DateTime selectedDate = DateTime.now();
-  TimeOfDay selectedTime = TimeOfDay.now();
+
+  List<TimeSlots> timeSlots = [];
+
+  late DocumentReference doctorReference;
+  Map<String, dynamic> doctorData = {};
+  final docName='';
+  late DocumentReference docUserReference;
+  Map<String, dynamic> docUserData={};
+
+
+  Future<void> fetchTimeSlots(DateTime selectedDay) async {
+    timeSlots.clear();
+    final scheduleCollection = FirebaseFirestore.instance.collection(
+        'Schedule');
+    final scheduleQuery = scheduleCollection.doc(widget.doctorID);
+    final dayScheduleQuery = await scheduleQuery.collection('Days').doc(
+        DateFormat('EEEE').format(selectedDay)).collection('Slots').get();
+        print('hereeeeeeeeeeeeeeeee');
+
+    setState(() {
+    for(final slots in dayScheduleQuery.docs)
+      {
+        if(!(slots['Number of Patients']== '0')){
+        final _StartTime = slots['Start Time'];
+        final _endTime = slots['End Time'];
+        final _sessionType = slots['Session Type'];
+        print(_StartTime);
+        TimeSlots timeSlot = TimeSlots(
+          id: slots.id,
+          startTime: _StartTime,
+          endTime: _endTime,
+          sessionType: _sessionType,
+        );
+        timeSlots.add(timeSlot);
+
+        }
+
+      }
+
+    });
+  }
+    Future<void> fetchDoctorData(String doctorID) async {
+    doctorReference = FirebaseFirestore.instance.collection('doctors').doc(doctorID);
+
+
+    final doctorSnapshot = await doctorReference.get();
+
+    if (doctorSnapshot.exists) {
+      setState(() {
+        doctorData = doctorSnapshot.data() as Map<String, dynamic>;
+      });
+    }
+  }
+
+  Future<void> fetchDoctorName(String doctorID) async {
+    docUserReference = FirebaseFirestore.instance.collection('users').doc(doctorID);
+
+    final doctUserSnapshot = await docUserReference.get();
+
+    if (doctUserSnapshot.exists) {
+      // Document with the specified doctorID exists in Firestore
+      // You can access its data, including the 'name' property.
+      docUserData = doctUserSnapshot.data() as Map<String, dynamic>;
+      print(docUserData['name']);
+
+    } else {
+      // Document with the specified doctorID does not exist in Firestore
+      // Handle this case as needed
+      print('Document does not exist');
+    }
+    final docUserSnapshot = await docUserReference.get();
+
+    if (docUserSnapshot.exists) {
+      setState(() {
+        docUserData = docUserSnapshot.data() as Map<String, dynamic>;
+        print(docUserData['name']);
+        print('vvvvvvvvvvvvvvvvvvvvvvv');
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    print(widget.doctorID);
+    fetchDoctorData(widget.doctorID);
+
+    fetchDoctorName(widget.doctorID);
+  }
+
+  late DateTime selectedDate ;
+  late TimeOfDay selectedTime ;
   CalendarFormat _calendarFormat = CalendarFormat.week;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
-  List<String> timeSlots = [
-    '9:00 AM - 10:00 AM',
-    '10:00 AM - 11:00 AM',
-    '2:00 PM - 3:00 PM',
-    // Add more time slots as needed
-  ];
-  String? selectedTimeSlot;
+  TimeSlots? selectedTimeSlot;
   String? healthIssue;
-  // Future<void> _selectDate(BuildContext context) async {
-  //   final DateTime? picked = await showDatePicker(
-  //     context: context,
-  //     initialDate: selectedDate,
-  //     firstDate: DateTime.now(),
-  //     lastDate: DateTime(2101),
-  //   );
-  //
-  //   if (picked != null && picked != selectedDate) {
-  //     setState(() {
-  //       selectedDate = picked;
-  //     });
-  //   }
-  // }
+  String? Day;
 
-  // Future<void> _selectTime(BuildContext context) async {
-  //   final TimeOfDay? picked = await showTimePicker(
-  //     context: context,
-  //     initialTime: selectedTime,
-  //   );
-  //
-  //   if (picked != null && picked != selectedTime) {
-  //     setState(() {
-  //       selectedTime = picked;
-  //     });
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return
+      Scaffold(
       appBar: AppBar(
         title: Text('Book Appointment'),
       ),
@@ -80,23 +149,31 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                         height: 150,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(0.0),
-                          image: DecorationImage(
+                          image: docUserData['profile'] != null
+                              ? DecorationImage(
+                            image: NetworkImage(docUserData['profile']),
+                            fit: BoxFit.cover,
+                          )
+                              : DecorationImage(
                             image: AssetImage('assets/images/doctor.png'),
                             fit: BoxFit.cover,
                           ),
                         ),
                       ),
+
                       SizedBox(width: 20),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Arpa', // Replace with doctor name
-                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
+                          // if (docUserData.isNotEmpty) // Render if docName is available
+                            Text(
+                              // 'as[pa',
+                              docUserData['name'] ?? 'Doctor Name', // Provide a default if the name is not available
+                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
                           SizedBox(height: 10),
                           Text(
-                            'Heart Specialist', // Replace with doctor speciality
+                            doctorData['specialization'] ?? 'Specilization', // Replace with doctor speciality
                             style: TextStyle(fontSize: 16),
                           ),
                         ],
@@ -123,6 +200,9 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                         },
                         onDaySelected: (selectedDay, focusedDay) {
                           setState(() {
+                            selectedDate = selectedDay;
+                            Day = DateFormat('EEEE').format(selectedDay);
+                            fetchTimeSlots(selectedDay);
                             _selectedDay = selectedDay;
                             _focusedDay = focusedDay;
                           });
@@ -138,9 +218,24 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                   SizedBox(height: 10),
                   Container(
                     height: 50,
-                    child: ListView(
+
+                    child: timeSlots.isEmpty
+                        ? Center(
+                      child: Text(
+                        "No slots available for the this Day",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                        ),
+                      ),
+                    )
+                        :
+                    ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      children: timeSlots.map((timeSlot) {
+                      itemCount: timeSlots.length,
+                      itemBuilder: (context, index) {
+                        final timeSlot = timeSlots[index];
+
                         return GestureDetector(
                           onTap: () {
                             setState(() {
@@ -151,24 +246,29 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                             margin: EdgeInsets.symmetric(horizontal: 5),
                             padding: EdgeInsets.all(10),
                             decoration: BoxDecoration(
-
-                              color: selectedTimeSlot == timeSlot ? Colors.blue.shade900 : Colors.grey.shade200,
+                              color: selectedTimeSlot == timeSlot
+                                  ? Colors.blue.shade900
+                                  : Colors.grey.shade200,
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  timeSlot,
+                                  '${timeSlot.startTime} - ${timeSlot.endTime}',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontSize: 12,
-                                    fontWeight: selectedTimeSlot == timeSlot ? FontWeight.bold : FontWeight.normal,
-                                    color: selectedTimeSlot == timeSlot ? Colors.white : Colors.black,
+                                    fontWeight: selectedTimeSlot == timeSlot
+                                        ? FontWeight.bold
+                                        : FontWeight.normal,
+                                    color: selectedTimeSlot == timeSlot
+                                        ? Colors.white
+                                        : Colors.black,
                                   ),
                                 ),
                                 Text(
-                                  'Online', // Add 'Online' or 'Offline' based on doctor availability along with timeslot
+                                  timeSlot.sessionType, // Add 'Online' or 'Offline' based on doctor availability along with timeslot
                                   style: TextStyle(
                                     color: Colors.red,
                                     fontWeight: FontWeight.bold,
@@ -178,9 +278,10 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                             ),
                           ),
                         );
-                      }).toList(),
+                      },
                     ),
-                  ),
+                  )
+,
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
                     child: Text(
@@ -191,6 +292,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                   SizedBox(height: 3),
                   TextField(
                     onChanged: (value) {
+                      print(healthIssue);
                       setState(() {
                         healthIssue = value;
                       });
@@ -208,11 +310,33 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                     child: ElevatedButton(
 
                       onPressed: () {
-                        if (selectedDate != null && selectedTimeSlot != null) {
-                          // Add logic to book appointment
+                        if (selectedDate != null && selectedTimeSlot != null && Day != null) {
+                          BookAppointment().bookAppointment(widget.doctorID,FirebaseAuth.instance.currentUser?.uid ?? '',
+                              selectedTimeSlot!.id , healthIssue ?? '' ,selectedDate, Day ?? '');
+                          Fluttertoast.showToast(
+                            msg: 'Appointment booked',
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: Colors.white,
+                            textColor: Colors.blue,
+                          );
                           print('Selected Date: $selectedDate');
-                          print('Selected Time Slot: $selectedTimeSlot');
-                          print('Health Issue: $healthIssue');
+                          print('Selected Time Slot: $Day');
+                          print( selectedTimeSlot?.id);
+                          Navigator.pop(
+                            context
+                          );
+                        }
+                        else{
+                          Fluttertoast.showToast(
+                            msg: 'Please select a day and slot to book an appointment',
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: Colors.white,
+                            textColor: Colors.red,
+                          );
                         }
                       },
                       style: ButtonStyle(
