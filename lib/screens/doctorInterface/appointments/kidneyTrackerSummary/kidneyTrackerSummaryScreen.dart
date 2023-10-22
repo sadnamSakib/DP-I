@@ -20,58 +20,7 @@ class KidneyTrackerSummaryScreen extends StatefulWidget {
 }
 
 class _KidneyTrackerSummaryScreenState extends State<KidneyTrackerSummaryScreen> {
-  List<BloodPressure> bloodPressureList = [];
 
-  List<Urine> urineList = [];
-  List<double> waterIntakeList = [];
-  List<Weight> weightList = [];
-
-  @override
-  void initState() {
-    super.initState();
-    getBloodPressureData();
-    getUrineData();
-    getWaterIntakeData();
-    getWeightData();
-  }
-
-  Future<void> getBloodPressureData() async {
-    List<BloodPressure> bpList =
-    await healthTrackerService(uid: widget.patientId).getPastBpData(7);
-
-    setState(() {
-      bloodPressureList = bpList;
-      print(bloodPressureList.toString());
-    });
-  }
-
-
-  Future<void> getUrineData() async {
-    List<Urine> u =
-    await healthTrackerService(uid: widget.patientId).getPastUrineData(7);
-    setState(() {
-      urineList = u;
-      print(urineList.toString());
-    });
-  }
-
-  Future<void> getWaterIntakeData() async {
-    List<int> waterIntakeData =
-    await healthTrackerService(uid: widget.patientId).getPastWaterData(7);
-    setState(() {
-      waterIntakeList = waterIntakeData.cast<double>();
-      print(waterIntakeList.toString());
-    });
-  }
-
-  Future<void> getWeightData() async {
-    List<Weight> weightData =
-    await healthTrackerService(uid: widget.patientId).getPastWeightData(7);
-    setState(() {
-      weightList = weightData;
-      print(weightList.toString());
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
