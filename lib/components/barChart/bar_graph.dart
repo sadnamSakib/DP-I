@@ -3,25 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 class BarGraph extends StatelessWidget {
-  final List weeklySummary;
+  final List <double> values1;
+  final List <double> values2;
+  final Color color;
   const BarGraph({super.key,
-    required this.weeklySummary,});
+    required this.values1, required this.values2 , this.color = Colors.blue});
 
   @override
   Widget build(BuildContext context) {
+    double maxSummaryValue = values1.isNotEmpty ? values1.reduce((a, b) => a > b ? a : b) : 0.0;
+    maxSummaryValue = maxSummaryValue + maxSummaryValue * 0.1;
     BarData myBarData = BarData(
-      sunAmount: weeklySummary[0],
-      monAmount: weeklySummary[1],
-      tueAmount: weeklySummary[2],
-      wedAmount: weeklySummary[3],
-      thuAmount: weeklySummary[4],
-      friAmount: weeklySummary[5],
-      satAmount: weeklySummary[6],
+      values1 : values1,
+      values2 : values2,
     );
     myBarData.initializeBarData();
     return BarChart(
       BarChartData(
-        maxY: 100,
+        maxY: maxSummaryValue,
         minY: 0,
         gridData: FlGridData(show: false),
         borderData: FlBorderData(show: false),
@@ -38,13 +37,24 @@ class BarGraph extends StatelessWidget {
             x: data.x,
                 barRods: [
                   BarChartRodData(
-                    toY: data.y,
-                    color: Colors.blue,
-                    width: 20,
+
+                    toY: data.y1,
+                    color: color,
+                    width: 10,
                     borderRadius: BorderRadius.circular(10),
                     backDrawRodData: BackgroundBarChartRodData(
                       show: true,
-                      toY: 100,
+                      toY: maxSummaryValue,
+                      color: Colors.grey.shade300,
+                    ),
+                  ),
+                  BarChartRodData(
+                    toY: data.y2,
+                    color: Colors.red,
+                    width: 10,
+                    borderRadius: BorderRadius.circular(10),
+                    backDrawRodData: BackgroundBarChartRodData(
+                      show: true,
                       color: Colors.grey.shade300,
                     ),
                   ),
