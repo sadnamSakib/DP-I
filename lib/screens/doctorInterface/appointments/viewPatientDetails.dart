@@ -1,3 +1,4 @@
+import 'package:design_project_1/components/virtualConsultation/call.dart';
 import 'package:flutter/material.dart';
 import 'package:design_project_1/models/AppointmentModel.dart';
 import 'healthTrackerSummaryScreen.dart';
@@ -55,8 +56,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
           ElevatedButton(
             onPressed: () {
-              // Implement the logic to call the patient into a session.
-              // You can use the phone number from widget.appointment.phoneNumber.
+              Navigator.push(context, MaterialPageRoute(builder: (context) => CallScreen()));
             },
             child: Text('Call into Session'),
           ),
