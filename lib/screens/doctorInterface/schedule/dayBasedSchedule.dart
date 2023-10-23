@@ -194,6 +194,14 @@ void initState() {
 
 
                       Navigator.of(context).pop();
+                      Fluttertoast.showToast(
+                        msg: 'Schedule Added',
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.white,
+                        textColor: Colors.red,
+                      );
 
                       }
                       // initState();

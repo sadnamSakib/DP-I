@@ -140,16 +140,38 @@ List<Appointments> appointments=[];
   Widget _buildAppointmentsForDate(DateTime date) {
 
 
-    void addCanceledAppointment(String appointmentID, String slotID, String cancellationReason) async {
+    Future<void> addCanceledAppointment(String appointmentID, String slotID, String cancellationReason) async {
       final collection = FirebaseFirestore.instance.collection('DeletedAppointment');
 
       try {
-        await collection.add({
-          'appointmentID': appointmentID ?? '',
-          'slotID': slotID,
-          'cancellationReason': cancellationReason ?? '',
-        });
-        print('Canceled appointment added to DeletedAppointment collection.');
+        print('IN TRYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY');
+        // Fetch the appointment data from the "Appointments" collection
+        final appointmentReference = FirebaseFirestore.instance.collection('Appointments').doc(appointmentID);
+        final appointmentSnapshot = await appointmentReference.get();
+        final appointmentData = appointmentSnapshot.data();
+
+        if (appointmentData != null) {
+          print('NOT NULLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL');
+
+          // Extract the specific fields you need
+          final patientID = appointmentData['patientID'] as String?;
+          final appointmentDate = appointmentData['date'] as String?;
+          final issue = appointmentData['issue'] as String?;
+
+          // Store these extracted fields in the "DeletedAppointment" collection
+          await collection.add({
+            'appointmentID': appointmentID ?? '',
+            'slotID': slotID,
+            'cancellationReason': cancellationReason ?? '',
+            'patientID': patientID ?? '',
+            'appointmentDate': appointmentDate ?? '',
+            'issue': issue ?? '',
+          });
+
+          print('Canceled appointment added to DeletedAppointment collection.');
+        } else {
+          print('Document data is null, cannot add canceled appointment.');
+        }
       } catch (e) {
         print('Error adding canceled appointment: $e');
       }
@@ -187,8 +209,6 @@ List<Appointments> appointments=[];
 
 
     void _cancelAppointment(ScheduleItem schedule, String cancellationReason) {
-
-
       // Reference to the Appointments collection
       final appointmentsCollection = FirebaseFirestore.instance.collection('Appointments');
 
@@ -197,21 +217,24 @@ List<Appointments> appointments=[];
 
       // Use the query to retrieve matching documents
       query.get().then((querySnapshot) {
-        querySnapshot.docs.forEach((doc) {
+        if (querySnapshot.docs.isNotEmpty) {
+          querySnapshot.docs.forEach((doc) async {
+            // Reference to the document to delete
+            final docReference = appointmentsCollection.doc(doc.id);
 
-          // Reference to the document to delete
-          final docReference = appointmentsCollection.doc(doc.id);
+            await addCanceledAppointment(doc.id, schedule.ID, cancellationReason);
 
-          addCanceledAppointment(doc.id, schedule.ID, cancellationReason);
-
-          // Delete the document
-          docReference.delete().then((_) {
-            // The appointment has been deleted
-            print('Appointment with ID ${doc.id} has been deleted for the schedule with ID: ${schedule.ID}');
-          }).catchError((error) {
-            print('Error deleting appointment: $error');
+            // Delete the document
+            docReference.delete().then((_) {
+              // The appointment has been deleted
+              print('Appointment with ID ${doc.id} has been deleted for the schedule with ID: ${schedule.ID}');
+            }).catchError((error) {
+              print('Error deleting appointment: $error');
+            });
           });
-        });
+        } else {
+          print('No matching appointments found.');
+        }
       });
 
       deleteSlot(schedule.ID);
