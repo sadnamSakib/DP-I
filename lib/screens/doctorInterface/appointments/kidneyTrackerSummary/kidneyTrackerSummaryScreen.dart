@@ -43,58 +43,69 @@ class _KidneyTrackerSummaryScreenState extends State<KidneyTrackerSummaryScreen>
         title: Text('Kidney Tracker Summary'),
         backgroundColor: Colors.blue[900],
       ),
-      body: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  'Choose Duration Format:',
-                  style: TextStyle(fontSize: 20.0),
-                ),
-                SizedBox(width: 20.0),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 20.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    border: Border.all(color: Colors.grey),
-                  ),
-                  child: DropdownButton<String>(
-                    value: selectedDuration,
-                    onChanged: (String? newValue) {
-                      updateDays(newValue);
-                    },
-                    items: <String>[
-                      'Past Week',
-                      'Past Month',
-                      'Past Year',
-                    ].map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
-                ),
-              ],
-            ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.white70, Colors.blue.shade200],
           ),
-          Container(
-            height: 600,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: <Widget>[
-                UrineSummary(patientId: widget.patientId, days: durationMap[selectedDuration]),
-                WeightSummary(patientId: widget.patientId, days: durationMap[selectedDuration]),
-                WaterSummary(patientId: widget.patientId, days: durationMap[selectedDuration]),
-                BloodPressureSummary(patientId: widget.patientId, days: durationMap[selectedDuration]),
-                ProteinSummary(patientId: widget.patientId, days: durationMap[selectedDuration]),
-              ],
+        ),
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'Choose Duration Format:',
+                    style: TextStyle(fontSize: 20.0),
+                  ),
+                  SizedBox(width: 20.0),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 20.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      border: Border.all(color: Colors.grey),
+                    ),
+                    child: DropdownButton<String>(
+                      value: selectedDuration,
+                      onChanged: (String? newValue) {
+                        updateDays(newValue);
+                      },
+                      items: <String>[
+                        'Past Week',
+                        'Past Month',
+                        'Past Year',
+                      ].map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+            Container(
+              height: 600,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: <Widget>[
+                  ProteinSummary(patientId: widget.patientId, days: durationMap[selectedDuration]),
+                  BloodPressureSummary(patientId: widget.patientId, days: durationMap[selectedDuration]),
+                  WeightSummary(patientId: widget.patientId, days: durationMap[selectedDuration]),
+                  UrineSummary(patientId: widget.patientId, days: durationMap[selectedDuration]),
+                  WaterSummary(patientId: widget.patientId, days: durationMap[selectedDuration]),
+
+
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
 

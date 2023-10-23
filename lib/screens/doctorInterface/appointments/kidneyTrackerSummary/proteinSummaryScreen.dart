@@ -38,7 +38,10 @@ averageProtein = averageProteinIntake.toStringAsFixed(2);
     return Column(
           children: <Widget>[
             SizedBox(height: 20),
-            Text("Protein Summary"),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12.0),
+              child: Text("Protein Summary", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.red)),
+            ),
         proteinList.isEmpty // Check if the data is empty
             ? CircularProgressIndicator() // Show loading indicator
             : SizedBox(
@@ -50,7 +53,7 @@ averageProtein = averageProteinIntake.toStringAsFixed(2);
           ),
         ),
             SizedBox(height: 20),
-            Text("Average Protein Intake: $averageProtein g"),
+            Text("Average Protein Intake: $averageProtein g", style: TextStyle(fontSize: 20)),
     ],
       );
   }

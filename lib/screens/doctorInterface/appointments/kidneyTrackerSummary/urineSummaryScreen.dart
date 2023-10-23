@@ -64,7 +64,10 @@ class _UrineSummaryState extends State<UrineSummary> {
     return Column(
       children: <Widget>[
         SizedBox(height: 20),
-        Text("Urine Summary"),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 12.0),
+          child: Text("Urine Summary", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.red)),
+        ),
         if (urineList.isEmpty)
           CircularProgressIndicator()
         else
@@ -77,9 +80,9 @@ class _UrineSummaryState extends State<UrineSummary> {
             ),
           ),
         SizedBox(height: 20),
-        Text("Average Urine Volume: $averageUrineVolume"),
+        Text("Average Urine Volume: $averageUrineVolume", style: TextStyle(fontSize: 20)),
         SizedBox(height: 20),
-        Text("Most Frequent Colored Urine: $mostFrequentColor"),
+        Text("Most Frequent Colored Urine: $mostFrequentColor",style: TextStyle(fontSize: 20)),
       ],
     );
 

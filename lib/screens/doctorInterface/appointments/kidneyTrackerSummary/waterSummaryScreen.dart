@@ -37,7 +37,10 @@ class _WaterSummaryState extends State<WaterSummary> {
     return Column(
         children: <Widget>[
           SizedBox(height: 20),
-          Text("Water Intake Summary"),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12.0),
+            child: Text("Water Intake Summary", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.red)),
+          ),
           waterList.isEmpty // Check if the data is empty
               ? CircularProgressIndicator() // Show loading indicator
               : SizedBox(
@@ -49,7 +52,7 @@ class _WaterSummaryState extends State<WaterSummary> {
             ),
           ),
           SizedBox(height: 20),
-          Text("Average Water Intake: $averageWater ml "),
+          Text("Average Water Intake: $averageWater ml ", style: TextStyle(fontSize: 20)),
         ],
     );
   }

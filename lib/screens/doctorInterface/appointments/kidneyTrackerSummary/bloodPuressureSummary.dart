@@ -55,7 +55,10 @@ class _BloodPressureSummaryState extends State<BloodPressureSummary> {
     return Column(
         children: <Widget>[
           SizedBox(height: 20),
-          Text("Blood Pressure Summary"),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12.0),
+            child: Text("Blood Pressure Summary", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.red)),
+          ),
           systolicList.isEmpty // Check if the data is empty
               ? CircularProgressIndicator() // Show loading indicator
               : SizedBox(
@@ -67,10 +70,10 @@ class _BloodPressureSummaryState extends State<BloodPressureSummary> {
             ),
           ),
           SizedBox(height: 20),
-          Text("Highest Systolic: $highestSystolic mmHg"),
-          Text("Lowest Systolic: $lowestSystolic mmHg"),
-          Text("Highest Diastolic: $highestDiastolic mmHg"),
-          Text("Lowest Diastolic: $lowestDiastolic mmHg"),
+          Text("Highest Systolic: $highestSystolic mmHg",style: TextStyle(fontSize: 18)),
+          Text("Lowest Systolic: $lowestSystolic mmHg",style: TextStyle(fontSize: 18)),
+          Text("Highest Diastolic: $highestDiastolic mmHg", style: TextStyle(fontSize: 18)),
+          Text("Lowest Diastolic: $lowestDiastolic mmHg", style: TextStyle(fontSize: 18)),
         ],
     );
   }
