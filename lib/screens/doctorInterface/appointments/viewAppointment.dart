@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:design_project_1/screens/doctorInterface/appointments/viewPatientDetails.dart';
 import 'package:flutter/material.dart';
 
@@ -5,8 +6,8 @@ import '../../../models/AppointmentModel.dart';
 import 'AppointmentClass.dart';
 
 class ViewAppointmentScreen extends StatefulWidget {
-  final Appointments appointments;
-  const ViewAppointmentScreen({Key? key, required this.appointments}) : super(key: key);
+  final String slotID;
+  const ViewAppointmentScreen({Key? key, required this.slotID}) : super(key: key);
 
   @override
   _ViewAppointmentScreenState createState() => _ViewAppointmentScreenState();
@@ -14,6 +15,52 @@ class ViewAppointmentScreen extends StatefulWidget {
 
 class _ViewAppointmentScreenState extends State<ViewAppointmentScreen> {
   final List<Appointments> appointments = [];
+
+  Future<void> fetchValidAppointments() async {
+    appointments.clear(); // Clear the list to avoid duplicates
+
+    try {
+      final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('Appointments')
+          .where('slotID', isEqualTo: widget.slotID)
+          .get();
+
+      setState(() {
+      for (final doc in querySnapshot.docs) {
+        final Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?;
+
+        if (data != null) {
+          final appointment = Appointments(
+            id: doc.id,
+            patientId: data['patientId'],
+            patientName: data['patientName'] ?? '',
+            isPaid: data['isPaid'] ?? false,
+            issue: data['issue'] ?? '',
+            doctorId: data['doctorId'] ?? '',
+            date: data['date'] ?? '',
+            startTime: data['startTime'] ?? '',
+            endTime: data['endTime'] ?? '',
+            sessionType: data['sessionType'] ?? '',
+            slotID: data['slotID'] ?? '',
+          );
+
+          print('docccccccccccccccccccIddddddddddddddddddddddddddd');
+          print(doc.id);
+          appointments.add(appointment);
+        }
+      }
+
+      });
+    } catch (e) {
+      print('Error fetching valid appointments: $e');
+    }
+  }
+
+  @override
+  void initState()
+  {
+    fetchValidAppointments();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +78,7 @@ class _ViewAppointmentScreenState extends State<ViewAppointmentScreen> {
 
                 Text('Issue: ${appointment.issue}'),
             onTap: () {
-              // Navigator.push(context, MaterialPageRoute(builder: (context) => AppointmentDetailScreen(appointment: appointment)));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => AppointmentDetailScreen(appointment: appointment)));
             },
 
 

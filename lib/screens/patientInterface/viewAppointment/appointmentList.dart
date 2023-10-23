@@ -17,7 +17,7 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay.now();
   DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDay;
+  DateTime? _selectedDay = DateTime.now();
   List<Appointment> appointments = [];
 
   @override
@@ -55,8 +55,8 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
                 setState(() {
                   _selectedDay = selectedDay;
                   _focusedDay = focusedDay;
-                });
                 fetchAppointments(selectedDay);
+                });
 
               },
             ),
@@ -84,9 +84,15 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
   }
 
   void fetchAppointments(DateTime selectedDay) async{
+
+    if (selectedDay == null) {
+      return;
+    }
     appointments.clear();
-    // print('dayyyyyyyyyyyyyyyyyyyyyyyyyy');
+    print('dayyyyyyyyyyyyyyyyyyyyyyyyyy');
+    print(selectedDay);
     String Searchfordate = DateFormat('yyyy-MM-dd').format(selectedDay);
+    print(Searchfordate);
     CollectionReference appointmentsCollection = FirebaseFirestore.instance.collection('Appointments');
 
     String currentUserId = FirebaseAuth.instance.currentUser?.uid ?? '';
@@ -105,7 +111,7 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
           if (data != null) {
             print('List');
             return Appointment(
-              patientId: data['patientId'],
+              patientId: data['patientId']?? '',
               patientName: data['patientName'] ?? '',
               isPaid: data['isPaid'] ?? '',
               issue: data['issue'] ?? '',
@@ -114,7 +120,7 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
               startTime: data['startTime'] ?? '',
               endTime: data['endTime'] ?? '',
               sessionType: data['sessionType'] ?? '',
-              slotID: data['slotID'],
+              slotID: data['slotID'] ?? '',
             );
           } else {
             return Appointment(

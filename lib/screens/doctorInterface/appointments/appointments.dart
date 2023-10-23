@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:design_project_1/screens/doctorInterface/appointments/viewAppointment.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -24,17 +25,29 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
   DateTime? _selectedDay;
   late DateTime _firstDay;
   late DateTime _lastDay;
-DateTime? selectedDay;
+
 List<Appointments> appointments=[];
+  final currentDayOfWeek = DateTime.now().weekday; // Ensure DateTime.now() is not null
+  final daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+   // Adjust for 0-based index
+
+// Now you can use the searchForDay variable in your query
 
 
 
   List<ScheduleItem> dayItems = [];
+  @override
+  void initState() {
+  print(currentDayOfWeek);
+    super.initState();
+    _setWeekRange(DateTime.now());
+    fetchSchedule(daysOfWeek[currentDayOfWeek - 1]);
+  }
   // List<ScheduleDay> schedule = [];
 
-  void fetchSchedule(DateTime selectedDay) async {
+  void fetchSchedule(String selectedDay) async {
     print('hhhhhhhhhhhhhhhhhhhhhhhh');
-    String searchForDay = DateFormat('EEEE').format(selectedDay);
+    String searchForDay = selectedDay;
 
     print(searchForDay);
     dayItems.clear();
@@ -68,51 +81,9 @@ List<Appointments> appointments=[];
     }
     // return schedule;
   }
-  Future<List<Appointments>> fetchAppointments(selectedDay) async {
-    String searchForDate = DateFormat('yyyy-MM-dd').format(selectedDay);
-
-    final appointmentsCollection = FirebaseFirestore.instance.collection('Appointments');
-    final QuerySnapshot<Object?> querySnapshot = await appointmentsCollection
-        .where('doctorId', isEqualTo: FirebaseAuth.instance.currentUser?.uid ?? '')
-        .where('date', isEqualTo: searchForDate)
-        .get();
-
-    final appointments = querySnapshot.docs.map((doc) {
-      final data = doc.data() as Map<String, dynamic>;
-      return Appointments(
-        id: doc.id,
-        patientId: data['patientId'],
-        patientName: data['patientName'],
-        doctorId: data['doctorId'],
-        date: data['date'],
-        startTime: data['startTime'],
-        endTime: data['endTime'],
-        sessionType: data['sessionType'],
-          isPaid : data['isPaid'],
-         issue : data['issue'],
-        slotID: data['slotID'],
 
 
-      );
-    }).toList();
 
-    return appointments;
-  }
-
-  void getAndStoreAppointments(selectedDay) async {
-    final fetchedAppointments = await fetchAppointments(selectedDay);
-    setState(() {
-      appointments = fetchedAppointments;
-    });
-  }
-
-
-  @override
-  void initState() {
-    super.initState();
-    _setWeekRange(DateTime.now());
-    fetchSchedule(DateTime.now());
-  }
 
   void _setWeekRange(DateTime selectedDate) {
     _firstDay = DateTime(2000); // Change this to your desired start date
@@ -138,7 +109,7 @@ List<Appointments> appointments=[];
         onDaySelected: (selectedDay, focusedDay) {
           setState(() {
             selectedDay = selectedDay;
-            fetchSchedule(selectedDay);
+            fetchSchedule(DateFormat('EEEE').format(selectedDay));
             _selectedDay = selectedDay;
             _focusedDay = focusedDay;
           });
@@ -149,7 +120,13 @@ List<Appointments> appointments=[];
         ),
       ),
           Expanded(
-            child: _buildAppointmentsForDate(_selectedDay ?? DateTime.now()),
+            child: dayItems.isEmpty
+                ? Center(
+              child: SpinKitCircle(
+                color: Colors.blue, // Choose your desired color
+                size: 50.0, // Choose the size of the indicator
+              ),
+            ): _buildAppointmentsForDate(_selectedDay ?? DateTime.now()),
           ),
         ],
       ),
@@ -234,7 +211,7 @@ List<Appointments> appointments=[];
       });
 
       deleteSlot(schedule.ID);
-      fetchSchedule(DateTime.now());
+      fetchSchedule(DateFormat('EEEE').format(_selectedDay!));
     }
 
 
@@ -285,7 +262,7 @@ List<Appointments> appointments=[];
       children: dayItems
           .map((dayItem) => GestureDetector(
         onTap: () {
-          // Navigator.push(context, MaterialPageRoute(builder: (context) => ViewAppointmentScreen(appointment)));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => ViewAppointmentScreen(slotID : dayItem.ID)));
         },
         onLongPress: () {
           _showCancellationDialog(context, dayItem);

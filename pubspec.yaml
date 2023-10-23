@@ -54,6 +54,7 @@ dependencies:
   intl: ^0.18.0
   vertical_weight_slider: ^2.5.1
   fl_chart: ^0.64.0
+  flutter_spinkit: ^5.0.2
 
 
 
