@@ -1,7 +1,5 @@
-
-import 'package:design_project_1/components/virtualConsultation/call.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:design_project_1/screens/doctorInterface/appointments/AppointmentClass.dart';
-
 import 'package:flutter/material.dart';
 import 'healthTrackerSummaryScreen.dart';
 
@@ -17,11 +15,14 @@ class AppointmentDetailScreen extends StatefulWidget {
 }
 class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
-@override
-void initState()
-{
-  print(widget.appointment.id);
-}
+  Map<String, dynamic>? userData;
+  @override
+  void initState(){
+    print('INITSTATE OF ');
+    print(widget.appointment.id);
+
+    getUserInfo();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +33,7 @@ void initState()
         children: [
           ListTile(
             title: Text(widget.appointment.patientName),
-            subtitle: Text('Gender: Male'),
+            // subtitle: Text('Gender: Male'),
           ),
           ListTile(
             title: Text('Issue'),
@@ -40,11 +41,12 @@ void initState()
           ),
           ListTile(
             title: Text('Previous Issues'),
-            subtitle: Text("Hypertension,Asthma"),
-          ),
+            subtitle: Text(
+                userData?['preExistingConditions'].join(", ") ?? ''
+            ),          ),
           ListTile(
             title: Text('Phone Number'),
-            subtitle: Text('01791239573'),
+            subtitle: Text(userData?['phone'] ?? 'N/A'),
           ),
           ListTile(
             title: Text('Session Type'),
@@ -63,7 +65,8 @@ void initState()
 
           ElevatedButton(
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => CallScreen()));
+              // Implement the logic to call the patient into a session.
+              // You can use the phone number from widget.appointment.phoneNumber.
             },
             child: Text('Call into Session'),
           ),
@@ -71,4 +74,23 @@ void initState()
       ),
     );
   }
+
+  Future<void> getUserInfo() async {
+    userData?.clear();
+    try {
+      DocumentSnapshot document = await FirebaseFirestore.instance.collection('patients').doc(widget.appointment.patientId).get();
+      if (document.exists) {
+        setState(() {
+          userData = document.data() as Map<String, dynamic>;
+        });
+      } else {
+        print(widget.appointment.patientId);
+        return null;
+      }
+    } catch (e) {
+      print('Error retrieving user information: $e');
+      return null;
+    }
+  }
+
 }

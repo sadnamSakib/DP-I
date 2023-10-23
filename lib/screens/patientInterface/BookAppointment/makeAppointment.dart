@@ -105,7 +105,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
   void initState() {
     super.initState();
     print(widget.doctorID);
-    fetchDoctorData(widget.doctorID);
+    fetchTimeSlots(DateTime.now());
 
     fetchDoctorName(widget.doctorID);
   }
@@ -218,6 +218,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                   SizedBox(height: 10),
                   Container(
                     height: 50,
+
 
                     child: timeSlots.isEmpty
                         ? Center(
