@@ -1,3 +1,5 @@
+import 'package:design_project_1/screens/doctorInterface/appointments/kidneyTrackerSummary/proteinSummaryScreen.dart';
+import 'package:design_project_1/screens/doctorInterface/appointments/kidneyTrackerSummary/urineSummaryScreen.dart';
 import 'package:design_project_1/screens/doctorInterface/appointments/kidneyTrackerSummary/waterSummaryScreen.dart';
 import 'package:design_project_1/screens/doctorInterface/appointments/kidneyTrackerSummary/weightSummaryScreen.dart';
 import 'package:flutter/material.dart';
@@ -20,59 +22,20 @@ class KidneyTrackerSummaryScreen extends StatefulWidget {
 }
 
 class _KidneyTrackerSummaryScreenState extends State<KidneyTrackerSummaryScreen> {
-  List<BloodPressure> bloodPressureList = [];
+  String selectedDuration = 'Past Week';
+  Map<String, int> durationMap = {
+    'Past Week': 7,
+    'Past Month': 30,
+    'Past Year': 365,
+  };
 
-  List<Urine> urineList = [];
-  List<double> waterIntakeList = [];
-  List<Weight> weightList = [];
-
-  @override
-  void initState() {
-    super.initState();
-    getBloodPressureData();
-    getUrineData();
-    getWaterIntakeData();
-    getWeightData();
+  void updateDays(String? duration) {
+    if (duration != null) {
+      setState(() {
+        selectedDuration = duration;
+      });
+    }
   }
-
-  Future<void> getBloodPressureData() async {
-    List<BloodPressure> bpList =
-    await healthTrackerService(uid: widget.patientId).getPastBpData(7);
-
-    setState(() {
-      bloodPressureList = bpList;
-      print(bloodPressureList.toString());
-    });
-  }
-
-
-  Future<void> getUrineData() async {
-    List<Urine> u =
-    await healthTrackerService(uid: widget.patientId).getPastUrineData(7);
-    setState(() {
-      urineList = u;
-      print(urineList.toString());
-    });
-  }
-
-  Future<void> getWaterIntakeData() async {
-    List<int> waterIntakeData =
-    await healthTrackerService(uid: widget.patientId).getPastWaterData(7);
-    setState(() {
-      waterIntakeList = waterIntakeData.cast<double>();
-      print(waterIntakeList.toString());
-    });
-  }
-
-  Future<void> getWeightData() async {
-    List<Weight> weightData =
-    await healthTrackerService(uid: widget.patientId).getPastWeightData(7);
-    setState(() {
-      weightList = weightData;
-      print(weightList.toString());
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,15 +43,71 @@ class _KidneyTrackerSummaryScreenState extends State<KidneyTrackerSummaryScreen>
         title: Text('Kidney Tracker Summary'),
         backgroundColor: Colors.blue[900],
       ),
-      body: Center(
-        child:// Show loading indicator
-             SizedBox(
-          height: 400,
-          child: WeightSummary(
-            patientId: widget.patientId
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.white70, Colors.blue.shade200],
           ),
+        ),
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'Choose Duration Format:',
+                    style: TextStyle(fontSize: 20.0),
+                  ),
+                  SizedBox(width: 20.0),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 20.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      border: Border.all(color: Colors.grey),
+                    ),
+                    child: DropdownButton<String>(
+                      value: selectedDuration,
+                      onChanged: (String? newValue) {
+                        updateDays(newValue);
+                      },
+                      items: <String>[
+                        'Past Week',
+                        'Past Month',
+                        'Past Year',
+                      ].map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              height: 600,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: <Widget>[
+                  ProteinSummary(patientId: widget.patientId, days: durationMap[selectedDuration]),
+                  BloodPressureSummary(patientId: widget.patientId, days: durationMap[selectedDuration]),
+                  WeightSummary(patientId: widget.patientId, days: durationMap[selectedDuration]),
+                  UrineSummary(patientId: widget.patientId, days: durationMap[selectedDuration]),
+                  WaterSummary(patientId: widget.patientId, days: durationMap[selectedDuration]),
+
+
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
+
   }
 }
