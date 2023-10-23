@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:design_project_1/components/virtualConsultation/call.dart';
 import 'package:design_project_1/screens/doctorInterface/appointments/AppointmentClass.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'healthTrackerSummaryScreen.dart';
 
@@ -16,6 +17,14 @@ class AppointmentDetailScreen extends StatefulWidget {
 }
 class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
+  final String userId = FirebaseAuth.instance.currentUser!.uid;
+  final String userName = FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).get().toString();
+
+  String generateCallID() {
+    String callID = '';
+    callID = widget.appointment.patientId + widget.appointment.doctorId + widget.appointment.date + widget.appointment.startTime;
+    return callID;
+  }
   Map<String, dynamic>? userData;
   @override
   void initState(){
@@ -76,9 +85,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
           ElevatedButton(
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => CallScreen()));
-              // Implement the logic to call the patient into a session.
-              // You can use the phone number from widget.appointment.phoneNumber.
+              Navigator.push(context, MaterialPageRoute(builder: (context) => CallPage(callID: '123' , userID: userId , userName: userName)));
             },
             child: Text('Call into Session'),
           ),
