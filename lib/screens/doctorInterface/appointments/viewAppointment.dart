@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:design_project_1/screens/doctorInterface/appointments/viewPatientDetails.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
-import '../../../models/AppointmentModel.dart';
 import 'AppointmentClass.dart';
 
 class ViewAppointmentScreen extends StatefulWidget {
@@ -114,7 +114,7 @@ class _ViewAppointmentScreenState extends State<ViewAppointmentScreen> {
 
             onLongPress: () {
               // Implement cancellation logic here
-              // _showCancellationDialog(appointment);
+              _showCancellationDialog(appointment);
             },
           );
 
@@ -123,7 +123,7 @@ class _ViewAppointmentScreenState extends State<ViewAppointmentScreen> {
     );
   }
 
-  void _showCancellationDialog(Appointment appointment) {
+  void _showCancellationDialog(Appointments appointment) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -153,8 +153,16 @@ class _ViewAppointmentScreenState extends State<ViewAppointmentScreen> {
             TextButton(
               onPressed: () {
                 // Implement your cancellation logic here, using `appointment` and `cancellationReason`
-                _cancelAppointment(appointment);
+                _cancelAppointment(appointment,cancellationReason);
                 Navigator.of(context).pop(); // Close the dialog
+                Fluttertoast.showToast(
+                  msg: 'Appointment deleted',
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.white,
+                  textColor: Colors.blue,
+                );
               },
               child: Text('Confirm'),
             ),
@@ -164,8 +172,31 @@ class _ViewAppointmentScreenState extends State<ViewAppointmentScreen> {
     );
   }
 
-  void _cancelAppointment(Appointment appointment) {
-    // Implement cancellation logic, e.g., remove the appointment from the list
+  void _cancelAppointment(Appointments appointment, String cancellationReason) {
+
+    print(appointment.id);
+
+    final appointmentReference = FirebaseFirestore.instance.collection('Appointments').doc(appointment.id);
+    final collection = FirebaseFirestore.instance.collection('DeletedAppointment');
+
+
+     collection.add({
+      'appointmentID': appointment.id ?? '',
+      'slotID': widget.slotID,
+      'cancellationReason': cancellationReason ?? '',
+      'patientID': appointment.patientId ?? '',
+      'appointmentDate': appointment.date ?? '',
+      'issue': appointment.issue ?? '',
+    });
+    // Use the reference to delete the document
+    appointmentReference.delete().then((_) {
+      // The appointment has been deleted
+      print('Appointment with ID ${appointment.id} has been deleted.');
+    }).catchError((error) {
+      print('Error deleting appointment: $error');
+    });
+
+
     setState(() {
       appointments.remove(appointment);
     });
