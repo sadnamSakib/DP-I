@@ -43,8 +43,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             ),
           ),
           ListTile(
-            title: Text(widget.appointment.patientName),
-            // subtitle: Text('Gender: Male'),
+            title: Text('Patient name'),
+            subtitle: Text(widget.appointment.patientName),
           ),
           ListTile(
             title: Text('Issue'),

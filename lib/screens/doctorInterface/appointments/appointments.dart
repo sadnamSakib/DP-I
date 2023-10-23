@@ -51,7 +51,10 @@ List<Appointments> appointments=[];
     String searchForDay = selectedDay;
 
     print(searchForDay);
+    setState(() {
+
     dayItems.clear();
+    });
     final scheduleCollection = FirebaseFirestore.instance.collection(
         'Schedule');
     final userUID = FirebaseAuth.instance.currentUser?.uid;
