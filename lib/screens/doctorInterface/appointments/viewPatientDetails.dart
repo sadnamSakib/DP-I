@@ -76,9 +76,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
           ElevatedButton(
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => CallScreen()));
-              // Implement the logic to call the patient into a session.
-              // You can use the phone number from widget.appointment.phoneNumber.
+              Navigator.push(context, MaterialPageRoute(builder: (context) => CallPage(callID: '123')));
             },
             child: Text('Call into Session'),
           ),
