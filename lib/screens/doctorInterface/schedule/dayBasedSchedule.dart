@@ -483,41 +483,7 @@ void initState() {
               )
                 ,
             ),
-            // Expanded(
-              // child: ListView(
-              //   children: <Widget>[
-              //     for (final session in _sessions)
-              //       Card(
-              //           color: Colors.grey.shade200,
-              //           margin: EdgeInsets.all(8),
-              //           child: ListTile(
-              //             title: Text('Start Time: ${session.startTime.format(context)}',
-              //                 style : TextStyle(fontSize: 20)),
-              //             subtitle: Row(
-              //               children: [
-              //                 Text('End Time: ${session.endTime.format(context)}',
-              //                     style : TextStyle(fontSize: 20)),
-              //                 SizedBox(width: 8), // Add some spacing
-              //                 Text(session.sessionType, style: TextStyle(color: Colors.grey, fontSize: 20),),
-              //                 Text(session.NumberOfPatients, style: TextStyle(color: Colors.grey, fontSize: 20),),
-              //
-              //                 SizedBox(width: 10),
-              //                 Container(
-              //                   width: 20,
-              //                   height: 20,
-              //                   decoration: BoxDecoration(
-              //                     shape: BoxShape.circle,
-              //                     color: session.sessionType == "Online" ? Colors.blue : Colors.red,
-              //                   ),
-              //                 ),
-              //               ],
-              //             ),
-              //           )
-              //
-              //       ),
-              //   ],
-              // ),
-            // ),
+
           ],
         ),
         floatingActionButton: FloatingActionButton(
@@ -561,14 +527,4 @@ class ScheduleItem {
     required this.numberOfPatients,
   });
 }
-
-// class ScheduleDay {
-//   final String day;
-//   final List<ScheduleItem> items;
-//
-//   ScheduleDay({
-//     required this.day,
-//     required this.items,
-//   });
-// }
 
