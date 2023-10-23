@@ -1,10 +1,12 @@
+
 import 'package:design_project_1/components/virtualConsultation/call.dart';
+import 'package:design_project_1/screens/doctorInterface/appointments/AppointmentClass.dart';
+
 import 'package:flutter/material.dart';
-import 'package:design_project_1/models/AppointmentModel.dart';
 import 'healthTrackerSummaryScreen.dart';
 
 class AppointmentDetailScreen extends StatefulWidget {
-  final Appointment appointment;
+  final Appointments appointment;
 
   const AppointmentDetailScreen({Key? key, required this.appointment})
       : super(key: key);
@@ -13,8 +15,13 @@ class AppointmentDetailScreen extends StatefulWidget {
   State<AppointmentDetailScreen> createState() =>
       _AppointmentDetailScreenState();
 }
-
 class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
+
+@override
+void initState()
+{
+  print(widget.appointment.id);
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(

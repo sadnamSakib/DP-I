@@ -17,7 +17,7 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay.now();
   DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDay;
+  DateTime? _selectedDay = DateTime.now();
   List<Appointment> appointments = [];
 
   @override
@@ -55,8 +55,8 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
                 setState(() {
                   _selectedDay = selectedDay;
                   _focusedDay = focusedDay;
-                });
                 fetchAppointments(selectedDay);
+                });
 
               },
             ),
@@ -84,9 +84,15 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
   }
 
   void fetchAppointments(DateTime selectedDay) async{
+
+    if (selectedDay == null) {
+      return;
+    }
     appointments.clear();
-    // print('dayyyyyyyyyyyyyyyyyyyyyyyyyy');
+    print('dayyyyyyyyyyyyyyyyyyyyyyyyyy');
+    print(selectedDay);
     String Searchfordate = DateFormat('yyyy-MM-dd').format(selectedDay);
+    print(Searchfordate);
     CollectionReference appointmentsCollection = FirebaseFirestore.instance.collection('Appointments');
 
     String currentUserId = FirebaseAuth.instance.currentUser?.uid ?? '';
@@ -105,18 +111,18 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
           if (data != null) {
             print('List');
             return Appointment(
-              patientId: data['patientId'],
-              patientName: data['patientName'] ?? '', // Provide a default value if it's null
-              isPaid: data['isPaid'] ?? '', // Provide a default value if it's null
-              issue: data['issue'] ?? '', // Provide a default value if it's null
-              doctorId: data['doctorId'] ?? '', // Provide a default value if it's null
-              date: data['date'] ?? '', // Provide a default value if it's null
-              startTime: data['startTime'] ?? '', // Provide a default value if it's null
-              endTime: data['endTime'] ?? '', // Provide a default value if it's null
-              sessionType: data['sessionType'] ?? '', // Provide a default value if it's null
+              patientId: data['patientId']?? '',
+              patientName: data['patientName'] ?? '',
+              isPaid: data['isPaid'] ?? '',
+              issue: data['issue'] ?? '',
+              doctorId: data['doctorId'] ?? '',
+              date: data['date'] ?? '',
+              startTime: data['startTime'] ?? '',
+              endTime: data['endTime'] ?? '',
+              sessionType: data['sessionType'] ?? '',
+              slotID: data['slotID'] ?? '',
             );
           } else {
-            // Handle the case where data is null (optional)
             return Appointment(
               patientId: '',
               patientName: '',
@@ -127,6 +133,7 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
               startTime: '',
               endTime: '',
               sessionType: '',
+              slotID: ''
             );
           }
         }).toList();
