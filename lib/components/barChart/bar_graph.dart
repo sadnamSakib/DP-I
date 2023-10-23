@@ -5,9 +5,8 @@ import 'package:fl_chart/fl_chart.dart';
 class BarGraph extends StatelessWidget {
   final List <double> values1;
   final List <double> values2;
-  final Color color;
   const BarGraph({super.key,
-    required this.values1, required this.values2 , this.color = Colors.blue});
+    required this.values1, required this.values2});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +38,7 @@ class BarGraph extends StatelessWidget {
                   BarChartRodData(
 
                     toY: data.y1,
-                    color: color,
+                    color: Colors.green.shade900,
                     width: 10,
                     borderRadius: BorderRadius.circular(10),
                     backDrawRodData: BackgroundBarChartRodData(

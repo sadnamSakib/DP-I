@@ -428,7 +428,7 @@ class healthTrackerService {
     return records;
   }
 
-  Future<List<int>> getPastWaterData(int days) async {
+  Future<List<double>> getPastWaterData(int days) async {
     // Calculate the end date for the past week (today)
     final now = DateTime.now();
     var endFormattedDate = DateFormat('yyyy-MM-dd').format(now);
@@ -437,13 +437,13 @@ class healthTrackerService {
     final startFormattedDate = DateFormat('yyyy-MM-dd').format(now.subtract(Duration(days: days)));
 
     final docRef = kidneyDiseaseCollection.doc(uid);
-    List<int> records = [];
+    List<double> records = [];
 
     while (endFormattedDate != startFormattedDate) {
       final docSnapshot = await docRef.collection('records').doc(endFormattedDate).get();
 
       if (docSnapshot.exists && docSnapshot.data() != null && docSnapshot.data()!['water'] != null) {
-        records.add(docSnapshot.data()!['water']);
+        records.add(docSnapshot.data()!['water'].toDouble());
       }
 
       // Decrement the date to get data for the previous day
@@ -451,7 +451,7 @@ class healthTrackerService {
       final previousDate = currentDate.subtract(Duration(days: 1));
       endFormattedDate = DateFormat('yyyy-MM-dd').format(previousDate);
     }
-
+    print(records.toString());
     return records;
   }
 
