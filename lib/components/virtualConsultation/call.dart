@@ -12,8 +12,8 @@ class _CallScreenState extends State<CallScreen> {
   final AgoraClient client = AgoraClient(
     agoraConnectionData: AgoraConnectionData(
       appId: "17b8343681ff4c34b01c3b1a22cfd284",
-      channelName: "test",
-      tempToken: token,
+      channelName: "arpa",
+      // tempToken: Token.token,
     ),
     enabledPermission: [
       Permission.camera,

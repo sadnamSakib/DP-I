@@ -25,6 +25,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
   DateTime? _selectedDay;
   late DateTime _firstDay;
   late DateTime _lastDay;
+  bool _isLoading = true;
 
 List<Appointments> appointments=[];
   final currentDayOfWeek = DateTime.now().weekday; // Ensure DateTime.now() is not null
@@ -79,6 +80,9 @@ List<Appointments> appointments=[];
       });
 
     }
+    setState(() {
+      _isLoading = false;
+    });
     // return schedule;
   }
 
@@ -120,13 +124,13 @@ List<Appointments> appointments=[];
         ),
       ),
           Expanded(
-            child: dayItems.isEmpty
+            child: _isLoading
                 ? Center(
               child: SpinKitCircle(
                 color: Colors.blue, // Choose your desired color
                 size: 50.0, // Choose the size of the indicator
               ),
-            ): _buildAppointmentsForDate(_selectedDay ?? DateTime.now()),
+            ): dayItems.isEmpty? Text("No slots") : _buildAppointmentsForDate(_selectedDay ?? DateTime.now()),
           ),
         ],
       ),

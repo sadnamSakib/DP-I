@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:design_project_1/components/virtualConsultation/call.dart';
 import 'package:design_project_1/screens/doctorInterface/appointments/AppointmentClass.dart';
 import 'package:flutter/material.dart';
 import 'healthTrackerSummaryScreen.dart';
@@ -31,6 +32,16 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
       ),
       body: Column(
         children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: ElevatedButton(
+                onPressed: () {},
+                child: Text('Mark as Done'),
+              ),
+            ),
+          ),
           ListTile(
             title: Text(widget.appointment.patientName),
             // subtitle: Text('Gender: Male'),
@@ -65,6 +76,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
           ElevatedButton(
             onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => CallScreen()));
               // Implement the logic to call the patient into a session.
               // You can use the phone number from widget.appointment.phoneNumber.
             },
