@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:design_project_1/screens/patientInterface/BookAppointment/doctorsListPage.dart';
 import 'package:flutter/material.dart';
 import '../../../services/SearchBarDelegator.dart';
 import '../../../services/auth.dart';
+import '../../../services/categorySearchDelegate.dart';
 import '../../../utilities/doctorSpecialization.dart';
 import './makeAppointment.dart';
 
@@ -14,6 +16,13 @@ class DoctorFinder extends StatefulWidget {
 
 class _DoctorFinderState extends State<DoctorFinder> {
   final AuthService _auth = AuthService();
+  String selectedCategory = '';
+
+  void onSelectCategory(String category) {
+    setState(() {
+      selectedCategory = category;
+    });
+  }
 
   CollectionReference usersCollection =
   FirebaseFirestore.instance.collection('users');
@@ -75,11 +84,11 @@ class _DoctorFinderState extends State<DoctorFinder> {
                 onTap: () {
                   showSearch(
                     context: context,
-                    delegate: createSearchBarDelegate(),
+                    delegate: CategorySearchDelegate(specializations: specializations),
                   );
                 },
                 decoration: InputDecoration(
-                  labelText: 'Search by Doctor\'s Name',
+                  labelText: 'Search by Specialization',
                 ),
               ),
             ),
@@ -91,16 +100,19 @@ class _DoctorFinderState extends State<DoctorFinder> {
               ),
             ),
             Container(
-              height: 120,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: specializations.map((category) {
-                    return CategoryTile(category: category);
-                  }).toList(),
+                height: 120,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: specializations.map((category) {
+                      return CategoryTile(
+                        category: category,
+                        onSelectCategory: onSelectCategory, // Step 2: Pass the callback function
+                      );
+                    }).toList(),
+                  ),
                 ),
               ),
-            ),
             Padding(
               padding: EdgeInsets.all(20.0),
               child: Text(
@@ -187,26 +199,48 @@ class _DoctorFinderState extends State<DoctorFinder> {
   }
 }
 
-class CategoryTile extends StatelessWidget {
-  final String category;
 
-  CategoryTile({required this.category});
+class CategoryTile extends StatefulWidget {
+  final String category;
+  final Function(String) onSelectCategory; // Step 1: Declare a callback function
+  CategoryTile({required this.category, required this.onSelectCategory});
+
+  @override
+  State<CategoryTile> createState() => _CategoryTileState();
+}
+
+class _CategoryTileState extends State<CategoryTile> {
+   String selectedCategory = '';
+
+  void onSelectCategory(String category) {
+    setState(() {
+      selectedCategory = category;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 170,
-      height: 100,
-      margin: EdgeInsets.all(15.0),
-      padding: EdgeInsets.all(15.0),
-      decoration: BoxDecoration(
-        color: Colors.blue.shade800,
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      child: Text(
-        category,
-        style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.white),
-        textAlign: TextAlign.center,
+    return GestureDetector(
+      onTap:() {
+        onSelectCategory(widget.category);
+        print("Jalay bachina");
+        print(selectedCategory);
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>DoctorsListPage(selectedCategory: selectedCategory)));
+      },
+      child: Container(
+        width: 170,
+        height: 100,
+        margin: EdgeInsets.all(15.0),
+        padding: EdgeInsets.all(15.0),
+        decoration: BoxDecoration(
+          color: Colors.blue.shade800,
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Text(
+          widget.category,
+          style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.white),
+          textAlign: TextAlign.center,
+        ),
       ),
     );
   }
