@@ -1,4 +1,5 @@
-class Appointment {
+class Appointments {
+  final String id;
   final String patientId;
   final String patientName;
   final bool isPaid;
@@ -10,8 +11,8 @@ class Appointment {
   final String sessionType;
   final String slotID;
 
-
-  Appointment({
+  Appointments({
+    required this.id,
     required this.patientId,
     required this.patientName,
     required this.isPaid,
@@ -21,21 +22,6 @@ class Appointment {
     required this.startTime,
     required this.endTime,
     required this.sessionType,
-    required this.slotID,
+    required this.slotID
   });
-
-  Map<String, dynamic> toMap() {
-    return {
-      'patientId': patientId,
-      'patientName': patientName,
-      'isPaid': isPaid,
-      'issue': issue,
-      'doctorId': doctorId,
-      'date': date,
-      'startTime': startTime,
-      'endTime': endTime,
-      'sessionType': sessionType,
-      'slotID' : slotID,
-    };
-  }
 }

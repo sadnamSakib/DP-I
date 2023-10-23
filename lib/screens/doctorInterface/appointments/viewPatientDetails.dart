@@ -1,10 +1,10 @@
-import 'package:design_project_1/components/virtualConsultation/call.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:design_project_1/screens/doctorInterface/appointments/AppointmentClass.dart';
 import 'package:flutter/material.dart';
-import 'package:design_project_1/models/AppointmentModel.dart';
 import 'healthTrackerSummaryScreen.dart';
 
 class AppointmentDetailScreen extends StatefulWidget {
-  final Appointment appointment;
+  final Appointments appointment;
 
   const AppointmentDetailScreen({Key? key, required this.appointment})
       : super(key: key);
@@ -13,8 +13,16 @@ class AppointmentDetailScreen extends StatefulWidget {
   State<AppointmentDetailScreen> createState() =>
       _AppointmentDetailScreenState();
 }
-
 class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
+
+  Map<String, dynamic>? userData;
+  @override
+  void initState(){
+    print('INITSTATE OF ');
+    print(widget.appointment.id);
+
+    getUserInfo();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +33,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         children: [
           ListTile(
             title: Text(widget.appointment.patientName),
-            subtitle: Text('Gender: Male'),
+            // subtitle: Text('Gender: Male'),
           ),
           ListTile(
             title: Text('Issue'),
@@ -33,11 +41,12 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
           ),
           ListTile(
             title: Text('Previous Issues'),
-            subtitle: Text("Hypertension,Asthma"),
-          ),
+            subtitle: Text(
+                userData?['preExistingConditions'].join(", ") ?? ''
+            ),          ),
           ListTile(
             title: Text('Phone Number'),
-            subtitle: Text('01791239573'),
+            subtitle: Text(userData?['phone'] ?? 'N/A'),
           ),
           ListTile(
             title: Text('Session Type'),
@@ -56,7 +65,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
           ElevatedButton(
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => CallScreen()));
+              // Implement the logic to call the patient into a session.
+              // You can use the phone number from widget.appointment.phoneNumber.
             },
             child: Text('Call into Session'),
           ),
@@ -64,4 +74,23 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
       ),
     );
   }
+
+  Future<void> getUserInfo() async {
+    userData?.clear();
+    try {
+      DocumentSnapshot document = await FirebaseFirestore.instance.collection('patients').doc(widget.appointment.patientId).get();
+      if (document.exists) {
+        setState(() {
+          userData = document.data() as Map<String, dynamic>;
+        });
+      } else {
+        print(widget.appointment.patientId);
+        return null;
+      }
+    } catch (e) {
+      print('Error retrieving user information: $e');
+      return null;
+    }
+  }
+
 }

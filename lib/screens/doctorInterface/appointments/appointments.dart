@@ -1,7 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:design_project_1/screens/doctorInterface/appointments/viewAppointment.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:design_project_1/models/AppointmentModel.dart';
+
+import '../schedule/dayBasedSchedule.dart';
+import 'AppointmentClass.dart';
 
 class AppointmentScreen extends StatefulWidget {
   const AppointmentScreen({Key? key}) : super(key: key);
@@ -19,25 +26,64 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
   late DateTime _firstDay;
   late DateTime _lastDay;
 
+List<Appointments> appointments=[];
+  final currentDayOfWeek = DateTime.now().weekday; // Ensure DateTime.now() is not null
+  final daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+   // Adjust for 0-based index
+
+// Now you can use the searchForDay variable in your query
+
+
+
+  List<ScheduleItem> dayItems = [];
   @override
   void initState() {
+  print(currentDayOfWeek);
     super.initState();
     _setWeekRange(DateTime.now());
+    fetchSchedule(daysOfWeek[currentDayOfWeek - 1]);
   }
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime.now(),
-      lastDate: DateTime(2101),
-    );
+  // List<ScheduleDay> schedule = [];
 
-    if (picked != null && picked != selectedDate) {
+  void fetchSchedule(String selectedDay) async {
+    print('hhhhhhhhhhhhhhhhhhhhhhhh');
+    String searchForDay = selectedDay;
+
+    print(searchForDay);
+    dayItems.clear();
+    final scheduleCollection = FirebaseFirestore.instance.collection(
+        'Schedule');
+    final userUID = FirebaseAuth.instance.currentUser?.uid;
+    final scheduleQuery = scheduleCollection.doc(userUID);
+    final dayScheduleQuery = await scheduleQuery.collection('Days').doc(
+        searchForDay).collection('Slots').get();
+
+
+    for (final slots in dayScheduleQuery.docs) {
+      final id = slots.id;
+      final startTime = slots['Start Time'];
+      final endTime = slots['End Time'];
+      final sessionType = slots['Session Type'];
+      final numberOfPatients = slots['Number of Patients'];
+      print(id);
+      print(startTime);
       setState(() {
-        selectedDate = picked;
+        dayItems.add(ScheduleItem(
+          ID : id,
+          startTime: startTime,
+          endTime: endTime,
+          sessionType: sessionType,
+          numberOfPatients: numberOfPatients,
+        ));
+        // schedule.add(ScheduleDay(day: widget.selectedDay, items: dayItems));
       });
+
     }
+    // return schedule;
   }
+
+
+
 
   void _setWeekRange(DateTime selectedDate) {
     _firstDay = DateTime(2000); // Change this to your desired start date
@@ -62,6 +108,8 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
         },
         onDaySelected: (selectedDay, focusedDay) {
           setState(() {
+            selectedDay = selectedDay;
+            fetchSchedule(DateFormat('EEEE').format(selectedDay));
             _selectedDay = selectedDay;
             _focusedDay = focusedDay;
           });
@@ -72,7 +120,13 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
         ),
       ),
           Expanded(
-            child: _buildAppointmentsForDate(_selectedDay ?? DateTime.now()),
+            child: dayItems.isEmpty
+                ? Center(
+              child: SpinKitCircle(
+                color: Colors.blue, // Choose your desired color
+                size: 50.0, // Choose the size of the indicator
+              ),
+            ): _buildAppointmentsForDate(_selectedDay ?? DateTime.now()),
           ),
         ],
       ),
@@ -82,40 +136,87 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
   Widget _buildAppointmentsForDate(DateTime date) {
 
 
-    // Simulated list of appointments. Replace this with your actual data.
-    final List<Appointment> appointments = [
-      Appointment(
-          patientId: 'YmYYfIC919OAlJ9zV9eYhnyQ1Pt2',
-          patientName: 'John Doe',
-          issue: 'Fever',
-          date : '22-10-2023',
-          startTime : '10:00',
-          endTime : '10:30',
-          isPaid: true,
-          doctorId: '1',
-          sessionType: 'Online'
-      ),
-      Appointment(
-          patientId: '2',
-          patientName: 'Jane Doe',
-          issue: 'Headache',
-          date : '22-10-2023',
-          startTime : '10:00',
-          endTime : '10:30',
-          isPaid: false,
-          doctorId: '1',
-          sessionType: 'Online'
-      ),
-      // Add more appointments here
-    ];
+    void addCanceledAppointment(String appointmentID, String slotID, String cancellationReason) async {
+      final collection = FirebaseFirestore.instance.collection('DeletedAppointment');
 
-    void _cancelAppointment(Appointment appointment, String cancellationReason) {
-      setState(() {
-        appointments.remove(appointment);
-      });
+      try {
+        await collection.add({
+          'appointmentID': appointmentID ?? '',
+          'slotID': slotID,
+          'cancellationReason': cancellationReason ?? '',
+        });
+        print('Canceled appointment added to DeletedAppointment collection.');
+      } catch (e) {
+        print('Error adding canceled appointment: $e');
+      }
     }
 
-    void _showCancellationDialog(BuildContext context, Appointment appointment) {
+    Future<void> deleteSlot(String id) async {
+      print('looooooooooooooopppppppppppppppppppp');
+      String searchForDay = DateFormat('EEEE').format(_selectedDay!);
+
+      print(searchForDay);
+
+      try {
+        print(id);
+
+
+        final scheduleCollection = FirebaseFirestore.instance.collection('Schedule');
+        final userUID = FirebaseAuth.instance.currentUser?.uid;
+        final scheduleQuery = scheduleCollection.doc(userUID);
+        final slotReference = scheduleQuery
+            .collection('Days')
+            .doc(searchForDay)
+            .collection('Slots')
+            .doc(id);
+
+        await slotReference.delete();
+        setState(() {
+          dayItems.removeWhere((item) => item.ID == id);
+        });
+
+        print('Document with ID $id deleted successfully.');
+      } catch (e) {
+        print('Error deleting document: $e');
+      }
+    }
+
+
+    void _cancelAppointment(ScheduleItem schedule, String cancellationReason) {
+
+
+      // Reference to the Appointments collection
+      final appointmentsCollection = FirebaseFirestore.instance.collection('Appointments');
+
+      // Define a query to find the appointments with matching slotID
+      final query = appointmentsCollection.where('slotID', isEqualTo: schedule.ID);
+
+      // Use the query to retrieve matching documents
+      query.get().then((querySnapshot) {
+        querySnapshot.docs.forEach((doc) {
+
+          // Reference to the document to delete
+          final docReference = appointmentsCollection.doc(doc.id);
+
+          addCanceledAppointment(doc.id, schedule.ID, cancellationReason);
+
+          // Delete the document
+          docReference.delete().then((_) {
+            // The appointment has been deleted
+            print('Appointment with ID ${doc.id} has been deleted for the schedule with ID: ${schedule.ID}');
+          }).catchError((error) {
+            print('Error deleting appointment: $error');
+          });
+        });
+      });
+
+      deleteSlot(schedule.ID);
+      fetchSchedule(DateFormat('EEEE').format(_selectedDay!));
+    }
+
+
+    void _showCancellationDialog(BuildContext context, ScheduleItem scheduleItem) {
+
       String cancellationReason = '';
 
       showDialog(
@@ -144,8 +245,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
               ),
               TextButton(
                 onPressed: () {
-                  // Implement your cancellation logic here, using `appointment` and `cancellationReason`
-                  _cancelAppointment(appointment, cancellationReason);
+                  _cancelAppointment(scheduleItem, cancellationReason);
                   Navigator.of(context).pop(); // Close the dialog
                 },
                 child: Text('Confirm'),
@@ -159,40 +259,40 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
 
 
     return ListView(
-      children: appointments
-          .map((appointment) => GestureDetector(
+      children: dayItems
+          .map((dayItem) => GestureDetector(
         onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => ViewAppointmentScreen()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => ViewAppointmentScreen(slotID : dayItem.ID)));
         },
         onLongPress: () {
-          _showCancellationDialog(context, appointment);
+          _showCancellationDialog(context, dayItem);
         },
             child: Card(
         margin: EdgeInsets.all(8),
         child: ListTile(
             title: Text(
-              'Start Time: ${appointment.startTime}',
+              'Start Time: ${dayItem.startTime}',
               style: TextStyle(fontSize: 16), // Adjust the font size as needed
             ),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'End Time: ${appointment.endTime}',
+                  'End Time: ${dayItem.endTime}',
                   style: TextStyle(fontSize: 16), // Adjust the font size as needed
                 ),
                 Row(
                   children: [
                     Text(
-                      'Type: ${appointment.sessionType == 'Online' ? 'Online' : 'Offline'}',
+                      'Type: ${dayItem.sessionType == 'Online' ? 'Online' : 'Offline'}',
                       style: TextStyle(fontSize: 16), // Adjust the font size as needed
                     ),
                     SizedBox(width: 8),
                     Icon(
-                      appointment.sessionType == 'Online'
+                      dayItem.sessionType == 'Online'
                           ? Icons.circle
                           : Icons.circle,
-                      color: appointment.sessionType == 'Online'
+                      color: dayItem.sessionType == 'Online'
                           ? Colors.blue
                           : Colors.red,
                       size: 16, // Adjust the icon size as needed
@@ -213,14 +313,6 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
 
 
 
-  String _formatTime(DateTime time) {
-    String period = time.hour >= 12 ? 'PM' : 'AM';
-    int hour = time.hour > 12 ? time.hour - 12 : time.hour;
-    int minute = time.minute;
-    String formattedHour = hour.toString().padLeft(2, '0');
-    String formattedMinute = minute.toString().padLeft(2, '0');
-    return '$formattedHour:$formattedMinute $period';
-  }
 
 
 }
