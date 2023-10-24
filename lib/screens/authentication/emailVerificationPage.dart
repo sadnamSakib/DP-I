@@ -101,6 +101,11 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                 padding: const EdgeInsets
                     .symmetric(horizontal: 32.0),
                 child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.blue.shade900,
+                    onPrimary: Colors.white,
+                    fixedSize: const Size(100, 50),
+                  ),
                   child: const Text('Resend'),
                   onPressed: () async {
                     try {
