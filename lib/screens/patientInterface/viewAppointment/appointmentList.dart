@@ -40,7 +40,7 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             // colors: [Colors.white70, Colors.blue.shade200],
-            colors: [Colors.white70, Colors.blue.shade200],
+            colors: [Colors.white70, Colors.blue.shade100],
           ),
         ),
         child: Column(

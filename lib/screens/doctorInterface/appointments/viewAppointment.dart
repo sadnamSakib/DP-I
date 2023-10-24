@@ -66,59 +66,70 @@ class _ViewAppointmentScreenState extends State<ViewAppointmentScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.pink.shade900,
         title: Text('View Appointments'),
       ),
-      body: ListView.builder(
-        itemCount: appointments.length,
-        itemBuilder: (context, index) {
-          final appointment = appointments[index];
-          return ListTile(
-            title: Text(appointment.patientName),
-            subtitle:
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
 
-                Text('Issue: ${appointment.issue}'),
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => AppointmentDetailScreen(appointment: appointment)));
-            },
+            colors: [Colors.white70, Colors.pink.shade50],
+          ),
+        ),
+        child: ListView.builder(
+          itemCount: appointments.length,
+          itemBuilder: (context, index) {
+            final appointment = appointments[index];
+            return ListTile(
+              title: Text(appointment.patientName),
+              subtitle:
 
-
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                appointment.isPaid
-                    ? Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(right : 8.0),
-                      child: Text('Paid', style: TextStyle(color: Colors.green)),
-                    ),
-
-                    Icon(Icons.check_circle, color: Colors.green),
-
-                  ],
-                )
-                    : Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(right:8.0),
-                      child: Text('Not Paid', style: TextStyle(color: Colors.red)),
-                    ),
-                    Icon(Icons.cancel, color: Colors.red),
-
-                  ],
-                ),
-              ],
-            ),
+                  Text('Issue: ${appointment.issue}'),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => AppointmentDetailScreen(appointment: appointment)));
+              },
 
 
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  appointment.isPaid
+                      ? Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right : 8.0),
+                        child: Text('Paid', style: TextStyle(color: Colors.green)),
+                      ),
 
-            onLongPress: () {
-              // Implement cancellation logic here
-              _showCancellationDialog(appointment);
-            },
-          );
+                      Icon(Icons.check_circle, color: Colors.green),
 
-        },
+                    ],
+                  )
+                      : Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right:8.0),
+                        child: Text('Not Paid', style: TextStyle(color: Colors.red)),
+                      ),
+                      Icon(Icons.cancel, color: Colors.red),
+
+                    ],
+                  ),
+                ],
+              ),
+
+
+
+              onLongPress: () {
+                // Implement cancellation logic here
+                _showCancellationDialog(appointment);
+              },
+            );
+
+          },
+        ),
       ),
     );
   }

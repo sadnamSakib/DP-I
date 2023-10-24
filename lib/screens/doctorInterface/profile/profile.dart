@@ -71,6 +71,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.pink.shade900,
         title: Row(
           children: [
             Container(
@@ -107,12 +108,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       Container(
         decoration: BoxDecoration(
-          color: Colors.lightBlue.shade50,
-
-          image: DecorationImage(
-            image: AssetImage('assets/images/doc.png'), //
-            fit: BoxFit.fitHeight,
-            opacity: .2,
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Colors.white70, Colors.pink.shade100],
           ),
         ),
 

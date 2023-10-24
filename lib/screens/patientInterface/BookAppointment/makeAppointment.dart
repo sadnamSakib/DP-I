@@ -104,6 +104,32 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
     });
   }
 
+  String timeformatting(String Time) {
+
+
+    List<String> timeParts = Time.split(':');
+    int hours = int.parse(timeParts[0]);
+    int minutes = int.parse(timeParts[1]);
+
+    String period = hours >= 12 ? 'PM' : 'AM';
+    if (hours > 12) {
+      hours -= 12;
+    } else if (hours == 0) {
+      hours = 12;
+    }
+
+    String hour = hours.toString().padLeft(2,'0');
+    String minute = minutes.toString().padLeft(2,'0');
+
+    String formattedTime = '$hour:$minute $period';
+
+    print('HOURRRRR');
+    print("Formatted Time: $formattedTime");
+
+    return formattedTime;
+
+  }
+
 
 
 
@@ -172,6 +198,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
       Scaffold(
         appBar: AppBar(
           title: Text('Book Appointment'),
+          backgroundColor: Colors.blue.shade900,
         ),
         body: Center(
           child: Container(
@@ -179,7 +206,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [Colors.white70, Colors.blue.shade200],
+                colors: [Colors.white70, Colors.blue.shade100],
               ),
             ),
             child: Padding(
@@ -296,7 +323,8 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                             child: Container(
                               margin: EdgeInsets.symmetric(horizontal: 5),
                               padding: EdgeInsets.all(10),
-                              height: 800,
+                              height: 1000,
+                              width: 150,
                               decoration: BoxDecoration(
                                 color: selectedTimeSlot == timeSlot
                                     ? Colors.blue.shade900
@@ -304,10 +332,11 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Column(
+
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    '${timeSlot.startTime} - ${timeSlot.endTime}',
+                                    '${timeformatting(timeSlot.startTime)} - ${timeformatting(timeSlot.endTime)}',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontSize: 12,

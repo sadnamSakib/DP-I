@@ -44,80 +44,98 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.pink.shade900,
         title: Text('Appointment Details'),
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: ElevatedButton(
-                onPressed: () {
-                  markAsDone(widget.appointment.id);
-                  Fluttertoast.showToast(
-                    msg: 'Mark As Done',
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.BOTTOM,
-                    timeInSecForIosWeb: 1,
-                    backgroundColor: Colors.white,
-                    textColor: Colors.blue,
-                  );
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AppointmentScreen()),
-                  );
-                },
-                child: Text('Mark as Done'),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter, // 10% of the width, so there are ten blinds.
+            colors: [Colors.white70, Colors.pink.shade50], // whitish to gray// repeats the gradient over the canvas
+          )
+        ),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(Colors.teal.shade800),
+                  ),
+                  onPressed: () {
+                    markAsDone(widget.appointment.id);
+                    Fluttertoast.showToast(
+                      msg: 'Mark As Done',
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.white,
+                      textColor: Colors.blue,
+                    );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AppointmentScreen()),
+                    );
+                  },
+                  child: Text('Mark as Done'),
+                ),
               ),
             ),
-          ),
-          ListTile(
-            title: Text('Patient name'),
-            subtitle: Text(widget.appointment.patientName),
-          ),
-          ListTile(
-            title: Text('Issue'),
-            subtitle: Text(widget.appointment.issue),
-          ),
-          ListTile(
-            title: Text('Previous Issues'),
-            subtitle: Text(
-                userData?['preExistingConditions'].join(", ") ?? ''
-            ),          ),
-          ListTile(
-            title: Text('Phone Number'),
-            subtitle: Text(userData?['phone'] ?? 'N/A'),
-          ),
-          ListTile(
-            title: Text('Session Type'),
-            subtitle: Text(widget.appointment.sessionType),
-          ),
-          ListTile(
-            title: Text('Paid'),
-            subtitle: Text(widget.appointment.isPaid ? 'Yes' : 'No'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => HealthTrackersScreen(patientId: widget.appointment.patientId)));
-            },
-            child: Text('View Health Tracker Information'),
-          ),
+            ListTile(
+              title: Text('Patient name'),
+              subtitle: Text(widget.appointment.patientName),
+            ),
+            ListTile(
+              title: Text('Issue'),
+              subtitle: Text(widget.appointment.issue),
+            ),
+            ListTile(
+              title: Text('Previous Issues'),
+              subtitle: Text(
+                  userData?['preExistingConditions'].join(", ") ?? ''
+              ),          ),
+            ListTile(
+              title: Text('Phone Number'),
+              subtitle: Text(userData?['phone'] ?? 'N/A'),
+            ),
+            ListTile(
+              title: Text('Session Type'),
+              subtitle: Text(widget.appointment.sessionType),
+            ),
+            ListTile(
+              title: Text('Paid'),
+              subtitle: Text(widget.appointment.isPaid ? 'Yes' : 'No'),
+            ),
+            ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.teal.shade800),
+              ),
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => HealthTrackersScreen(patientId: widget.appointment.patientId)));
+              },
+              child: Text('View Health Tracker Information'),
+            ),
 
-           widget.appointment.sessionType == 'Online' ?  ElevatedButton(
+             widget.appointment.sessionType == 'Online' ?  ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.teal.shade800),
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CallPage(callID: generateCallID(), userID: userId, userName: userName)),
+                );
+              },
+              child: Text('Call into Session'),
+            ):
+                 Container()
 
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => CallPage(callID: generateCallID(), userID: userId, userName: userName)),
-              );
-            },
-            child: Text('Call into Session'),
-          ):
-               Container()
 
-
-        ],
+          ],
+        ),
       ),
     );
   }

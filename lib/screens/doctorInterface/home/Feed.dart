@@ -28,9 +28,11 @@ class _FeedState extends State<Feed> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.pink.shade900,
           title: Align(
             alignment: Alignment.centerLeft,
             child: Text('DocLinkr'),
+
           ),
           actions: [
             IconButton(
@@ -43,12 +45,10 @@ class _FeedState extends State<Feed> {
         ),
       body: Container(
         decoration: BoxDecoration(
-          color: Colors.lightBlue.shade50,
-
-          image: DecorationImage(
-            image: AssetImage('assets/images/doc.png'), // Replace with your image path
-            fit: BoxFit.fitHeight,
-            opacity: .2,
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter, // 10% of the width, so there are ten blinds.
+            colors: [Colors.white70, Colors.pink.shade50], // whitish to gray// repeats the gradient over the canvas
           ),
         ),
         child: Center(
@@ -69,24 +69,20 @@ class _FeedState extends State<Feed> {
                     final username = userData['name'] as String;
                     return Column(
                       children: [
-                        // Icon(
-                        //   Icons.medical_services,
-                        //   size: 100,
-                        //   color: Colors.grey,
-                        // ),
                         SizedBox(height: 20),
                         Text(
-                          'Welcome to DocLinkr $username.',
+                          'Welcome to DocLinkr,',
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
+                            color: Colors.grey.shade700,
                           ),
                           textAlign: TextAlign.center,
                         ),
                         SizedBox(height: 10),
                         Text(
-                          'Perfect Health Care for you',
-                          style: TextStyle(fontSize: 16,
+                          '$username',
+                          style: TextStyle(fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
                           textAlign: TextAlign.center,

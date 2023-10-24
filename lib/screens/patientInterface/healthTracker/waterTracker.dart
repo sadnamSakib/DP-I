@@ -1,6 +1,9 @@
+import 'package:design_project_1/screens/doctorInterface/appointments/kidneyTrackerSummary/kidneyTrackerSummaryScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:design_project_1/services/healthTrackerService.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import 'kidneyDiseaseTracker/kidneyTracker.dart';
 class WaterTrackerPage extends StatefulWidget {
   @override
   _WaterTrackerPageState createState() => _WaterTrackerPageState();
@@ -32,7 +35,7 @@ class _WaterTrackerPageState extends State<WaterTrackerPage> {
     });
     await healthTrackerService(uid: FirebaseAuth.instance.currentUser!.uid)
         .updateWaterData(totalMl);
-    loadWaterData();
+
   }
 
   void removeGlass() async {
@@ -43,7 +46,7 @@ class _WaterTrackerPageState extends State<WaterTrackerPage> {
       });
       await healthTrackerService(uid: FirebaseAuth.instance.currentUser!.uid)
           .updateWaterData(totalMl);
-      loadWaterData();
+
     }
 
   }
@@ -55,8 +58,10 @@ class _WaterTrackerPageState extends State<WaterTrackerPage> {
         backgroundColor: Colors.blue.shade900,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
+          onPressed: () async {
+            await healthTrackerService(uid: FirebaseAuth.instance.currentUser!.uid)
+                .updateWaterData(totalMl);
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const KidneyTracker() ));
           },
         ),
         title: Text('Water Tracker'),
@@ -70,6 +75,7 @@ class _WaterTrackerPageState extends State<WaterTrackerPage> {
             fit: BoxFit.cover,
           ),
           // Blurred overlay
+
           Container(
             color: Colors.white.withOpacity(0.5),
           ),
@@ -78,6 +84,10 @@ class _WaterTrackerPageState extends State<WaterTrackerPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text("Track today's water intake", style: TextStyle(fontSize: 20,color: Colors.grey.shade800)),
+                ),
                 AnimatedContainer(
                   duration: Duration(milliseconds: 500),
                   curve: Curves.easeInOut,
