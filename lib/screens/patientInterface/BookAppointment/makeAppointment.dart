@@ -89,8 +89,8 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
           setState(() {
           TimeSlots timeSlot = TimeSlots(
             id: slots.id,
-            startTime: timeformatting(_StartTime),
-            endTime: timeformatting(_endTime),
+            startTime: _StartTime,
+            endTime: _endTime,
             sessionType: _sessionType,
           );
           timeSlots.add(timeSlot);
@@ -336,7 +336,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    '${timeSlot.startTime} - ${timeSlot.endTime}',
+                                    '${timeformatting(timeSlot.startTime)} - ${timeformatting(timeSlot.endTime)}',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontSize: 12,

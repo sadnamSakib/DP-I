@@ -282,6 +282,10 @@ void initState() {
                   children: <Widget>[
                     if (_startTime == null)
                       ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.teal.shade800,
+                          onPrimary: Colors.white,
+                        ),
                         onPressed: () async {
                           startTime = await showTimePicker(
                             context: context,
@@ -297,6 +301,10 @@ void initState() {
                       ),
                     if (_endTime == null)
                       ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.teal.shade800,
+                          onPrimary: Colors.white,
+                        ),
                         onPressed: () async {
                           endTime = await showTimePicker(
                             context: context,
@@ -350,6 +358,10 @@ void initState() {
               ),
               actions: <Widget>[
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.teal.shade800,
+                    onPrimary: Colors.white,
+                  ),
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       if (_startTime == null ||
@@ -412,81 +424,90 @@ void initState() {
     return Scaffold(
         appBar: AppBar(
           title: Text('Day-Based Schedule'),
+          backgroundColor: Colors.pink.shade900,
         ),
-        body: Column(
-          children: [
-            Expanded(
-              child:
-              ListView(
-                children: <Widget>[
-                  for (final slots in dayItems)
-                    Material(
-                      elevation: 6,
-                      child: Card(
-                        color: Colors.blue.shade50,
-                        margin: EdgeInsets.all(8),
-                        child: ListTile(
-                          title: Text(
-                            'Day: ${widget.selectedDay}',
-                            style: TextStyle(fontSize: 20),
-                            textAlign: TextAlign.left, // Align title to the left
+        body: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                  colors: [Colors.white70, Colors.pink.shade100])),
+          child: Column(
+            children: [
+              Expanded(
+                child:
+                ListView(
+                  children: <Widget>[
+                    for (final slots in dayItems)
+                      Material(
+                        elevation: 6,
+                        child: Card(
+                          color: Colors.teal.shade50,
+                          margin: EdgeInsets.all(8),
+                          child: ListTile(
+                            title: Text(
+                              'Day: ${widget.selectedDay}',
+                              style: TextStyle(fontSize: 20),
+                              textAlign: TextAlign.left, // Align title to the left
+                            ),
+                            isThreeLine: true, // Make ListTile three-line
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start, // Align subtitle to the left
+                              children: [
+                                Text(
+                                  'Start Time: ${slots.startTime}',
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                                Text(
+                                  'End Time: ${slots.endTime}',
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                              ],
+                            ),
+                            contentPadding: EdgeInsets.all(16), // Add more padding to the ListTile
+                            onTap: () {
+                              _showUpdateSessionDialog(slots.ID);
+                            },
+                            onLongPress: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: Text('Confirm Deletion'),
+                                    content: Text('Are you sure you want to delete this slot?'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () {
+                                          // User confirmed deletion, call the deleteSlot function
+                                          deleteSlot(slots.ID); // Pass the ID of the document to delete
+                                          Navigator.of(context).pop(); // Close the dialog
+                                        },
+                                        child: Text('Delete'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop(); // Close the dialog without deletion
+                                        },
+                                        child: Text('Cancel'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
                           ),
-                          isThreeLine: true, // Make ListTile three-line
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start, // Align subtitle to the left
-                            children: [
-                              Text(
-                                'Start Time: ${slots.startTime}',
-                                style: TextStyle(fontSize: 20),
-                              ),
-                              Text(
-                                'End Time: ${slots.endTime}',
-                                style: TextStyle(fontSize: 20),
-                              ),
-                            ],
-                          ),
-                          contentPadding: EdgeInsets.all(16), // Add more padding to the ListTile
-                          onTap: () {
-                            _showUpdateSessionDialog(slots.ID);
-                          },
-                          onLongPress: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: Text('Confirm Deletion'),
-                                  content: Text('Are you sure you want to delete this slot?'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () {
-                                        // User confirmed deletion, call the deleteSlot function
-                                        deleteSlot(slots.ID); // Pass the ID of the document to delete
-                                        Navigator.of(context).pop(); // Close the dialog
-                                      },
-                                      child: Text('Delete'),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop(); // Close the dialog without deletion
-                                      },
-                                      child: Text('Cancel'),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          },
                         ),
                       ),
-                    ),
-                ],
-              )
-                ,
-            ),
+                  ],
+                )
+                  ,
+              ),
 
-          ],
+            ],
+          ),
         ),
         floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.teal.shade900,
           onPressed: _showAddSessionDialog,
           child: Icon(Icons.add),
         ),
