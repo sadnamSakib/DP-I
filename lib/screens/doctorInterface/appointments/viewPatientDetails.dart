@@ -21,11 +21,12 @@ class AppointmentDetailScreen extends StatefulWidget {
 class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
   final String userId = FirebaseAuth.instance.currentUser!.uid;
-  final String userName = FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).get().toString();
-
+  final  userDoc = FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).get();
+  Future username = FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).get().then((value) => value.data()!['name']);
+  String userName = '';
   String generateCallID() {
     String callID = '';
-    callID = widget.appointment.patientId + widget.appointment.doctorId + widget.appointment.date + widget.appointment.startTime;
+    callID = widget.appointment.doctorId;
     return callID;
   }
   Map<String, dynamic>? userData;
@@ -33,6 +34,9 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
   void initState(){
     print('INITSTATE OF ');
     print(widget.appointment.id);
+    setState(() {
+      username.then((value) => userName = value.toString());
+    });
 
     getUserInfo();
   }
@@ -102,7 +106,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
           ElevatedButton(
             onPressed: () {
-              // Navigator.push(context, MaterialPageRoute(builder: (context) => CallPage(callID: '123' , userID: userId , userName: userName)));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => CallPage(callID: generateCallID() , userID: userId , userName: userName)));
             },
             child: Text('Call into Session'),
           ),
