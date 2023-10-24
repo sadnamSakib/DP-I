@@ -116,6 +116,8 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
     if (doctorSnapshot.exists) {
       setState(() {
         doctorData = doctorSnapshot.data() as Map<String, dynamic>;
+      print(doctorData['specialization']);
+      print('SPECIALIZZZZZZZZZAAAAAAAAATTTTIONNNNNNNNNNNNNNNNNNNNN');
       });
     }
   }
@@ -130,6 +132,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
       // You can access its data, including the 'name' property.
       docUserData = doctUserSnapshot.data() as Map<String, dynamic>;
       print(docUserData['name']);
+
 
     } else {
       // Document with the specified doctorID does not exist in Firestore
@@ -154,6 +157,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
     fetchTimeSlots(DateTime.now());
 
     fetchDoctorName(widget.doctorID);
+    fetchDoctorData(widget.doctorID);
   }
 
   late DateTime selectedDate ;
@@ -218,8 +222,13 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                             ),
                           SizedBox(height: 10),
                           Text(
-                            doctorData['specialization'] ?? 'Specilization', // Replace with doctor speciality
+                            doctorData['specialization'] ?? '', // Replace with doctor speciality
                             style: TextStyle(fontSize: 16),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            doctorData['degrees']?.join(', ') ?? '', // Replace with doctor speciality
+                            style: TextStyle(fontSize: 12),
                           ),
                         ],
                       ),
