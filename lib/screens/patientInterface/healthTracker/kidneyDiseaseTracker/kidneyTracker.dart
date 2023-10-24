@@ -109,8 +109,7 @@ class _KidneyTrackerState extends State<KidneyTracker> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            // colors: [Colors.white70, Colors.blue.shade200],
-            colors: [Colors.white70, Colors.blue.shade200],
+            colors: [Colors.white70, Colors.blue.shade100],
           ),
         ),
         child: Column(
@@ -121,7 +120,7 @@ class _KidneyTrackerState extends State<KidneyTracker> {
               color: Colors.grey[200],
                 child: TableCalendar(
                   firstDay: kFirstDay,
-                  lastDay: kLastDay,
+                  lastDay: DateTime.now(),
                   focusedDay: _focusedDay,
                   calendarFormat: _calendarFormat,
                   selectedDayPredicate: (day) {

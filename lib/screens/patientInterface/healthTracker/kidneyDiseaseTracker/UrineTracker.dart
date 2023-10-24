@@ -54,7 +54,7 @@ class _UrineTrackerState extends State<UrineTracker> {
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [Colors.white70, Colors.blue.shade200],
+              colors: [Colors.white70, Colors.blue.shade100],
             ),
           ),
           child: Stack(

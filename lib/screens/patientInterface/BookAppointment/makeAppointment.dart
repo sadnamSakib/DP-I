@@ -172,6 +172,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
       Scaffold(
         appBar: AppBar(
           title: Text('Book Appointment'),
+          backgroundColor: Colors.blue.shade900,
         ),
         body: Center(
           child: Container(
@@ -179,7 +180,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [Colors.white70, Colors.blue.shade200],
+                colors: [Colors.white70, Colors.blue.shade100],
               ),
             ),
             child: Padding(

@@ -46,6 +46,7 @@ class _DoctorFinderState extends State<DoctorFinder> {
     return Scaffold(
 
       appBar: AppBar(
+        backgroundColor: Colors.blue.shade900,
         title: Align(
           alignment: Alignment.centerLeft,
           child: Text('DocLinkr'),
@@ -64,7 +65,7 @@ class _DoctorFinderState extends State<DoctorFinder> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.white70, Colors.blue.shade200],
+            colors: [Colors.white70, Colors.blue.shade100],
           ),
         ),
         child: Column(

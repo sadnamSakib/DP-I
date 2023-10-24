@@ -76,7 +76,7 @@ Future<void> saveWeight() async {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             // colors: [Colors.white70, Colors.blue.shade200],
-            colors: [Colors.white70, Colors.blue.shade200],
+            colors: [Colors.white70, Colors.blue.shade100],
           ),
         ),
         child: Column(

@@ -51,6 +51,7 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.blue.shade900,
         title: Text('Doctors in ${widget.selectedCategory}'),
       ),
       body: Column(

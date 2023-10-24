@@ -49,26 +49,23 @@ class _BloodPressureTrackerState extends State<BloodPressureTracker> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.white70, Colors.blue.shade300],
+            colors: [Colors.white70, Colors.blue.shade100],
           ),
         ),
         child: Stack(
           children: <Widget>[
             // Background image with blur
-            IgnorePointer(
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Image.asset(
-                  'assets/images/bpBackground.png', // Replace with your image path
-                  fit: BoxFit.fitWidth,
-
-                ),
-              ),
-            ),
+            // IgnorePointer(
+            //   child: Align(
+            //     alignment: Alignment.bottomCenter,
+            //     child: Image.asset(
+            //       'assets/images/bpBackground.png', // Replace with your image path
+            //       fit: BoxFit.fitWidth,
+            //
+            //     ),
+            //   ),
+            // ),
             // Blurred overlay
-            Container(
-              color: Colors.white.withOpacity(0.8),
-            ),
             Padding(
               padding: EdgeInsets.all(16.0),
               child: Column(
