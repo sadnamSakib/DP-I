@@ -59,8 +59,7 @@ class _WaterTrackerPageState extends State<WaterTrackerPage> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () async {
-            await healthTrackerService(uid: FirebaseAuth.instance.currentUser!.uid)
-                .updateWaterData(totalMl);
+
             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const KidneyTracker() ));
           },
         ),

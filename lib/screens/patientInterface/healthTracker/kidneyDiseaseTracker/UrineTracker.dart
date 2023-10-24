@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 import '../../../../models/UrineModel.dart';
 import '../../../../services/healthTrackerService.dart';
+import 'kidneyTracker.dart';
 class UrineTracker extends StatefulWidget {
   @override
   _UrineTrackerState createState() => _UrineTrackerState();
@@ -43,7 +44,7 @@ class _UrineTrackerState extends State<UrineTracker> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const KidneyTracker() ));
           },
         ),
       ),

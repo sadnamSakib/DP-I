@@ -157,6 +157,7 @@ class ProfileController with ChangeNotifier{
                 if (newName.isNotEmpty) {
                   try {
                     await users.doc(userUID).update({'name': newName});
+                    await patients.doc(userUID).update({'name': newName});
                     nameController.clear();
                     Fluttertoast.showToast(
                       msg: 'Username updated',
