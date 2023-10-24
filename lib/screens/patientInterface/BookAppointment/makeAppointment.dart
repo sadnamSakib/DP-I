@@ -89,8 +89,8 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
           setState(() {
           TimeSlots timeSlot = TimeSlots(
             id: slots.id,
-            startTime: _StartTime,
-            endTime: _endTime,
+            startTime: timeformatting(_StartTime),
+            endTime: timeformatting(_endTime),
             sessionType: _sessionType,
           );
           timeSlots.add(timeSlot);
@@ -102,6 +102,32 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
       }
 
     });
+  }
+
+  String timeformatting(String Time) {
+
+
+    List<String> timeParts = Time.split(':');
+    int hours = int.parse(timeParts[0]);
+    int minutes = int.parse(timeParts[1]);
+
+    String period = hours >= 12 ? 'PM' : 'AM';
+    if (hours > 12) {
+      hours -= 12;
+    } else if (hours == 0) {
+      hours = 12;
+    }
+
+    String hour = hours.toString().padLeft(2,'0');
+    String minute = minutes.toString().padLeft(2,'0');
+
+    String formattedTime = '$hour:$minute $period';
+
+    print('HOURRRRR');
+    print("Formatted Time: $formattedTime");
+
+    return formattedTime;
+
   }
 
 
@@ -297,7 +323,8 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                             child: Container(
                               margin: EdgeInsets.symmetric(horizontal: 5),
                               padding: EdgeInsets.all(10),
-                              height: 800,
+                              height: 1000,
+                              width: 150,
                               decoration: BoxDecoration(
                                 color: selectedTimeSlot == timeSlot
                                     ? Colors.blue.shade900
@@ -305,6 +332,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Column(
+
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(

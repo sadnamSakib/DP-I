@@ -101,6 +101,7 @@ List<Appointments> appointments=[];
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.pink.shade900,
         title: Text('Appointments'),
       ),
       body: Column(

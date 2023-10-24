@@ -53,7 +53,7 @@ class _HealthTrackersScreenState extends State<HealthTrackersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue.shade900,
+        backgroundColor: Colors.pink.shade900,
         title: Text('Disease Health Tracker'),
 
       ),
@@ -63,7 +63,7 @@ class _HealthTrackersScreenState extends State<HealthTrackersScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             // colors: [Colors.white70, Colors.blue.shade200],
-            colors: [Colors.white70, Colors.blue.shade200],
+            colors: [Colors.white70, Colors.blue.shade100],
           ),
         ),
         child: selectedDiseases.isEmpty
