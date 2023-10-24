@@ -74,6 +74,8 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
     setState(()  {
     for(final slots in dayScheduleQuery.docs)
       {
+        print(dayScheduleQuery.docs.length);
+        print(slots.id);
         timeSlots.clear();
         print('hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
 
@@ -395,7 +397,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                           print('Selected Date: $selectedDate');
                           print('Selected Time Slot: $Day');
                           print( selectedTimeSlot?.id);
-                          Navigator.pop(context);
+                          // Navigator.pop(context);
                         }
                         else{
                           Fluttertoast.showToast(
