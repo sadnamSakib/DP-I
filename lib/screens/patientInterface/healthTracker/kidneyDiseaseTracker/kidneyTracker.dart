@@ -161,7 +161,6 @@ class _KidneyTrackerState extends State<KidneyTracker> {
                 ),
               ),
 
-
             // Visualizer
             Container(
               height: 200, // Adjust the height as needed
@@ -188,6 +187,8 @@ class _KidneyTrackerState extends State<KidneyTracker> {
                 ],
               ),
             ),
+
+
 
 
             // Fitness Measures

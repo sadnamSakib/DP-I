@@ -66,6 +66,7 @@ class _ViewAppointmentScreenState extends State<ViewAppointmentScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.pink.shade900,
         title: Text('View Appointments'),
       ),
       body: ListView.builder(

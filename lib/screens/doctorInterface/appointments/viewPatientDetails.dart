@@ -44,6 +44,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.pink.shade800,
         title: Text('Appointment Details'),
       ),
       body: Column(
@@ -53,6 +54,9 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             child: Align(
               alignment: Alignment.centerRight,
               child: ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(Colors.teal.shade800),
+                ),
                 onPressed: () {
                   markAsDone(widget.appointment.id);
                   Fluttertoast.showToast(
@@ -98,6 +102,9 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             subtitle: Text(widget.appointment.isPaid ? 'Yes' : 'No'),
           ),
           ElevatedButton(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(Colors.teal.shade800),
+            ),
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) => HealthTrackersScreen(patientId: widget.appointment.patientId)));
             },
@@ -105,7 +112,9 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
           ),
 
            widget.appointment.sessionType == 'Online' ?  ElevatedButton(
-
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(Colors.teal.shade800),
+            ),
             onPressed: () {
               Navigator.push(
                 context,

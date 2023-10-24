@@ -71,6 +71,11 @@ class _FoodSelectionScreenState extends State<FoodSelectionScreen> {
               ),
               child: Column(
                 children: [
+
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text("Track today's protein intake", style: TextStyle(fontSize: 20,color: Colors.grey.shade800)),
+                  ),
                   Container(
                     alignment: Alignment.center,
                     padding: const EdgeInsets.all(16.0),
