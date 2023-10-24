@@ -33,7 +33,8 @@ class _SignUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('SIgn Up'),
+        title: const Text('Sign Up'),
+        backgroundColor: Colors.blue.shade900,
       ),
       body: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
@@ -99,6 +100,14 @@ class _SignUpState extends State<SignUp> {
                   ),
                   const SizedBox(height: 20.0),
                   ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.blue.shade900,
+                      onPrimary: Colors.white,
+                      fixedSize: const Size(100, 50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
 
@@ -123,7 +132,7 @@ class _SignUpState extends State<SignUp> {
 
                       }
                     },
-                    child: const Text('Register'),
+                    child: const Text('Register', style: TextStyle(fontSize: 18.0)),
                   ),
                   const SizedBox(height: 20.0),
                   Text(
@@ -137,12 +146,12 @@ class _SignUpState extends State<SignUp> {
                           mainAxisAlignment: MainAxisAlignment.center, // Aligns the children to the center horizontally
                           children: [
                             SizedBox(height: 20.0),
-                            Text('Already have an account?'),
+                            Text('Already have an account?', style: TextStyle(fontSize: 16.0)),
                             TextButton(
                               onPressed: () {
                                 widget.toggleView();
                               },
-                              child: Text('Sign In'),
+                              child: Text('Sign In', style: TextStyle(fontSize: 16.0)),
                             ),
                           ],
 
@@ -151,6 +160,7 @@ class _SignUpState extends State<SignUp> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children:[
                             //google button
+                             Text('Or, Sign up with', style: TextStyle(fontSize: 16.0)),
                            SquareTile(
                                onTap: () async {
                                  dynamic result = await _auth.registerWithGoogle();

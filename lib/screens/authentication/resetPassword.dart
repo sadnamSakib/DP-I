@@ -71,7 +71,14 @@ final TextEditingController emailController = TextEditingController();
                 ),
                 SizedBox(height: 20),
                 ElevatedButton(
-                  child: Text('Send Email'),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.blue.shade900,
+                    fixedSize: const Size(150, 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                  child: Text('Send Email', style: TextStyle(fontSize: 18.0)),
                   onPressed: () {
                     passwordReset();
                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Wrapper()));

@@ -76,8 +76,8 @@ class _ChangePasswordState extends State<ChangePassword> {
               SizedBox(height: 20),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.lightBlue, // Change the button color
-                  onPrimary: Colors.black, // Change the text color
+                  primary: Colors.blue.shade900,
+                  onPrimary: Colors.white ,// Change the text color
                   padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
                 ),
                 child: Text('Send Email'),

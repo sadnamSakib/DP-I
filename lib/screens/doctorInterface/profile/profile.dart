@@ -261,15 +261,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             },
                                             child: Text(
                                               'Change Password',
-                                              style: TextStyle(color: Colors.black), // Set the text color to black
+                                              style: TextStyle(color: Colors.white), // Set the text color to black
                                             ),
                                             style: ElevatedButton.styleFrom(
-                                              backgroundColor: Colors.white70,
+                                              backgroundColor: Colors.teal.shade800,
                                               padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
                                               textStyle: TextStyle(fontSize: 18),
                                             ).copyWith(
                                               minimumSize: MaterialStateProperty.all(Size(double.infinity, 60)),
-                                              backgroundColor: MaterialStateProperty.all(Colors.white70),
+                                              backgroundColor: MaterialStateProperty.all(Colors.teal.shade800),
                                             ),
                                           ),
                                         ),

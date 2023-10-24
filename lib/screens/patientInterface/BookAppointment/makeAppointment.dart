@@ -251,7 +251,11 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                             SizedBox(height: 10),
                             Text(
                               doctorData['degrees']?.join(', ') ?? '', // Replace with doctor speciality
-                              style: TextStyle(fontSize: 12),
+                              style: TextStyle(fontSize: 14),
+                            ),
+                            Text(
+                              doctorData['chamberAddress'] ?? '', // Replace with doctor speciality
+                              style: TextStyle(fontSize: 14),
                             ),
                           ],
                         ),
