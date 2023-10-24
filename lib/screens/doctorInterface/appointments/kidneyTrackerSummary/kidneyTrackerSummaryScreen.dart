@@ -41,14 +41,14 @@ class _KidneyTrackerSummaryScreenState extends State<KidneyTrackerSummaryScreen>
     return Scaffold(
       appBar: AppBar(
         title: Text('Kidney Tracker Summary'),
-        backgroundColor: Colors.blue[900],
+        backgroundColor: Colors.pink.shade900,
       ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.white70, Colors.blue.shade200],
+            colors: [Colors.white70, Colors.pink.shade50],
           ),
         ),
         child: Column(

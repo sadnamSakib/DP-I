@@ -63,7 +63,7 @@ class _HealthTrackersScreenState extends State<HealthTrackersScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             // colors: [Colors.white70, Colors.blue.shade200],
-            colors: [Colors.white70, Colors.blue.shade100],
+            colors: [Colors.white70, Colors.pink.shade50],
           ),
         ),
         child: selectedDiseases.isEmpty

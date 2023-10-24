@@ -265,108 +265,122 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     // else{
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue.shade900,
+        backgroundColor: Colors.pink.shade900,
         title: Text('Schedule'),
 
       ),
       body: selectedDays.isEmpty
-          ? Center(
+          ? Container(
+        decoration: BoxDecoration(
+        gradient: LinearGradient(
+        begin: Alignment.topRight,
+        end: Alignment.bottomLeft,
+        colors: [Colors.white70, Colors.pink.shade100])),
+            child: Center(
         child: Text(
-          'Add day of week to your schedule',
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 20, color: Colors.grey),
+            'Add day of week to your schedule',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 20, color: Colors.grey),
         ),
-      )
+      ),
+          )
           :
-      ListView.builder(
-        itemCount: selectedDays.length,
-        itemBuilder: (BuildContext context, int index) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SizedBox(
-              height: 100,
-              width: 100,
-              child: GestureDetector(
-                onLongPress: () {
-                  // Show delete option
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('Delete day?'),
-                        content: Text('Are you sure you want to delete?'),
-                        actions: <Widget>[
-                          TextButton(
-                            onPressed: () {
-                              setState(() {
-                                availableDays.add(selectedDays[index]);
-                                delete(selectedDays[index]);
-                                Fluttertoast.showToast(
-                                  msg: 'Schedule and associated appointments deleted',
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.BOTTOM,
-                                  timeInSecForIosWeb: 1,
-                                  backgroundColor: Colors.white,
-                                  textColor: Colors.blue,
-                                );
-                                // availableDays.add(selectedDays[index]);
-                                // selectedDays.removeAt(index);
-                              });
-                              Navigator.of(context).pop();
-                            },
-                            child: Text('Delete'),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text('Cancel'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          DayBasedScheduleScreen(selectedDay: selectedDays[index]),
-                    ),
-                  );
-                },
-                child: Card(
-                  elevation: 5,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            selectedDays[index], // Use bookedDays here
-                            style: TextStyle(
-                              fontSize: 20,
+      Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                colors: [Colors.white70, Colors.pink.shade100])),
+        child: ListView.builder(
+          itemCount: selectedDays.length,
+          itemBuilder: (BuildContext context, int index) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                height: 100,
+                width: 100,
+                child: GestureDetector(
+                  onLongPress: () {
+                    // Show delete option
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Delete day?'),
+                          content: Text('Are you sure you want to delete?'),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  availableDays.add(selectedDays[index]);
+                                  delete(selectedDays[index]);
+                                  Fluttertoast.showToast(
+                                    msg: 'Schedule and associated appointments deleted',
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.white,
+                                    textColor: Colors.blue,
+                                  );
+                                  // availableDays.add(selectedDays[index]);
+                                  // selectedDays.removeAt(index);
+                                });
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('Delete'),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('Cancel'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            DayBasedScheduleScreen(selectedDay: selectedDays[index]),
+                      ),
+                    );
+                  },
+                  child: Card(
+                    elevation: 5,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              selectedDays[index], // Use bookedDays here
+                              style: TextStyle(
+                                fontSize: 20,
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 50, // Adjust the height as needed
-                          width: 50, // Adjust the width as needed
-                          child: Icon(Icons.calendar_today),
-                        ),
-                      ],
+                          SizedBox(
+                            height: 50, // Adjust the height as needed
+                            width: 50, // Adjust the width as needed
+                            child: Icon(Icons.calendar_today),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
 
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blue.shade900,
+        backgroundColor: Colors.teal.shade900,
         onPressed: () {
           _openModal(context);
         },

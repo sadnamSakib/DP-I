@@ -104,39 +104,48 @@ List<Appointments> appointments=[];
         backgroundColor: Colors.pink.shade900,
         title: Text('Appointments'),
       ),
-      body: Column(
-        children: [
-        TableCalendar(
-        calendarFormat: CalendarFormat.week,
-        firstDay: DateTime.now(),
-        lastDay: DateTime.now().add(Duration(days: 6)),
-        focusedDay: _focusedDay,
-        selectedDayPredicate: (day) {
-          return isSameDay(_selectedDay, day);
-        },
-        onDaySelected: (selectedDay, focusedDay) {
-          setState(() {
-            selectedDay = selectedDay;
-            fetchSchedule(DateFormat('EEEE').format(selectedDay));
-            _selectedDay = selectedDay;
-            _focusedDay = focusedDay;
-          });
-        },
-        calendarStyle: CalendarStyle(
-          // Add background color property here
-          outsideDaysVisible: false, // Optional: hide the days outside the range
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter, // 10% of the width, so there are ten blinds.
+            colors: [Colors.white70, Colors.pink.shade50], // whitish to gray// repeats the gradient over the canvas
+          )
         ),
-      ),
-          Expanded(
-            child: _isLoading
-                ? Center(
-              child: SpinKitCircle(
-                color: Colors.blue, // Choose your desired color
-                size: 50.0, // Choose the size of the indicator
-              ),
-            ): dayItems.isEmpty? Text("No slots") : _buildAppointmentsForDate(_selectedDay ?? DateTime.now()),
+        child: Column(
+          children: [
+          TableCalendar(
+          calendarFormat: CalendarFormat.week,
+          firstDay: DateTime.now(),
+          lastDay: DateTime.now().add(Duration(days: 6)),
+          focusedDay: _focusedDay,
+          selectedDayPredicate: (day) {
+            return isSameDay(_selectedDay, day);
+          },
+          onDaySelected: (selectedDay, focusedDay) {
+            setState(() {
+              selectedDay = selectedDay;
+              fetchSchedule(DateFormat('EEEE').format(selectedDay));
+              _selectedDay = selectedDay;
+              _focusedDay = focusedDay;
+            });
+          },
+          calendarStyle: CalendarStyle(
+            // Add background color property here
+            outsideDaysVisible: false, // Optional: hide the days outside the range
           ),
-        ],
+        ),
+            Expanded(
+              child: _isLoading
+                  ? Center(
+                child: SpinKitCircle(
+                  color: Colors.blue, // Choose your desired color
+                  size: 50.0, // Choose the size of the indicator
+                ),
+              ): dayItems.isEmpty? Text("No slots") : _buildAppointmentsForDate(_selectedDay ?? DateTime.now()),
+            ),
+          ],
+        ),
       ),
     );
   }
