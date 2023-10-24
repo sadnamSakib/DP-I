@@ -160,6 +160,7 @@ class _SignUpState extends State<SignUp> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children:[
                             //google button
+                             Text('Or, Sign up with', style: TextStyle(fontSize: 16.0)),
                            SquareTile(
                                onTap: () async {
                                  dynamic result = await _auth.registerWithGoogle();
