@@ -104,12 +104,19 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             child: Text('View Health Tracker Information'),
           ),
 
-          ElevatedButton(
+           widget.appointment.sessionType == 'Online' ?  ElevatedButton(
+
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => CallPage(callID: generateCallID() , userID: userId , userName: userName)));
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CallPage(callID: generateCallID(), userID: userId, userName: userName)),
+              );
             },
             child: Text('Call into Session'),
-          ),
+          ):
+               Container()
+
+
         ],
       ),
     );
