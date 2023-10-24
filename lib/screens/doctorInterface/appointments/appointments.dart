@@ -30,9 +30,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
 List<Appointments> appointments=[];
   final currentDayOfWeek = DateTime.now().weekday; // Ensure DateTime.now() is not null
   final daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-   // Adjust for 0-based index
 
-// Now you can use the searchForDay variable in your query
 
 
 
@@ -43,6 +41,31 @@ List<Appointments> appointments=[];
     super.initState();
     _setWeekRange(DateTime.now());
     fetchSchedule(daysOfWeek[currentDayOfWeek - 1]);
+  }
+  String timeformatting(String Time) {
+
+
+    List<String> timeParts = Time.split(':');
+    int hours = int.parse(timeParts[0]);
+    int minutes = int.parse(timeParts[1]);
+
+    String period = hours >= 12 ? 'PM' : 'AM';
+    if (hours > 12) {
+      hours -= 12;
+    } else if (hours == 0) {
+      hours = 12;
+    }
+
+    String hour = hours.toString().padLeft(2,'0');
+    String minute = minutes.toString().padLeft(2,'0');
+
+    String formattedTime = '$hour:$minute $period';
+
+    print('HOURRRRR');
+    print("Formatted Time: $formattedTime");
+
+    return formattedTime;
+
   }
   // List<ScheduleDay> schedule = [];
 
@@ -311,14 +334,14 @@ List<Appointments> appointments=[];
         margin: EdgeInsets.all(8),
         child: ListTile(
             title: Text(
-              'Start Time: ${dayItem.startTime}',
+              'Start Time: ${timeformatting(dayItem.startTime)}',
               style: TextStyle(fontSize: 16), // Adjust the font size as needed
             ),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'End Time: ${dayItem.endTime}',
+                  'End Time: ${timeformatting(dayItem.endTime)}',
                   style: TextStyle(fontSize: 16), // Adjust the font size as needed
                 ),
                 Row(

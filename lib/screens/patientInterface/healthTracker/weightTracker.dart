@@ -4,6 +4,7 @@ import 'package:design_project_1/services/healthTrackerService.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../../models/weightModel.dart';
+import 'kidneyDiseaseTracker/kidneyTracker.dart';
 class WeightTracker extends StatefulWidget {
   const WeightTracker({super.key});
 
@@ -66,7 +67,7 @@ Future<void> saveWeight() async {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const KidneyTracker() ));
           },
         ),
       ),

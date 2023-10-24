@@ -3,6 +3,7 @@ import 'package:design_project_1/models/bloodPressureModel.dart';
 import 'package:design_project_1/screens/patientInterface/healthTracker/DataVisualizer.dart';
 import 'package:design_project_1/screens/patientInterface/healthTracker/foodSelectionScreen.dart';
 import 'package:design_project_1/screens/patientInterface/healthTracker/kidneyDiseaseTracker/utils.dart';
+import 'package:design_project_1/screens/patientInterface/healthTracker/tracker.dart';
 import 'package:design_project_1/screens/patientInterface/healthTracker/waterTracker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -102,6 +103,12 @@ class _KidneyTrackerState extends State<KidneyTracker> {
       appBar: AppBar(
         backgroundColor: Colors.blue.shade900,
         title: Text('Kidney Disease Tracker'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const Tracker() ));
+          },
+        ),
       ),
 
       body: Container(

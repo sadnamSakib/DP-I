@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../../services/healthTrackerService.dart';
+import 'kidneyDiseaseTracker/kidneyTracker.dart';
 class BloodPressureTracker extends StatefulWidget {
   @override
   _BloodPressureTrackerState createState() => _BloodPressureTrackerState();
@@ -43,6 +44,12 @@ class _BloodPressureTrackerState extends State<BloodPressureTracker> {
       appBar: AppBar(
         backgroundColor: Colors.blue.shade900,
         title: Text('Blood Pressure Tracker'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const KidneyTracker() ));
+          },
+        ),
       ),
       body: Container(
         decoration: BoxDecoration(

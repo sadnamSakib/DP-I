@@ -5,6 +5,7 @@ import 'package:design_project_1/services/foodSelection.dart';
 
 import '../../../models/foodModel.dart';
 import '../../../services/healthTrackerService.dart';
+import 'kidneyDiseaseTracker/kidneyTracker.dart';
 
 class FoodSelectionScreen extends StatefulWidget {
   const FoodSelectionScreen({super.key});
@@ -58,6 +59,12 @@ class _FoodSelectionScreenState extends State<FoodSelectionScreen> {
           appBar: AppBar(
             backgroundColor: Colors.blue.shade900,
             title: Text('Food Selection'),
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const KidneyTracker() ));
+              },
+            ),
           ),
           body: SingleChildScrollView(
             child: Container(

@@ -165,6 +165,7 @@ class ProfileController with ChangeNotifier{
             if (newName.isNotEmpty) {
               try {
                 await users.doc(userUID).update({'name': newName});
+                await doctors.doc(userUID).update({'name': newName});
                 nameController.clear();
                 Fluttertoast.showToast(
                   msg: 'Username updated',
@@ -187,55 +188,6 @@ class ProfileController with ChangeNotifier{
   }
 
 
-  // Future<void> showPhoneNumberDialogueAlert(BuildContext context, String phone) {
-  //
-  //   return showDialog(context: context,
-  //       builder: (context){
-  //         return AlertDialog(
-  //           title: Text('Update phone number'),
-  //           content: SingleChildScrollView(
-  //               child: Column(
-  //                 children: [
-  //                   TextField(
-  //                     controller: phoneController,
-  //                     decoration: InputDecoration(labelText: 'New phone number'),
-  //                   ),
-  //                 ],
-  //               )
-  //           ),
-  //           actions: [
-  //             TextButton(onPressed: (){
-  //               Navigator.pop(context);
-  //             }, child: Text('Cancel',
-  //                 style: TextStyle(color: Colors.red)),
-  //             ),
-  //
-  //             TextButton(onPressed: () async {
-  //               Navigator.pop(context);
-  //               String newphone = phoneController.text;
-  //               if (newphone.isNotEmpty) {
-  //                 try {
-  //                   await users.doc(userUID).update({'phone': newphone});
-  //                   phoneController.clear();
-  //                   Fluttertoast.showToast(
-  //                     msg: 'Phone number updated',
-  //                     toastLength: Toast.LENGTH_SHORT,
-  //                     gravity: ToastGravity.BOTTOM,
-  //                     timeInSecForIosWeb: 1,
-  //                     backgroundColor: Colors.white,
-  //                     textColor: Colors.blue,
-  //                   );
-  //                 } catch (error) {
-  //                   print('Error updating phone number: $error');
-  //
-  //                 }
-  //               }
-  //             },
-  //                 child: Text('OK')),
-  //           ],
-  //         );
-  //       });
-  // }
 
 
   Future<void> showPhoneNumberDialogueAlert(BuildContext context, String phone) {
