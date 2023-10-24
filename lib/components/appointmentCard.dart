@@ -15,7 +15,6 @@ class AppointmentCard extends StatelessWidget {
 
   String timeformatting(String Time) {
 
-
     List<String> timeParts = Time.split(':');
     int hours = int.parse(timeParts[0]);
     int minutes = int.parse(timeParts[1]);
