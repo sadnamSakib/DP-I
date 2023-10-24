@@ -69,14 +69,9 @@ class _FeedState extends State<Feed> {
                     final username = userData['name'] as String;
                     return Column(
                       children: [
-                        // Icon(
-                        //   Icons.medical_services,
-                        //   size: 100,
-                        //   color: Colors.grey,
-                        // ),
                         SizedBox(height: 20),
                         Text(
-                          'Welcome to DocLinkr $username.',
+                          'Welcome to DocLinkr',
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
@@ -85,8 +80,8 @@ class _FeedState extends State<Feed> {
                         ),
                         SizedBox(height: 10),
                         Text(
-                          'Perfect Health Care for you',
-                          style: TextStyle(fontSize: 16,
+                          '$username',
+                          style: TextStyle(fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
                           textAlign: TextAlign.center,

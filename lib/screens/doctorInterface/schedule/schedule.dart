@@ -299,6 +299,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                           TextButton(
                             onPressed: () {
                               setState(() {
+                                availableDays.add(selectedDays[index]);
                                 delete(selectedDays[index]);
                                 Fluttertoast.showToast(
                                   msg: 'Schedule and associated appointments deleted',
