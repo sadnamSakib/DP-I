@@ -52,6 +52,31 @@ class _DayBasedScheduleScreenState extends State<DayBasedScheduleScreen> {
     }
       // return schedule;
   }
+  String timeformatting(String Time) {
+
+
+    List<String> timeParts = Time.split(':');
+    int hours = int.parse(timeParts[0]);
+    int minutes = int.parse(timeParts[1]);
+
+    String period = hours >= 12 ? 'PM' : 'AM';
+    if (hours > 12) {
+      hours -= 12;
+    } else if (hours == 0) {
+      hours = 12;
+    }
+
+    String hour = hours.toString().padLeft(2,'0');
+    String minute = minutes.toString().padLeft(2,'0');
+
+    String formattedTime = '$hour:$minute $period';
+
+    print('HOURRRRR');
+    print("Formatted Time: $formattedTime");
+
+    return formattedTime;
+
+  }
 
 @override
 void initState() {
@@ -455,11 +480,11 @@ void initState() {
                               crossAxisAlignment: CrossAxisAlignment.start, // Align subtitle to the left
                               children: [
                                 Text(
-                                  'Start Time: ${slots.startTime}',
+                                  'Start Time: ${timeformatting(slots.startTime)}',
                                   style: TextStyle(fontSize: 20),
                                 ),
                                 Text(
-                                  'End Time: ${slots.endTime}',
+                                  'End Time: ${timeformatting(slots.endTime)}',
                                   style: TextStyle(fontSize: 20),
                                 ),
                               ],
