@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/UserModel.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:design_project_1/screens/authentication/doctorDetailsPage.dart' as doctordetails;
 import 'package:design_project_1/screens/authentication/patientDetailsPage.dart' as patientdetails;
@@ -31,7 +32,12 @@ class Wrapper extends StatelessWidget {
             stream: FirebaseFirestore.instance.collection('users').doc(user.uid).snapshots(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
-                return const CircularProgressIndicator();
+                return Center(
+                  child: SpinKitCircle(
+                    color: Colors.blue, // Choose your desired color
+                    size: 50.0, // Choose the size of the indicator
+                  ),
+                );
               }
 
               if (snapshot.hasError) {
@@ -54,7 +60,12 @@ class Wrapper extends StatelessWidget {
 
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator();
+                    return Center(
+                      child: SpinKitCircle(
+                        color: Colors.blue, // Choose your desired color
+                        size: 50.0, // Choose the size of the indicator
+                      ),
+                    );
                   }
 
 
