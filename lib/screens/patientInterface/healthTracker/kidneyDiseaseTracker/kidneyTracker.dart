@@ -143,8 +143,8 @@ class _KidneyTrackerState extends State<KidneyTracker> {
                       setState(() {
 
                         formattedDate = "${_selectedDay!.year}-${_selectedDay!.month}-${_selectedDay!.day}";
-                      });
                       loadData();
+                      });
                     }
                   },
                   onFormatChanged: (format) {

@@ -37,7 +37,6 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
 
   Future<void> IsBooked(String slotid) async {
 
-    print('ISSSSSSSSSSSSSSBOOOOOOOOOKEDDDDDDDDDDDDDDD');
     print(slotid);
     final appointmentsCollection = FirebaseFirestore.instance.collection('Appointments');
     final appointmentsQuery = await appointmentsCollection
@@ -48,8 +47,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
     // Check if any matching appointments exist
     if (appointmentsQuery.docs.isNotEmpty) {
       // Appointments matching the current user exist for this slot
-      print('Appointments exist for slot $slotid');
-      print('apoint existssssssssssssssssssssssssssssssssssssss');
+      // print('Appointments exist for slot $slotid');
       setState(() {
 
         hasAppointment = true;
@@ -57,14 +55,17 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
 
     } else {
       // No matching appointments found for this slot
-      print('No appointments for slot $slotid');
+      // print('No appointments for slot $slotid');
     }
   }
 
   Future<void> fetchTimeSlots(DateTime selectedDay) async {
+    setState(() {
+
     selectedTimeSlot=null;
     hasAppointment=false;
     timeSlots.clear();
+    });
     final scheduleCollection = FirebaseFirestore.instance.collection(
         'Schedule');
     final scheduleQuery = scheduleCollection.doc(widget.doctorID);
@@ -74,8 +75,6 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
     setState(()  {
       for(final slots in dayScheduleQuery.docs)
       {
-        timeSlots.clear();
-        print('hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
 
         if(!(slots['Number of Patients']== '0')){
           final _StartTime = slots['Start Time'];
@@ -85,9 +84,9 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
           IsBooked(slots.id);
 
 
-
-
           print(_StartTime);
+
+          setState(() {
           TimeSlots timeSlot = TimeSlots(
             id: slots.id,
             startTime: _StartTime,
@@ -95,6 +94,8 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
             sessionType: _sessionType,
           );
           timeSlots.add(timeSlot);
+
+          });
 
         }
 
@@ -117,7 +118,6 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
       setState(() {
         doctorData = doctorSnapshot.data() as Map<String, dynamic>;
         print(doctorData['specialization']);
-        print('SPECIALIZZZZZZZZZAAAAAAAAATTTTIONNNNNNNNNNNNNNNNNNNNN');
       });
     }
   }
@@ -128,15 +128,13 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
     final doctUserSnapshot = await docUserReference.get();
 
     if (doctUserSnapshot.exists) {
-      // Document with the specified doctorID exists in Firestore
-      // You can access its data, including the 'name' property.
+
       docUserData = doctUserSnapshot.data() as Map<String, dynamic>;
       print(docUserData['name']);
 
 
     } else {
-      // Document with the specified doctorID does not exist in Firestore
-      // Handle this case as needed
+
       print('Document does not exist');
     }
     final docUserSnapshot = await docUserReference.get();
@@ -145,7 +143,6 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
       setState(() {
         docUserData = docUserSnapshot.data() as Map<String, dynamic>;
         print(docUserData['name']);
-        print('vvvvvvvvvvvvvvvvvvvvvvv');
       });
     }
   }
@@ -214,7 +211,6 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // if (docUserData.isNotEmpty) // Render if docName is available
                             Text(
                               // 'as[pa',
                               docUserData['name'] ?? 'Doctor Name', // Provide a default if the name is not available
