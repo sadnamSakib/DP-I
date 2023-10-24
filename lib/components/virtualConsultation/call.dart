@@ -1,7 +1,7 @@
 
 import 'package:design_project_1/components/virtualConsultation/callSettings.dart';
 import 'package:flutter/material.dart';
-import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
+import 'package:agora_uikit/agora_uikit.dart';
 
 class CallPage extends StatefulWidget {
   final String callID;
@@ -21,18 +21,40 @@ class _CallPageState extends State<CallPage> {
     print(widget.callID);
     print(widget.userID);
     print(widget.userName);
+    initAgora();
+  }
+
+
+  final AgoraClient client = AgoraClient(
+    agoraConnectionData: AgoraConnectionData(
+      appId: appId,
+      channelName: "doclinkr",
+      tempToken: token,
+    ),
+    enabledPermission: [
+      Permission.camera,
+      Permission.microphone,
+    ],
+  );
+
+
+  void initAgora() async {
+    await client.initialize();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ZegoUIKitPrebuiltCall(
-      appID: appId, // Fill in the appID that you get from ZEGOCLOUD Admin Console.
-      appSign: appSign, // Fill in the appSign that you get from ZEGOCLOUD Admin Console.
-      userID: widget.userID.toString(),
-      userName: widget.userName.toString(),
-      callID: '123',
-      // You can also use groupVideo/groupVoice/oneOnOneVoice to make more types of calls.
-      config: ZegoUIKitPrebuiltCallConfig.oneOnOneVideoCall(),
+    return MaterialApp(
+      home: Scaffold(
+        body: SafeArea(
+          child: Stack(
+            children: [
+              AgoraVideoViewer(client: client),
+              AgoraVideoButtons(client: client)
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
