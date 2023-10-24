@@ -76,7 +76,7 @@ class _UrineSummaryState extends State<UrineSummary> {
             width: 400,
             child: BarGraph(
               values1: urineList,
-              values2: List.filled(urineList.length, 10),
+              values2: List.filled(urineList.length, 0),
             ),
           ),
         SizedBox(height: 20),

@@ -91,7 +91,7 @@ class _KidneyTrackerSummaryScreenState extends State<KidneyTrackerSummaryScreen>
             ),
             Container(
               height: 600,
-              child: ListView(
+              child: PageView(
                 scrollDirection: Axis.horizontal,
                 children: <Widget>[
                   ProteinSummary(patientId: widget.patientId, days: durationMap[selectedDuration]),
@@ -99,7 +99,6 @@ class _KidneyTrackerSummaryScreenState extends State<KidneyTrackerSummaryScreen>
                   WeightSummary(patientId: widget.patientId, days: durationMap[selectedDuration]),
                   UrineSummary(patientId: widget.patientId, days: durationMap[selectedDuration]),
                   WaterSummary(patientId: widget.patientId, days: durationMap[selectedDuration]),
-
 
                 ],
               ),
