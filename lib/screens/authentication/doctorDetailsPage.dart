@@ -35,6 +35,7 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
         backgroundColor: Colors.pink.shade900,
       ),
       body: Container(
+        height: 800,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
