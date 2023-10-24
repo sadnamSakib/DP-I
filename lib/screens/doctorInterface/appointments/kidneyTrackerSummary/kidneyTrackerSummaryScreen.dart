@@ -23,11 +23,30 @@ class KidneyTrackerSummaryScreen extends StatefulWidget {
 
 class _KidneyTrackerSummaryScreenState extends State<KidneyTrackerSummaryScreen> {
   String selectedDuration = 'Past Week';
+  int _currentPage = 0;
+  final PageController _pageController = PageController(initialPage: 0);
   Map<String, int> durationMap = {
     'Past Week': 7,
     'Past Month': 30,
     'Past Year': 365,
   };
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Listen to page changes and update the current page.
+    _pageController.addListener(() {
+      setState(() {
+        _currentPage = _pageController.page?.round() ?? 0;
+      });
+    });
+  }
 
   void updateDays(String? duration) {
     if (duration != null) {
@@ -92,6 +111,7 @@ class _KidneyTrackerSummaryScreenState extends State<KidneyTrackerSummaryScreen>
             Container(
               height: 600,
               child: PageView(
+                controller: _pageController,
                 scrollDirection: Axis.horizontal,
                 children: <Widget>[
                   ProteinSummary(patientId: widget.patientId, days: durationMap[selectedDuration]),
@@ -102,6 +122,20 @@ class _KidneyTrackerSummaryScreenState extends State<KidneyTrackerSummaryScreen>
 
                 ],
               ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(5, (index) {
+                return Container(
+                  width: 10,
+                  height: 10,
+                  margin: EdgeInsets.symmetric(horizontal: 5),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: index == _currentPage ? Colors.blue : Colors.grey,
+                  ),
+                );
+              }),
             ),
           ],
         ),
