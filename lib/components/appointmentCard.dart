@@ -13,6 +13,32 @@ class AppointmentCard extends StatelessWidget {
   required this.docName,
   required this.appointmentID});
 
+  String timeformatting(String Time) {
+
+
+    List<String> timeParts = Time.split(':');
+    int hours = int.parse(timeParts[0]);
+    int minutes = int.parse(timeParts[1]);
+
+    String period = hours >= 12 ? 'PM' : 'AM';
+    if (hours > 12) {
+      hours -= 12;
+    } else if (hours == 0) {
+      hours = 12;
+    }
+
+    String hour = hours.toString().padLeft(2,'0');
+    String minute = minutes.toString().padLeft(2,'0');
+
+    String formattedTime = '$hour:$minute $period';
+
+    print('HOURRRRR');
+    print("Formatted Time: $formattedTime");
+
+    return formattedTime;
+
+  }
+
 
 
   @override
@@ -39,7 +65,7 @@ class AppointmentCard extends StatelessWidget {
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               Text(
-                'Time: ${appointment.startTime} - ${appointment.endTime}',
+                'Time: ${timeformatting(appointment.startTime)} - ${timeformatting(appointment.endTime)}',
               ),
               Text(
                 appointment.sessionType == 'Online' ? 'Online' : 'Offline',
