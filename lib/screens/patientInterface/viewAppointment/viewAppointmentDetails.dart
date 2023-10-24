@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../../../components/virtualConsultation/call.dart';
 import '../../../models/AppointmentModel.dart';
 class ViewAppointmentDetailsPage extends StatefulWidget {
   final Appointment appointment;
@@ -21,6 +22,16 @@ class _ViewAppointmentDetailsPageState extends State<ViewAppointmentDetailsPage>
 
   late  Map<String, dynamic>? doctorData ;
   late  Map<String, dynamic>? patientData ;
+  final String userId = FirebaseAuth.instance.currentUser!.uid;
+  final  userDoc = FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).get();
+  Future username = FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).get().then((value) => value.data()!['name']);
+  String userName = '';
+
+  String generateCallID() {
+    String callID = '';
+    callID = widget.appointment.doctorId;
+    return callID;
+  }
 
   Future<void> fetchDocInfo()
   async {
@@ -61,6 +72,10 @@ class _ViewAppointmentDetailsPageState extends State<ViewAppointmentDetailsPage>
   {
     fetchDocInfo();
     fetchPatientInfo();
+    setState(() {
+      username.then((value) => userName = value.toString());
+    });
+
   }
   Appointment get appointment => widget.appointment;
   @override
@@ -142,7 +157,9 @@ class _ViewAppointmentDetailsPageState extends State<ViewAppointmentDetailsPage>
                 Center(
                   child: ElevatedButton(
                     onPressed: () {
-                      // Add logic to join online session
+
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => CallPage(callID: generateCallID() , userID: userId , userName: userName)));
+
                     },
                     child: Text('Join Session'),
                     style: ElevatedButton.styleFrom(
