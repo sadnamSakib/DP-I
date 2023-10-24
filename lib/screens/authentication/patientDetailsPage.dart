@@ -53,8 +53,17 @@ class _PatientDetailsPageState extends State<PatientDetailsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Sign Up'),
+        backgroundColor: Colors.blue.shade900,
       ),
       body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            // colors: [Colors.white70, Colors.blue.shade200],
+            colors: [Colors.white70, Colors.blue.shade100],
+          ),
+        ),
         padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
         child: Form(
           key: _formKey,
@@ -181,6 +190,14 @@ class _PatientDetailsPageState extends State<PatientDetailsPage> {
 
                 SizedBox(height: 10.0),
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.blue.shade900,
+                    onPrimary: Colors.white,
+                    fixedSize: const Size(100, 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
                   onPressed: () {
                     _showDegreeSelection(
                         context); // Show the degree selection modal bottom sheet
@@ -192,6 +209,14 @@ class _PatientDetailsPageState extends State<PatientDetailsPage> {
                 Text('Pre-Existing Conditions: ${preExistingConditions.join(", ")}'),
                 SizedBox(height: 10.0),
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.blue.shade900,
+                    onPrimary: Colors.white,
+                    fixedSize: const Size(100, 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
                   onPressed: () async {
                     // Submit the form and handle doctor registration here
                     if (_formKey.currentState!.validate()) {

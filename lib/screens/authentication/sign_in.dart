@@ -25,6 +25,7 @@ class _SignInState extends State<SignIn> {
     return Scaffold(
         appBar: AppBar(
           title: const Text('Sign In'),
+          backgroundColor: Colors.blue.shade900,
         ),
         body: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
@@ -56,6 +57,14 @@ class _SignInState extends State<SignIn> {
                   ),
                   const SizedBox(height: 20.0),
                   ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.blue.shade900,
+                      onPrimary: Colors.white,
+                      fixedSize: const Size(100, 50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         //print('valid');
@@ -68,7 +77,7 @@ class _SignInState extends State<SignIn> {
                         }
                       }
                     },
-                    child: const Text('Sign In'),
+                    child: const Text('Sign In', style: TextStyle(fontSize: 20.0)),
                     ),
                   const SizedBox(height: 20.0),
                   Text(

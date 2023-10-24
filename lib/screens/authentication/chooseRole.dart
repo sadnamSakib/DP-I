@@ -32,23 +32,34 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Role Selection'),
+        backgroundColor: Colors.blue.shade900,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            RoleCard(
-              role: 'Doctor',
-              imagePath: 'assets/images/doctor.png',
-              onPressed: () => _selectRole('doctor'),
-            ),
-            SizedBox(height: 40),
-            RoleCard(
-              role: 'Patient',
-              imagePath: 'assets/images/patient.png',
-              onPressed: () => _selectRole('patient'),
-            ),
-          ],
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+
+            colors: [Colors.white70, Colors.blue.shade100],
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              RoleCard(
+                role: 'Doctor',
+                imagePath: 'assets/images/doctor.png',
+                onPressed: () => _selectRole('doctor'),
+              ),
+              SizedBox(height: 40),
+              RoleCard(
+                role: 'Patient',
+                imagePath: 'assets/images/patient.png',
+                onPressed: () => _selectRole('patient'),
+              ),
+            ],
+          ),
         ),
       ),
     );
