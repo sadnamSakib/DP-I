@@ -14,6 +14,13 @@ class DatabaseService {
       'email': email
     });
   }
+  Future updateUserDataWithGoogle(String name, String email,String photoUrl) async {
+    return await userCollection.doc(uid).set({
+      'name': name,
+      'email': email,
+      'profile' : photoUrl
+    });
+  }
 
   Future updateDoctorData(String phone, String chamberAddress,String medicalLicense, String specialization,  List<String> degrees) async {
     DocumentSnapshot user = await userCollection.doc(uid).get();
