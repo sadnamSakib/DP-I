@@ -97,7 +97,7 @@ class _TrackerState extends State<Tracker> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             // colors: [Colors.white70, Colors.blue.shade200],
-            colors: [Colors.white70, Colors.blue.shade200],
+            colors: [Colors.white70, Colors.blue.shade100],
           ),
         ),
         child: selectedDiseases.isEmpty

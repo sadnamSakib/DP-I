@@ -61,6 +61,14 @@ class _FoodSelectionScreenState extends State<FoodSelectionScreen> {
           ),
           body: SingleChildScrollView(
             child: Container(
+              height: 800,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Colors.white70, Colors.blue.shade100],
+                ),
+              ),
               child: Column(
                 children: [
                   Container(
