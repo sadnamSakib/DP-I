@@ -82,7 +82,7 @@ void initState() {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    if (_startTime == null)
+                    if (_startTime == null || _endTime == null)
                       ElevatedButton(
                         onPressed: () async {
                           startTime = await showTimePicker(
@@ -97,7 +97,7 @@ void initState() {
                         },
                         child: Text("Select Start Time"),
                       ),
-                    if (_endTime == null)
+                    if (_endTime == null || _startTime == null)
                       ElevatedButton(
                         onPressed: () async {
                           endTime = await showTimePicker(
