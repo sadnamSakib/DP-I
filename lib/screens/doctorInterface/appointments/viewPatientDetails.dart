@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:design_project_1/components/virtualConsultation/call.dart';
 import 'package:design_project_1/screens/doctorInterface/appointments/AppointmentClass.dart';
+import 'package:design_project_1/screens/doctorInterface/appointments/viewAppointment.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'appointments.dart';
 import 'healthTrackerSummaryScreen.dart';
 
 class AppointmentDetailScreen extends StatefulWidget {
@@ -46,14 +49,28 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             child: Align(
               alignment: Alignment.centerRight,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  markAsDone(widget.appointment.id);
+                  Fluttertoast.showToast(
+                    msg: 'Mark As Done',
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Colors.white,
+                    textColor: Colors.blue,
+                  );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AppointmentScreen()),
+                  );
+                },
                 child: Text('Mark as Done'),
               ),
             ),
           ),
           ListTile(
-            title: Text(widget.appointment.patientName),
-            // subtitle: Text('Gender: Male'),
+            title: Text('Patient name'),
+            subtitle: Text(widget.appointment.patientName),
           ),
           ListTile(
             title: Text('Issue'),
@@ -85,7 +102,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
           ElevatedButton(
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => CallPage(callID: '123' , userID: userId , userName: userName)));
+              // Navigator.push(context, MaterialPageRoute(builder: (context) => CallPage(callID: '123' , userID: userId , userName: userName)));
             },
             child: Text('Call into Session'),
           ),
@@ -110,6 +127,21 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
       print('Error retrieving user information: $e');
       return null;
     }
+  }
+
+  void markAsDone(String id) {
+
+    print('MARK ASSSSSSSSSSS DONEEEEEEEEEEEEEEE');
+    print(id);
+
+      final appointmentsCollection = FirebaseFirestore.instance.collection('Appointments');
+
+      // Delete the document with the specified ID
+      appointmentsCollection.doc(id).delete().then((_) {
+        print("Document with ID $id deleted successfully.");
+      }).catchError((error) {
+        print("Error deleting document: $error");
+      });
   }
 
 }

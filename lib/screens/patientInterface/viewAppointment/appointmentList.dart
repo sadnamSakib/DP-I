@@ -14,6 +14,7 @@ class AppointmentListPage extends StatefulWidget {
 }
 
 class _AppointmentListPageState extends State<AppointmentListPage> {
+  List<String> appointmentIds = [];
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay.now();
   DateTime _focusedDay = DateTime.now();
@@ -60,21 +61,30 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
 
               },
             ),
-          Expanded(
-            child: ListView(
-              children: <Widget>[
-                for (var appointment in appointments)
-                  FutureBuilder<String?>(
-                    future: fetchDoctorName(appointment.doctorId),
-                    builder: (context, snapshot) {
-                        String doctorName = snapshot.data ?? '';
-                        return AppointmentCard(appointment: appointment, docName: doctorName);
+        Expanded(
+          child: ListView(
+            children: <Widget>[
+              for (int i = 0; i < appointments.length; i++)
+                FutureBuilder<String?>(
+                  future: fetchDoctorName(appointments[i].doctorId),
+                  builder: (context, snapshot) {
+                    String doctorName = snapshot.data ?? '';
+                    // Get the appointment at the current index
+                    Appointment appointment = appointments[i];
+                    // Get the corresponding appointment ID
+                    String appointmentID = appointmentIds[i];
+                    print(appointmentID);
+                    print('Apppppppppppppppppppp');
 
-                    },
-                  ),
-              ],
-            ),
+                    return AppointmentCard(appointment: appointment, docName: doctorName,
+                        appointmentID :appointmentID);
+
+                  },
+                ),
+            ],
           ),
+        ),
+
 
 
           ],
@@ -84,7 +94,10 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
   }
 
   void fetchAppointments(DateTime selectedDay) async{
+      setState(() {
+    appointmentIds.clear();
 
+       });
     if (selectedDay == null) {
       return;
     }
@@ -107,6 +120,7 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
       // Convert the query results into a list of Appointment objects
       setState(() {
         appointments = querySnapshot.docs.map((doc) {
+          appointmentIds.add(doc.id);
           final Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?;
           if (data != null) {
             print('List');

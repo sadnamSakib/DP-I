@@ -22,30 +22,71 @@ class BookAppointmentPage extends StatefulWidget {
 class _BookAppointmentPageState extends State<BookAppointmentPage> {
 
   List<TimeSlots> timeSlots = [];
+  TimeSlots? selectedTimeSlot;
 
   late DocumentReference doctorReference;
   Map<String, dynamic> doctorData = {};
   final docName='';
   late DocumentReference docUserReference;
   Map<String, dynamic> docUserData={};
+  String userUID = FirebaseAuth.instance.currentUser?.uid ?? '';
 
+
+  bool hasAppointment = false;
+
+
+  Future<void> IsBooked(String slotid) async {
+
+    print('ISSSSSSSSSSSSSSBOOOOOOOOOKEDDDDDDDDDDDDDDD');
+    print(slotid);
+    final appointmentsCollection = FirebaseFirestore.instance.collection('Appointments');
+    final appointmentsQuery = await appointmentsCollection
+        .where('patientId', isEqualTo: userUID)
+        .where('slotID', isEqualTo: slotid)
+        .get();
+
+    // Check if any matching appointments exist
+    if (appointmentsQuery.docs.isNotEmpty) {
+      // Appointments matching the current user exist for this slot
+      print('Appointments exist for slot $slotid');
+      print('apoint existssssssssssssssssssssssssssssssssssssss');
+      setState(() {
+
+      hasAppointment = true;
+      });
+
+    } else {
+      // No matching appointments found for this slot
+      print('No appointments for slot $slotid');
+    }
+  }
 
   Future<void> fetchTimeSlots(DateTime selectedDay) async {
+    selectedTimeSlot=null;
+    hasAppointment=false;
     timeSlots.clear();
     final scheduleCollection = FirebaseFirestore.instance.collection(
         'Schedule');
     final scheduleQuery = scheduleCollection.doc(widget.doctorID);
     final dayScheduleQuery = await scheduleQuery.collection('Days').doc(
         DateFormat('EEEE').format(selectedDay)).collection('Slots').get();
-        print('hereeeeeeeeeeeeeeeee');
 
-    setState(() {
+    setState(()  {
     for(final slots in dayScheduleQuery.docs)
       {
+        timeSlots.clear();
+        print('hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+
         if(!(slots['Number of Patients']== '0')){
         final _StartTime = slots['Start Time'];
         final _endTime = slots['End Time'];
         final _sessionType = slots['Session Type'];
+
+        IsBooked(slots.id);
+
+
+
+
         print(_StartTime);
         TimeSlots timeSlot = TimeSlots(
           id: slots.id,
@@ -61,6 +102,11 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
 
     });
   }
+
+
+
+
+
     Future<void> fetchDoctorData(String doctorID) async {
     doctorReference = FirebaseFirestore.instance.collection('doctors').doc(doctorID);
 
@@ -70,6 +116,8 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
     if (doctorSnapshot.exists) {
       setState(() {
         doctorData = doctorSnapshot.data() as Map<String, dynamic>;
+      print(doctorData['specialization']);
+      print('SPECIALIZZZZZZZZZAAAAAAAAATTTTIONNNNNNNNNNNNNNNNNNNNN');
       });
     }
   }
@@ -84,6 +132,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
       // You can access its data, including the 'name' property.
       docUserData = doctUserSnapshot.data() as Map<String, dynamic>;
       print(docUserData['name']);
+
 
     } else {
       // Document with the specified doctorID does not exist in Firestore
@@ -108,6 +157,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
     fetchTimeSlots(DateTime.now());
 
     fetchDoctorName(widget.doctorID);
+    fetchDoctorData(widget.doctorID);
   }
 
   late DateTime selectedDate ;
@@ -115,7 +165,6 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
   CalendarFormat _calendarFormat = CalendarFormat.week;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
-  TimeSlots? selectedTimeSlot;
   String? healthIssue;
   String? Day;
 
@@ -173,8 +222,13 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                             ),
                           SizedBox(height: 10),
                           Text(
-                            doctorData['specialization'] ?? 'Specilization', // Replace with doctor speciality
+                            doctorData['specialization'] ?? '', // Replace with doctor speciality
                             style: TextStyle(fontSize: 16),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            doctorData['degrees']?.join(', ') ?? '', // Replace with doctor speciality
+                            style: TextStyle(fontSize: 12),
                           ),
                         ],
                       ),
@@ -246,6 +300,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                           child: Container(
                             margin: EdgeInsets.symmetric(horizontal: 5),
                             padding: EdgeInsets.all(10),
+                            height: 800,
                             decoration: BoxDecoration(
                               color: selectedTimeSlot == timeSlot
                                   ? Colors.blue.shade900
@@ -310,7 +365,22 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                   Center(
                     child: ElevatedButton(
 
-                      onPressed: () {
+                      onPressed: hasAppointment?
+                          ()
+                          {
+
+                            Fluttertoast.showToast(
+                              msg: 'Appointment already booked for ${Day ?? DateFormat('EEEE').format(DateTime.now())}',
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 2,
+                              backgroundColor: Colors.white,
+                              textColor: Colors.blue,
+                            );
+
+
+                          }:
+                        () {
                         if (selectedDate != null && selectedTimeSlot != null && Day != null) {
                           BookAppointment().bookAppointment(widget.doctorID,FirebaseAuth.instance.currentUser?.uid ?? '',
                               selectedTimeSlot!.id , healthIssue ?? '' ,selectedDate, Day ?? '');
@@ -325,9 +395,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                           print('Selected Date: $selectedDate');
                           print('Selected Time Slot: $Day');
                           print( selectedTimeSlot?.id);
-                          Navigator.pop(
-                            context
-                          );
+                          Navigator.pop(context);
                         }
                         else{
                           Fluttertoast.showToast(
@@ -339,6 +407,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                             textColor: Colors.red,
                           );
                         }
+                        Navigator.pop(context);
                       },
                       style: ButtonStyle(
                         fixedSize: MaterialStateProperty.all<Size>(Size(200, 50)),
@@ -352,7 +421,8 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                         ),
 
                     ),
-                      child: Text('Book Appointment',
+                      child: Text( hasAppointment? 'Appointment Booked'
+                          : 'Book Appointment',
                       style: TextStyle(fontSize: 16),
                     )
                     ),

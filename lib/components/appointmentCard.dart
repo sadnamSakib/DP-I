@@ -7,18 +7,22 @@ import '../screens/patientInterface/viewAppointment/viewAppointmentDetails.dart'
 class AppointmentCard extends StatelessWidget {
   final Appointment appointment;
   final String docName;
+  final String appointmentID;
 
   AppointmentCard({required this.appointment,
-  required this.docName});
+  required this.docName,
+  required this.appointmentID});
 
 
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+
       onTap: () { Navigator.push(context,
+
         MaterialPageRoute(
-          builder: (context) => ViewAppointmentDetailsPage(appointment: appointment),
+          builder: (context) => ViewAppointmentDetailsPage(appointment: appointment, ID :appointmentID),
         ),
       );
       },
@@ -36,7 +40,16 @@ class AppointmentCard extends StatelessWidget {
               ),
               Text(
                 'Time: ${appointment.startTime} - ${appointment.endTime}',
+              ),
+              Text(
+                appointment.sessionType == 'Online' ? 'Online' : 'Offline',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: appointment.sessionType == 'Online' ? Colors.blue : Colors.red, // Change the color based on the session type
+                ),
               )
+
             ],
           ),
         ),

@@ -1,12 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:design_project_1/screens/patientInterface/viewAppointment/appointmentList.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../models/AppointmentModel.dart';
 class ViewAppointmentDetailsPage extends StatefulWidget {
   final Appointment appointment;
+  final String ID;
 
-  ViewAppointmentDetailsPage({super.key, required this.appointment});
+  ViewAppointmentDetailsPage({super.key, required this.appointment,
+  required this.ID});
 
 
   @override
@@ -112,7 +116,19 @@ class _ViewAppointmentDetailsPageState extends State<ViewAppointmentDetailsPage>
             trailing: !appointment.isPaid
                 ? ElevatedButton(
               onPressed: () {
-                // Add logic to handle payment
+                updatePayment();
+                Fluttertoast.showToast(
+                  msg: 'Payment Status updated',
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.white,
+                  textColor: Colors.blue,
+                );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AppointmentListPage()),
+                );
               },
               child: Text('Pay Now'),
               style: ElevatedButton.styleFrom(
@@ -145,5 +161,23 @@ class _ViewAppointmentDetailsPageState extends State<ViewAppointmentDetailsPage>
         ),
       ),
     );
+  }
+
+  Future<void> updatePayment() async {
+    try {
+      final appointmentsCollection = FirebaseFirestore.instance.collection('Appointments');
+
+      // Reference to the specific appointment document using its ID
+      final appointmentDoc = appointmentsCollection.doc(widget.ID);
+
+      // Update the payment status
+      await appointmentDoc.update({
+        'isPaid': !widget.appointment.isPaid,
+      });
+
+      print('Payment status updated for appointment');
+    } catch (e) {
+      print('Error updating payment status: $e');
+    }
   }
 }

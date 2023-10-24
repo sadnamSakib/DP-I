@@ -3,6 +3,7 @@ import 'package:design_project_1/screens/doctorInterface/schedule/dayBasedSchedu
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:design_project_1/services/diseaseViewModel.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 
 class ScheduleScreen extends StatefulWidget {
@@ -119,6 +120,84 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     }
     }
 
+
+  Future<void> addCancelledAppointment(String appointmentID, String slotID) async {
+    final appointmentsCollection = FirebaseFirestore.instance.collection('Appointments');
+
+    try {
+      print('INNNN TRYYYYYYYYYYYYY');
+      final appointmentDocument = await appointmentsCollection.doc(appointmentID).get();
+      if (appointmentDocument.exists) {
+        print('EXISTSTTTTTTTTTTTTTTTTTTTTT');
+        final Map<String, dynamic>? appointmentData = appointmentDocument.data() as Map<String, dynamic>?;
+
+        if (appointmentData != null) {
+          final String date = appointmentData['date'] as String; // Replace 'date' with the actual field name
+
+          final collection = FirebaseFirestore.instance.collection('DeletedAppointment');
+
+          print('colectttttttttttttttttttionnnnnnnnnnnnn');
+          collection.add({
+            'appointmentID': appointmentID ?? '',
+            'slotID': slotID ?? '',
+            'cancellationReason':  '',
+            'patientID': appointmentData['patientId'] ?? '',
+            'appointmentDate': date ?? '',
+            'issue': appointmentData['issue'] ?? '',
+          });
+
+          // Now you have retrieved the 'date' field from the appointment document
+          print('Date of the appointment: $date');
+        } else {
+          print('Appointment data is null for ID: $appointmentID');
+        }
+      } else {
+        print('Appointment document does not exist for ID: $appointmentID');
+      }
+    } catch (e) {
+      print('Error retrieving appointment data: $e');
+    }
+  }
+
+
+
+  Future<void> deleteAppointmentsForSlot(String slotID) async {
+    try {
+      // Reference to the Appointments collection
+      final appointmentsCollection = FirebaseFirestore.instance.collection('Appointments');
+
+      // Define a query to find the appointments with matching slotID
+      final query = appointmentsCollection.where('slotID', isEqualTo: slotID);
+
+      // Use the query to retrieve matching documents
+      final querySnapshot = await query.get();
+
+      for (final doc in querySnapshot.docs) {
+
+        final appointmentID = doc.id;
+        print(appointmentID);
+        print('appppppp paiseeeeeeeeeeeeeeee');
+
+        await addCancelledAppointment(appointmentID,slotID);
+        // Reference to the document to delete
+        final docReference = appointmentsCollection.doc(doc.id);
+
+        // Delete the document
+        await docReference.delete();
+
+        // Log the deletion
+        print('Appointment with ID ${doc.id} has been deleted for the slot with ID: $slotID');
+      }
+
+      print('All matching appointments for slot with ID: $slotID have been deleted successfully.');
+    } catch (e) {
+      print('Error deleting documents: $e');
+    }
+  }
+
+
+
+
   Future<void> delete(String Day) async {
     try {
       final scheduleCollection = FirebaseFirestore.instance.collection('Schedule');
@@ -129,6 +208,13 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       final slotsQuery = await slotsCollection.get();
 
       for (final slotDoc in slotsQuery.docs) {
+        final slotID = slotDoc.id;
+        print(slotID);
+        print('SLOT IDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD');
+
+
+        deleteAppointmentsForSlot(slotID);
+
         await slotDoc.reference.delete();
       }
 
@@ -214,6 +300,14 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                             onPressed: () {
                               setState(() {
                                 delete(selectedDays[index]);
+                                Fluttertoast.showToast(
+                                  msg: 'Schedule and associated appointments deleted',
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.white,
+                                  textColor: Colors.blue,
+                                );
                                 // availableDays.add(selectedDays[index]);
                                 // selectedDays.removeAt(index);
                               });
@@ -282,6 +376,8 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   // }
     // }
   }
+
+
 }
 
 
