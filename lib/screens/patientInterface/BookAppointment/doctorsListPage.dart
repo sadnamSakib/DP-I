@@ -89,6 +89,8 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
                     child: ListTile(
                       title: Text(searchedDoctors[index]['name']),
                       subtitle: Text(searchedDoctors[index]['specialization']),
+                      trailing: Text(searchedDoctors[index]['chamberAddress']),
+
                     ),
                   ),
                 );
