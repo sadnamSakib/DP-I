@@ -56,6 +56,7 @@ class _PatientDetailsPageState extends State<PatientDetailsPage> {
         backgroundColor: Colors.blue.shade900,
       ),
       body: Container(
+        height: 800,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
