@@ -132,7 +132,7 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
           String EndTime = data['endTime'];
           String date = data['date'];
 
-          if (!await missedAppointment(StartTime, EndTime, doc.id, date)) {
+          if (!await missedAppointment(StartTime, EndTime, doc.id, date,Searchfordate)) {
             // Only add the appointment if missedAppointment returns false
             setState(() {
             appointmentIds.add(doc.id);
@@ -168,42 +168,51 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
 
 
   Future<bool> missedAppointment(String startTime, String endTime, String docID,
-      String documentDate)
+      String documentDate, String selectedDate)
   async {
-
     String StartTime = timeformatting(startTime);
     String EndTime = timeformatting(endTime);
 
 
     DateTime currentDate = DateTime.now();
-    String formattedCurrentDate = "${currentDate.year}-${currentDate.month.toString().padLeft(2, '0')}-${currentDate.day.toString().padLeft(2, '0')}";
+    String formattedCurrentDate = "${currentDate.year}-${currentDate.month
+        .toString().padLeft(2, '0')}-${currentDate.day.toString().padLeft(
+        2, '0')}";
 
 // Compare the dates
     int comparisonResult = formattedCurrentDate.compareTo(documentDate);
 
     DateTime now = DateTime.now();
-    String  currentTime = DateFormat('h:mm a').format(DateTime.now());
+    String currentTime = DateFormat('h:mm a').format(DateTime.now());
+    DateTime parsedDateTime = DateTime.parse(selectedDate);
+    DateTime currentDateTime = DateTime.now();
+
+
     print(currentTime);
     print('CURRENT  TIMEEEEEEEEEEEEE');
 
-    DateTime currentTimeFormat = DateFormat('h:mm a').parse(currentTime); // Parse current time
-    DateTime endTimeFormat = DateFormat('h:mm a').parse(EndTime); // Parse end time
+    DateTime currentTimeFormat = DateFormat('h:mm a').parse(
+        currentTime); // Parse current time
+    DateTime endTimeFormat = DateFormat('h:mm a').parse(
+        EndTime); // Parse end time
+    if (parsedDateTime == currentDateTime) {
 
-    if (currentTimeFormat.isBefore(endTimeFormat)) {
+      if (currentTimeFormat.isBefore(endTimeFormat)) {
       // Current time is before end time
       // Do something
     } else if (currentTimeFormat.isAfter(endTimeFormat)) {
-
-      final appointmentRef = FirebaseFirestore.instance.collection('Appointments').doc(docID);
-
+      final appointmentRef = FirebaseFirestore.instance.collection(
+          'Appointments').doc(docID);
 
 
       final DocumentSnapshot appointmentSnapshot = await appointmentRef.get();
 
-        final Map<String, dynamic> appointmentdata = appointmentSnapshot.data() as Map<String, dynamic>;
+      final Map<String, dynamic> appointmentdata = appointmentSnapshot
+          .data() as Map<String, dynamic>;
 
-        // You can now access the fields in the appointment document
-      CollectionReference missedAppointmentsCollection = FirebaseFirestore.instance.collection('MissedAppointments');
+      // You can now access the fields in the appointment document
+      CollectionReference missedAppointmentsCollection = FirebaseFirestore
+          .instance.collection('MissedAppointments');
 
       // Add the appointment data to the "MissedAppointments" collection
       await missedAppointmentsCollection.add({
@@ -230,6 +239,7 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
       // Current time is equal to end time
       // Do something else
     }
+  }
 
     return false;
   }

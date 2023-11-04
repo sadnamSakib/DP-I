@@ -219,7 +219,8 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       }
 
       setState(() {
-        fetchSchedule();
+        checkForSchedules();
+        // fetchSchedule();
       });
 
       print('All documents in Slots collection for $Day deleted successfully.');

@@ -46,3 +46,4 @@ app.*.map.json
 /android/app/google-services.json
 /lib/firebase_options.dart
 /lib/services/nutritionixApi.dart
+/lib/services/secret_key.dart
