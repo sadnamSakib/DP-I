@@ -1,3 +1,4 @@
+import 'package:design_project_1/screens/doctorInterface/emergencyPortal/chat.dart';
 import 'package:design_project_1/screens/patientInterface/profile/profile.dart';
 import 'package:design_project_1/screens/patientInterface/BookAppointment/doctorFinderPage.dart';
 import 'package:design_project_1/screens/patientInterface/healthTracker/tracker.dart';
@@ -27,7 +28,7 @@ class _HomeState extends State<Home> {
   List<Widget> _buildScreens() {
     return [
       Tracker(),
-      Text('Reports'),
+      Chat(receiverUserEmail: 'emergency', receiverUserID: 'emergency'),
       DoctorFinder(),
       AppointmentListPage(),
       ProfileScreen(),

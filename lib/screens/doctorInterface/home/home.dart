@@ -8,6 +8,7 @@ import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:design_project_1/services/auth.dart';
 
 // import '../schedule/weekly_calender.dart';
+import '../emergencyPortal/chat.dart';
 import 'Feed.dart';
 
 void main() {
@@ -45,7 +46,10 @@ class _HomeState extends State<Home> {
       ),
       Container(
         color: Colors.transparent,
-        child: Text('Emergency'),
+        child: Chat(
+          receiverUserEmail: 'Emergency',
+          receiverUserID: 'emergency',
+        ),
       ),
       Container(
         color: Colors.transparent,
