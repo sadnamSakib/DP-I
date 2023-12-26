@@ -2,16 +2,13 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:design_project_1/screens/patientInterface/viewAppointment/appointmentList.dart';
-import 'package:design_project_1/services/MakePayment.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-
 import '../../../components/virtualConsultation/call.dart';
 import '../../../models/AppointmentModel.dart';
-import '../../../services/secret_key.dart';
 class ViewAppointmentDetailsPage extends StatefulWidget {
   final Appointment appointment;
   final String ID;
