@@ -6,6 +6,7 @@ import 'package:design_project_1/screens/patientInterface/viewAppointment/appoin
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:design_project_1/services/auth.dart';
+import 'package:design_project_1/screens/patientInterface/emergencyPortal/requestEmergencyScreen.dart';
 
 import '../../../services/SearchBarDelegator.dart';
 
@@ -28,11 +29,10 @@ class _HomeState extends State<Home> {
   List<Widget> _buildScreens() {
     return [
       Tracker(),
-      Chat(receiverUserEmail: 'emergency', receiverUserID: 'emergency'),
+      RequestEmergencyScreen(),
       DoctorFinder(),
       AppointmentListPage(),
       ProfileScreen(),
-
     ];
   }
 

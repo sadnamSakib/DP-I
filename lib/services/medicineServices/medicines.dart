@@ -1,7 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csv/csv.dart';
-import 'Medicine.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../../models/MedicineModel.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
+import 'package:design_project_1/models/PrescriptionModel.dart';
+import 'package:design_project_1/models/PrescribedMedicineModel.dart';
+
+FirebaseFirestore firestore = FirebaseFirestore.instance;
+
 
 
 Future<List<Medicine>> loadMedicines() async {
@@ -21,4 +28,32 @@ Future<List<Medicine>> loadMedicines() async {
 
   return medicines;
 }
+
+Future<void> addPrescribedMedicine(String patientId, PrescribeMedicineModel prescribedMedicine) async {
+  FirebaseAuth auth = FirebaseAuth.instance;
+  String doctorId = auth.currentUser!.uid;
+  String prescriptionId = doctorId + patientId;
+
+  DocumentReference prescriptionRef = firestore.collection('prescriptions').doc(prescriptionId);
+
+  DocumentSnapshot prescriptionSnapshot = await prescriptionRef.get();
+
+  if (prescriptionSnapshot.exists) {
+    // If the prescription already exists, add the new prescribed medicine to the list
+    await prescriptionRef.update({
+      'prescribedMedicines': FieldValue.arrayUnion([prescribedMedicine.toMap()])
+    });
+  } else {
+    // If the prescription does not exist, create a new one
+    final prescription = PrescriptionModel(
+      patientId: patientId,
+      doctorId: doctorId,
+      date: DateTime.now().toString(),
+      prescribedMedicines: [prescribedMedicine],
+    );
+
+    await prescriptionRef.set(prescription.toMap());
+  }
+}
+
 
