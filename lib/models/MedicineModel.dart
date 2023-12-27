@@ -12,4 +12,13 @@ class Medicine {
     required this.strength,
     required this.manufacturer,
   });
+  Map<String, dynamic> toMap() {
+    return {
+      'brandName': brandName,
+      'dosageForm': dosageForm,
+      'generic': generic,
+      'strength': strength,
+      'manufacturer': manufacturer,
+    };
+  }
 }

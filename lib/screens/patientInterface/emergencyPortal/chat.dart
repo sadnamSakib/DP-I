@@ -29,7 +29,7 @@ class _ChatState extends State<Chat> {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return  Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue.shade900,
         title: Align(

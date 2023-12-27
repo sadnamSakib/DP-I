@@ -8,6 +8,30 @@ class ChatService extends ChangeNotifier{
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  Future<void> requestEmergency() async {
+    //get current user info
+    final String currentUserID = _auth.currentUser!.uid;
+    final String currentUserEmail = _auth.currentUser!.email!;
+    final Timestamp timestamp = Timestamp.now();
+    // need to handle if the emergency request already exists
+    await _firestore.collection('emergencyRequests').doc(currentUserID).set({
+      'senderID': currentUserID,
+      'senderEmail': currentUserEmail,
+      'timestamp': timestamp,
+    });
+  }
+
+  Future<void> dismissEmergencyRequest() async {
+    //get current user info
+    final String currentUserID = _auth.currentUser!.uid;
+    final String currentUserEmail = _auth.currentUser!.email!;
+    final Timestamp timestamp = Timestamp.now();
+    // need to handle if the emergency request doesnt exist
+    await _firestore.collection('emergencyRequests').doc(currentUserID).delete();
+  }
+
+
+
   //send message
   Future<void> sendMessage(String receiverID, String message) async {
     //get current user info
@@ -41,5 +65,15 @@ class ChatService extends ChangeNotifier{
 
       return _firestore.collection('chatrooms').doc(chatroomID).collection('messages').orderBy('timestamp', descending: false).snapshots();
     }
+
+    Stream<DocumentSnapshot> getChatroomData() {
+      String userUID = FirebaseAuth.instance.currentUser?.uid ?? '';
+
+      return FirebaseFirestore.instance.collection('users').doc(userUID).snapshots();
+    }
+
+
+
+
 
 }
