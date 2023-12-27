@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:design_project_1/screens/doctorInterface/appointments/appointments.dart';
+import 'package:design_project_1/screens/doctorInterface/emergencyPortal/emergencyRequests.dart';
 import 'package:design_project_1/screens/doctorInterface/profile/profile.dart';
 import 'package:design_project_1/screens/doctorInterface/schedule/schedule.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -46,10 +47,7 @@ class _HomeState extends State<Home> {
       ),
       Container(
         color: Colors.transparent,
-        child: Chat(
-          receiverUserEmail: 'Emergency',
-          receiverUserID: 'emergency',
-        ),
+        child: EmergencyRequestList(),
       ),
       Container(
         color: Colors.transparent,

@@ -21,6 +21,11 @@ class _ChatState extends State<Chat> {
   final TextEditingController _messageController = TextEditingController();
   final ChatService _chatService = ChatService();
   final _auth = FirebaseAuth.instance;
+  @override
+  void initState() {
+    super.initState();
+    _chatService.requestEmergency();
+  }
   void sendMessage() async{
     if(_messageController.text.isNotEmpty){
       await _chatService.sendMessage(widget.receiverUserID, _messageController.text);
@@ -29,22 +34,71 @@ class _ChatState extends State<Chat> {
   }
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue.shade900,
-        title: Align(
-          alignment: Alignment.centerLeft,
-          child: Text(widget.receiverUserEmail),
-        ),
-      ),
-      body: Column(
-        children:[
-          Expanded(
-            child: _buildMessageList(),
-          ),
-          _buildMessageInput(),
-        ],
-      ),
+    final String currentUserId = FirebaseAuth.instance.currentUser!.uid;
+
+    return StreamBuilder<DocumentSnapshot>(
+      stream: FirebaseFirestore.instance.collection('chatrooms').doc(widget.receiverUserID).snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        // if (snapshot.connectionState == ConnectionState.waiting) {
+        //   print(widget.receiverUserID);
+        //   print(currentUserId);
+        //   print("waiting hoitese");
+        //   return Scaffold(
+        //     body: Center(
+        //       child: Column(
+        //         mainAxisAlignment: MainAxisAlignment.center,
+        //         children: <Widget>[
+        //           CircularProgressIndicator(),
+        //           Text('More jao'),
+        //         ],
+        //       ),
+        //     ),
+        //   );
+        // }
+
+        if (snapshot.hasError) {
+          return const Text('Something went wrong');
+        }
+
+        if (snapshot.hasData && snapshot.data!.exists) {
+          print("ki je hoitese");
+          print(snapshot.data!.data());
+          return Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.blue.shade900,
+              title: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(widget.receiverUserEmail),
+              ),
+            ),
+            body: Column(
+              children:[
+                Expanded(
+                  child: _buildMessageList(),
+                ),
+                _buildMessageInput(),
+              ],
+            ),
+          );
+        } else {
+          print("data nai");
+          return const Scaffold(
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  CircularProgressIndicator(),
+                  Text('Trying to connect to an emergency doctor...',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                  ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+      },
     );
   }
   //build message list
