@@ -21,6 +21,7 @@ class _ChatState extends State<Chat> {
   final TextEditingController _messageController = TextEditingController();
   final ChatService _chatService = ChatService();
   final _auth = FirebaseAuth.instance;
+
   void sendMessage() async{
     if(_messageController.text.isNotEmpty){
       await _chatService.sendMessage(widget.receiverUserID, _messageController.text);
@@ -57,7 +58,7 @@ class _ChatState extends State<Chat> {
           }
 
           if(snapshot.connectionState == ConnectionState.waiting){
-            return Text('Loading...');
+            return const Text('Loading...');
           }
           return ListView(
             children: snapshot.data!.docs.map<Widget>((document) => _buildMessageItem(document)).toList(),
@@ -99,7 +100,7 @@ class _ChatState extends State<Chat> {
           crossAxisAlignment: (data['senderID'] == _auth.currentUser?.uid) ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           mainAxisAlignment: (data['senderID'] == _auth.currentUser?.uid) ? MainAxisAlignment.end : MainAxisAlignment.start,
           children: [
-            Text(data['senderEmail']),
+            Text(data['senderName']),
             ChatBubble(message: data['message']),
           ]
         ),
