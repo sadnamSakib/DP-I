@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:design_project_1/screens/patientInterface/viewAppointment/appointmentList.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import '../../../components/virtualConsultation/call.dart';
@@ -245,26 +244,7 @@ class _ViewAppointmentDetailsPageState extends State<ViewAppointmentDetailsPage>
   }
 
   displayPaymentSheet() async {
-    try {
-      await Stripe.instance.presentPaymentSheet().then((value) {
-        paymentIntent = null;
 
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => AppointmentListPage()),
-        );
-        Fluttertoast.showToast(
-          msg: 'Payment Status updated',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.white,
-          textColor: Colors.blue,
-        );
-      }) ;
-      } catch (e) {
-      print('Error: $e');
-    }
   }
 
 

@@ -66,8 +66,8 @@ class _EmergencyRequestListState extends State<EmergencyRequestList> {
                 Map<String, dynamic> data =
                 document.data()! as Map<String, dynamic>;
                 return ListTile(
-                  onTap: () {
-                    _chatService.dismissEmergencyRequest(data['senderID']);
+                  onTap: () async {
+                    await _chatService.dismissEmergencyRequest(data['senderID']);
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -80,12 +80,12 @@ class _EmergencyRequestListState extends State<EmergencyRequestList> {
                   title: Text(data['senderName']),
                   trailing: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.lightBlueAccent,
+                      primary: Colors.pink.shade900,
                       onPrimary: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(40.0),
                       ),
-                      fixedSize: const Size(100.0, 80.0),
+                      fixedSize: const Size(100.0, 40.0),
                     ),
                     child: const Text("Respond"),
                     onPressed: () {

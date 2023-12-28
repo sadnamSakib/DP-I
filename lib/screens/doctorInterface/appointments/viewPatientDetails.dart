@@ -187,7 +187,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Icon(
-                    Icons.bar_chart, // Replace with the icon you want
+                    Icons.content_paste_outlined,
                     color: Colors.black,
                   ),
                   SizedBox(width: 8.0), // Adjust the spacing between the icon and text

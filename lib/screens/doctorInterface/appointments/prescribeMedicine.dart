@@ -10,7 +10,6 @@ import 'package:design_project_1/models/PrescribedMedicineModel.dart';
 class PrescribeMedicineScreen extends StatefulWidget {
   final patientId;
   const PrescribeMedicineScreen({Key? key, required this.patientId}) : super(key: key);
-
   @override
   State<PrescribeMedicineScreen> createState() => _PrescribeMedicineScreenState();
 }
@@ -19,6 +18,8 @@ class _PrescribeMedicineScreenState extends State<PrescribeMedicineScreen> {
   String query = '';
   List<Medicine> searchResults = [];
   List<Medicine> medicines = [];
+  List<Medicine> prescribedMedicines = [];
+
 
   @override
   void initState() {
@@ -26,6 +27,13 @@ class _PrescribeMedicineScreenState extends State<PrescribeMedicineScreen> {
     loadMedicines().then((value) {
       setState(() {
         medicines = value;
+      });
+    });
+    loadCurrentlyRunningMedicines(widget.patientId).then((value) {
+      setState(() {
+        print(value);
+        prescribedMedicines = value;
+        print(prescribedMedicines.length);
       });
     });
   }
@@ -66,6 +74,7 @@ class _PrescribeMedicineScreenState extends State<PrescribeMedicineScreen> {
                 ),
               ),
             ),
+
             ListView.builder(
               shrinkWrap: true, // Add this line
               itemCount: min(searchResults.length, 5),
@@ -74,8 +83,26 @@ class _PrescribeMedicineScreenState extends State<PrescribeMedicineScreen> {
                   title: Text(searchResults[index].brandName + ' ' + searchResults[index].strength),
                   subtitle: Text(searchResults[index].generic),
                   onTap : (){
-                    _showPrescribeMedicineModalBottomSheet(context, searchResults[index] , widget.patientId);
+                    _showPrescribeMedicineModalBottomSheet(context, searchResults[index] , widget.patientId, (value) {
+                      setState(() {
+                        prescribedMedicines = value;
+                      });
+                    });
                   }
+                );
+              },
+            ),
+            Padding(padding:
+              EdgeInsets.all(8.0),
+              child: Text('Prescribed Medicines', style: TextStyle(fontSize: 20.0),),
+            ),
+            ListView.builder(
+              shrinkWrap: true,
+              itemCount: prescribedMedicines.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(prescribedMedicines[index].brandName + ' ' + prescribedMedicines[index].strength ),
+                  subtitle: Text(prescribedMedicines[index].generic),
                 );
               },
             ),
@@ -86,7 +113,7 @@ class _PrescribeMedicineScreenState extends State<PrescribeMedicineScreen> {
   }
 }
 
-void _showPrescribeMedicineModalBottomSheet(BuildContext context, Medicine medicine , String patientId) {
+void _showPrescribeMedicineModalBottomSheet(BuildContext context, Medicine medicine , String patientId,Function(List<Medicine>) updatePrescribedMedicines) {
   bool morning = false;
   bool noon = false;
   bool night = false;
@@ -97,12 +124,13 @@ void _showPrescribeMedicineModalBottomSheet(BuildContext context, Medicine medic
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      bool morning = false;
-      bool noon = false;
-      bool night = false;
+      int morning = 0;
+      int noon = 0;
+      int night = 0;
       bool isBeforeMeal = true;
       int days = 0;
       String specialNote = '';
+
 
       return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
@@ -110,32 +138,102 @@ void _showPrescribeMedicineModalBottomSheet(BuildContext context, Medicine medic
             content: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-                  CheckboxListTile(
+                  ListTile(
                     title: Text('Morning'),
-                    value: morning,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        morning = value!;
-                      });
-                    },
+                    trailing: SizedBox(
+                      width: 110,
+                      child: Expanded(
+                        child: Row(
+                          children: <Widget>[
+                            IconButton(
+                              icon: Icon(Icons.remove_circle),
+                              onPressed: () {
+                                setState(() {
+                                  if (morning > 0) {
+                                    morning--;
+                                  }
+                                });
+                              },
+                            ),
+                            Text('$morning'),
+                            IconButton(
+                              icon: Icon(Icons.add_circle),
+                              onPressed: () {
+                                setState(() {
+                                  morning++;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
-                  CheckboxListTile(
+                  ListTile(
                     title: Text('Noon'),
-                    value: noon,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        noon = value!;
-                      });
-                    },
+                    trailing: SizedBox(
+                      width: 110,
+                      child: Expanded(
+                        child: Row(
+                          children: <Widget>[
+                            IconButton(
+                              icon: Icon(Icons.remove_circle),
+                              onPressed: () {
+                                setState(() {
+                                  if (noon > 0) {
+                                    noon--;
+                                  }
+                                });
+                              },
+                            ),
+                            Text('$noon'),
+                            IconButton(
+                              icon: Icon(Icons.add_circle),
+                              onPressed: () {
+                                setState(() {
+                                  noon++;
+                                });
+                              },
+                            ),
+
+
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
-                  CheckboxListTile(
+                  ListTile(
                     title: Text('Night'),
-                    value: night,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        night = value!;
-                      });
-                    },
+                    trailing: SizedBox(
+                      width: 110,
+                      child: Expanded(
+                        child: Row(
+                          children: <Widget>[
+
+                            IconButton(
+                              icon: Icon(Icons.remove_circle),
+                              onPressed: () {
+                                setState(() {
+                                  if (night > 0) {
+                                    night--;
+                                  }
+                                });
+                              },
+                            ),
+                            Text('$night'),
+                            IconButton(
+                              icon: Icon(Icons.add_circle),
+                              onPressed: () {
+                                setState(() {
+                                  night++;
+                                });
+                              },
+                            ),
+
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                   RadioListTile<bool>(
                     title: Text('Before Meal'),
@@ -179,6 +277,21 @@ void _showPrescribeMedicineModalBottomSheet(BuildContext context, Medicine medic
                   ElevatedButton(
                     child: Text('Add'),
                     onPressed: () {
+                      if (morning == 0 && noon == 0 && night == 0) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Please update the intake time.'))
+                        );
+                        return;
+                      }
+
+                      if (days == 0) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Please update the number of days.'))
+                        );
+                        return;
+                      }
+
+
                       PrescribeMedicineModel prescribedMedicine = PrescribeMedicineModel(
                         medicineDetails: medicine,
                         days: days,
@@ -191,6 +304,9 @@ void _showPrescribeMedicineModalBottomSheet(BuildContext context, Medicine medic
                         instruction: specialNote,
                       );
                       addPrescribedMedicine(patientId, prescribedMedicine);
+                      loadCurrentlyRunningMedicines(patientId).then((value) {
+                        updatePrescribedMedicines(value);
+                      });
                       Navigator.pop(context);
                     },
                   ),

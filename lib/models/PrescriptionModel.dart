@@ -15,5 +15,14 @@ class PrescriptionModel{
     };
   }
 
+  static fromMap(Map<String,dynamic>map){
+    return PrescriptionModel(
+      patientId: map['patientId'],
+      doctorId: map['doctorId'],
+      date: map['date'],
+      prescribedMedicines: map['prescribedMedicines'],
+    );
+  }
+
 
 }
