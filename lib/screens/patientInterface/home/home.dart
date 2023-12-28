@@ -9,6 +9,7 @@ import 'package:design_project_1/services/auth.dart';
 import 'package:design_project_1/screens/patientInterface/emergencyPortal/requestEmergencyScreen.dart';
 
 import '../../../services/SearchBarDelegator.dart';
+import '../profile/InfromationSelectionPage.dart';
 
 class Home extends StatefulWidget {
   Home({Key? key}) : super(key: key);
@@ -32,7 +33,7 @@ class _HomeState extends State<Home> {
       RequestEmergencyScreen(),
       DoctorFinder(),
       AppointmentListPage(),
-      ProfileScreen(),
+      InformationSelectionScreen(),
     ];
   }
 

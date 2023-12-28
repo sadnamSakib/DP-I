@@ -4,6 +4,7 @@ import 'package:design_project_1/components/chatComponent/textField.dart';
 import 'package:design_project_1/services/chat/chatService.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 class Chat extends StatefulWidget {
   final String receiverUserID;
   final String initialMessage;
@@ -31,37 +32,21 @@ class _ChatState extends State<Chat> {
     super.initState();
     _messageController.text = widget.initialMessage;
     sendMessage();
-    _chatService.requestEmergency();
   }
   @override
   Widget build(BuildContext context) {
     final String currentUserId = FirebaseAuth.instance.currentUser!.uid;
 
     return StreamBuilder<DocumentSnapshot>(
-      stream: FirebaseFirestore.instance.collection('chatrooms').doc(widget.receiverUserID).snapshots(),
+      stream: FirebaseFirestore.instance.collection('emergencyRequests').doc(widget.receiverUserID).snapshots(),
       builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-        // if (snapshot.connectionState == ConnectionState.waiting) {
-        //   print(widget.receiverUserID);
-        //   print(currentUserId);
-        //   print("waiting hoitese");
-        //   return Scaffold(
-        //     body: Center(
-        //       child: Column(
-        //         mainAxisAlignment: MainAxisAlignment.center,
-        //         children: <Widget>[
-        //           CircularProgressIndicator(),
-        //           Text('More jao'),
-        //         ],
-        //       ),
-        //     ),
-        //   );
-        // }
+
 
         if (snapshot.hasError) {
           return const Text('Something went wrong');
         }
 
-        if (snapshot.hasData && snapshot.data!.exists) {
+        if (!snapshot.hasData || !snapshot.data!.exists) {
           print("ki je hoitese");
           print(snapshot.data!.data());
           return Scaffold(

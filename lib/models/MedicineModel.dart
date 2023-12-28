@@ -21,4 +21,14 @@ class Medicine {
       'manufacturer': manufacturer,
     };
   }
+
+static fromMap(Map<String, dynamic> map) {
+    return Medicine(
+      brandName: map['brandName'],
+      dosageForm: map['dosageForm'],
+      generic: map['generic'],
+      strength: map['strength'],
+      manufacturer: map['manufacturer'],
+    );
+  }
 }
