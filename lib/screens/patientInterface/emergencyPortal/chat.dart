@@ -5,11 +5,9 @@ import 'package:design_project_1/services/chat/chatService.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 class Chat extends StatefulWidget {
-  final String receiverUserEmail;
   final String receiverUserID;
-  const Chat({super.key,
-    required this.receiverUserEmail,
-    required this.receiverUserID,
+  final String initialMessage;
+  const Chat({super.key,  required this.receiverUserID, required this.initialMessage,
   });
 
   @override
@@ -21,16 +19,19 @@ class _ChatState extends State<Chat> {
   final TextEditingController _messageController = TextEditingController();
   final ChatService _chatService = ChatService();
   final _auth = FirebaseAuth.instance;
-  @override
-  void initState() {
-    super.initState();
-    _chatService.requestEmergency();
-  }
+
   void sendMessage() async{
     if(_messageController.text.isNotEmpty){
       await _chatService.sendMessage(widget.receiverUserID, _messageController.text);
       _messageController.clear();
     }
+  }
+  @override
+  void initState() {
+    super.initState();
+    _messageController.text = widget.initialMessage;
+    sendMessage();
+    _chatService.requestEmergency();
   }
   @override
   Widget build(BuildContext context) {
@@ -68,7 +69,7 @@ class _ChatState extends State<Chat> {
               backgroundColor: Colors.blue.shade900,
               title: Align(
                 alignment: Alignment.centerLeft,
-                child: Text(widget.receiverUserEmail),
+                child: Text("Emergency Portal"),
               ),
             ),
             body: Column(
@@ -154,7 +155,7 @@ class _ChatState extends State<Chat> {
               crossAxisAlignment: (data['senderID'] == _auth.currentUser?.uid) ? CrossAxisAlignment.end : CrossAxisAlignment.start,
               mainAxisAlignment: (data['senderID'] == _auth.currentUser?.uid) ? MainAxisAlignment.end : MainAxisAlignment.start,
               children: [
-                Text(data['senderEmail']),
+                Text(data['senderName']),
                 ChatBubble(message: data['message']),
               ]
           ),

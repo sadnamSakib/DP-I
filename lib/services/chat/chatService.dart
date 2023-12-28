@@ -11,12 +11,13 @@ class ChatService extends ChangeNotifier{
   Future<void> requestEmergency() async {
     //get current user info
     final String currentUserID = _auth.currentUser!.uid;
-    final String currentUserEmail = _auth.currentUser!.email!;
+    final currentUserData = await _firestore.collection('users').doc(currentUserID).get();
+    final String currentUserName = currentUserData['name'] ?? 'CurrentUser';
     final Timestamp timestamp = Timestamp.now();
     // need to handle if the emergency request already exists
     await _firestore.collection('emergencyRequests').doc(currentUserID).set({
       'senderID': currentUserID,
-      'senderEmail': currentUserEmail,
+      'senderName': currentUserName,
       'timestamp': timestamp,
     });
   }
@@ -56,16 +57,22 @@ class ChatService extends ChangeNotifier{
   Future<void> sendMessage(String receiverID, String message) async {
     //get current user info
     final String currentUserID = _auth.currentUser!.uid;
-    final String currentUserEmail = _auth.currentUser!.email!;
+    final receiverData = await _firestore.collection('users').doc(receiverID).get();
+    final currentUserData = await _firestore.collection('users').doc(currentUserID).get();
+
+    final String receiverName = receiverData['name'] ?? 'Receiver'; // Replace 'name' with the actual field name in your user document
+    final String currentUserName = currentUserData['name'] ?? 'CurrentUser';
     final Timestamp timestamp = Timestamp.now();
 
     //create a new message
     Message newMessage = Message(
       senderID: currentUserID,
-      senderEmail: currentUserEmail,
+      senderName: currentUserName,
       receiverID: receiverID,
+      receiverName: receiverName,
       message: message,
       timestamp: timestamp,
+
     );
 
     //construct chatroom id from current user id and receiver id

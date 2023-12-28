@@ -4,12 +4,11 @@ import 'package:design_project_1/components/chatComponent/textField.dart';
 import 'package:design_project_1/services/chat/chatService.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 class Chat extends StatefulWidget {
-  final String receiverUserEmail;
   final String receiverUserID;
-  const Chat({super.key,
-  required this.receiverUserEmail,
-  required this.receiverUserID,
+  const Chat({super.key,  required this.receiverUserID,
   });
 
   @override
@@ -22,6 +21,7 @@ class _ChatState extends State<Chat> {
   final ChatService _chatService = ChatService();
   final _auth = FirebaseAuth.instance;
 
+
   void sendMessage() async{
     if(_messageController.text.isNotEmpty){
       await _chatService.sendMessage(widget.receiverUserID, _messageController.text);
@@ -30,22 +30,50 @@ class _ChatState extends State<Chat> {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.pink.shade900,
-        title: Align(
-          alignment: Alignment.centerLeft,
-          child: Text(widget.receiverUserEmail),
-        ),
-      ),
-      body: Column(
-        children:[
-          Expanded(
-            child: _buildMessageList(),
+    return StreamBuilder<DocumentSnapshot>(
+      stream: FirebaseFirestore.instance.collection('patients').doc(widget.receiverUserID).snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return Text("Something went wrong");
+        }
+
+        // if (snapshot.connectionState == ConnectionState.waiting) {
+        //   return Text("Loading");
+        // }
+
+        Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
+        String receiverName = data['name'];
+        String receiverPhoneNumber = data['phone'];
+
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.pink.shade900,
+            title: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(receiverName),
+            ),
+            actions: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(right: 20.0),
+                child: IconButton(
+                  icon: Icon(Icons.call),
+                  onPressed: () {
+                      showCallModal(receiverPhoneNumber);
+                  },
+                ),
+              ),
+            ],
           ),
-          _buildMessageInput(),
-        ],
-      ),
+          body: Column(
+            children:[
+              Expanded(
+                child: _buildMessageList(),
+              ),
+              _buildMessageInput(),
+            ],
+          ),
+        );
+      },
     );
   }
   //build message list
@@ -105,6 +133,34 @@ class _ChatState extends State<Chat> {
           ]
         ),
       )
+    );
+  }
+  void showCallModal(String receiverPhoneNumber) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.blue.shade800,
+          content: ListTile(
+            tileColor: Colors.blue.shade800,
+            leading: Icon(Icons.call, color: Colors.white),
+            title: Text(receiverPhoneNumber, style: TextStyle(color: Colors.white)),
+            onTap: () async {
+              final Uri url = Uri(
+                scheme: 'tel',
+                path: receiverPhoneNumber,
+              );
+              print(receiverPhoneNumber);
+              if (await canLaunchUrl(url)) {
+                await launchUrl(url);
+                print('Launched $url');
+              } else {
+                print('Could not launch $url');
+              }
+            },
+          ),
+        );
+      },
     );
   }
 }
