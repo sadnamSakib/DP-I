@@ -72,13 +72,12 @@ class _EmergencyRequestListState extends State<EmergencyRequestList> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => Chat(
-                          receiverUserEmail: data['senderEmail'],
                           receiverUserID: data['senderID'],
                         ),
                       ),
                     );
                   },
-                  title: Text(data['senderEmail']),
+                  title: Text(data['senderName']),
                   trailing: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       primary: Colors.lightBlueAccent,
@@ -95,7 +94,6 @@ class _EmergencyRequestListState extends State<EmergencyRequestList> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => Chat(
-                            receiverUserEmail: data['senderEmail'],
                             receiverUserID: data['senderID'],
                           ),
                         ),

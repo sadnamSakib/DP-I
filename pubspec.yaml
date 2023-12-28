@@ -59,6 +59,8 @@ dependencies:
   flutter_stripe: ^9.5.0+1
   http: ^1.1.0
   csv: ^5.1.1
+  url_launcher: ^6.2.2
+  url_launcher_android: ^6.2.0
 
 
 

@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:design_project_1/services/chat/chatService.dart';
 
-import '../../patientInterface/emergencyPortal/chat.dart';
+import '../../doctorInterface/emergencyPortal/chat.dart';
 
 class PreviousEmergencyRequestList extends StatefulWidget {
   const PreviousEmergencyRequestList({Key? key}) : super(key: key);
@@ -50,7 +50,6 @@ class _PreviousEmergencyRequestListState extends State<PreviousEmergencyRequestL
                   String?,
                   dynamic>;
 
-              // Replace with your UI components to display each previous chat
               return ListTile(
                 title: Text(chatData['receiverName']),
                 onTap: () {
@@ -58,13 +57,11 @@ class _PreviousEmergencyRequestListState extends State<PreviousEmergencyRequestL
                     context,
                     MaterialPageRoute(
                       builder: (context) => Chat(
-                        receiverUserEmail: chatData['receiverName'],
                         receiverUserID: chatData['receiverID'],
                       ),
                     ),
                   );
                 }
-                // Add more details or customize the UI as needed
               );
             }).toList(),
           );
