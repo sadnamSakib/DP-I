@@ -2,12 +2,10 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:design_project_1/screens/patientInterface/viewAppointment/appointmentList.dart';
-import 'package:design_project_1/services/MakePayment.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:http/http.dart' as http;
 
 import '../../../components/virtualConsultation/call.dart';
 import '../../../models/AppointmentModel.dart';
@@ -209,68 +207,68 @@ class _ViewAppointmentDetailsPageState extends State<ViewAppointmentDetailsPage>
     }
   }
 
-  createPaymentIntent(String amount, String currency) async {
-    try {
-      String secretKey = 'sk_test_51MsksrAgd3wAxE6JZoeAMmpqAsFZvBvu2Rru45r8ismiD14M8OOf0ah3eEMwLkLurfhvRWHUKEaPgL1M98ZE7XaI004HuirWQP';
-
-      // Request body
-      Map<String, dynamic> body = {
-        'amount': amount,
-        'currency': currency,
-      };
-
-      print(calculateAmount(amount));
-      // Make post request to Stripe
-      var response = await http.post(
-        Uri.parse('https://api.stripe.com/v1/payment_intents'),
-        headers: {
-          'Authorization': 'Bearer $secretKey',
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: body,
-      );
-
-      // print(json.decode(response.body).toString());
-      return json.decode(response.body);
-    } catch (err) {
-      print(err);
-    }
-  }
-
-  int calculateAmount(String amount) {
-    try {
-      final price = int.parse(amount);
-      return price;
-    } catch (e) {
-      print('Error parsing amount: $e');
-      return 0;
-    }
-  }
-
-  displayPaymentSheet() async {
-    try {
-      await Stripe.instance.presentPaymentSheet().then((value) {
-        paymentIntent = null;
-
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => AppointmentListPage()),
-        );
-        Fluttertoast.showToast(
-          msg: 'Payment Status updated',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.white,
-          textColor: Colors.blue,
-        );
-      }) ;
-      } catch (e) {
-      print('Error: $e');
-    }
-  }
-
-
-
-
+//   createPaymentIntent(String amount, String currency) async {
+//     try {
+//       String secretKey = 'sk_test_51MsksrAgd3wAxE6JZoeAMmpqAsFZvBvu2Rru45r8ismiD14M8OOf0ah3eEMwLkLurfhvRWHUKEaPgL1M98ZE7XaI004HuirWQP';
+//
+//       // Request body
+//       Map<String, dynamic> body = {
+//         'amount': amount,
+//         'currency': currency,
+//       };
+//
+//       print(calculateAmount(amount));
+//       // Make post request to Stripe
+//       var response = await http.post(
+//         Uri.parse('https://api.stripe.com/v1/payment_intents'),
+//         headers: {
+//           'Authorization': 'Bearer $secretKey',
+//           'Content-Type': 'application/x-www-form-urlencoded',
+//         },
+//         body: body,
+//       );
+//
+//       // print(json.decode(response.body).toString());
+//       return json.decode(response.body);
+//     } catch (err) {
+//       print(err);
+//     }
+//   }
+//
+//   int calculateAmount(String amount) {
+//     try {
+//       final price = int.parse(amount);
+//       return price;
+//     } catch (e) {
+//       print('Error parsing amount: $e');
+//       return 0;
+//     }
+//   }
+//
+//   displayPaymentSheet() async {
+//     try {
+//       await Stripe.instance.presentPaymentSheet().then((value) {
+//         paymentIntent = null;
+//
+//         Navigator.push(
+//           context,
+//           MaterialPageRoute(builder: (context) => AppointmentListPage()),
+//         );
+//         Fluttertoast.showToast(
+//           msg: 'Payment Status updated',
+//           toastLength: Toast.LENGTH_SHORT,
+//           gravity: ToastGravity.BOTTOM,
+//           timeInSecForIosWeb: 1,
+//           backgroundColor: Colors.white,
+//           textColor: Colors.blue,
+//         );
+//       }) ;
+//       } catch (e) {
+//       print('Error: $e');
+//     }
+//   }
+//
+//
+//
+//
 }
