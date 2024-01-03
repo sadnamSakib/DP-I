@@ -49,10 +49,12 @@ Future<void> deleteSharedPreferenceData() async {
   final prefs = await SharedPreferences.getInstance();
   prefs.clear();
 }
-@pragma('vm: entry-point')
+@pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async{
   await Firebase.initializeApp();
   print(message.notification!.title.toString());
+  print(message.notification!.body.toString());
+
 }
 
 
