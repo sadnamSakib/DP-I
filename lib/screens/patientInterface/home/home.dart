@@ -9,7 +9,11 @@ import 'package:design_project_1/services/auth.dart';
 import 'package:design_project_1/screens/patientInterface/emergencyPortal/requestEmergencyScreen.dart';
 
 import '../../../services/SearchBarDelegator.dart';
+
 import '../profile/InfromationSelectionPage.dart';
+
+import '../../../services/notification_services.dart';
+
 
 class Home extends StatefulWidget {
   Home({Key? key}) : super(key: key);
@@ -19,12 +23,21 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  NotificationServices notificationServices = NotificationServices();
+
   final AuthService _auth = AuthService();
   int _currentIndex = 2; // Track the current tab index
   @override
   void initState() {
     setState(() {
       _currentIndex = 2;
+    });
+    notificationServices.requestNotificationPermission();
+   notificationServices.firebaseInit();
+    // notificationServices.isTokenRefresh();
+    notificationServices.getDeviceToken().then((value) {
+print("device   token");
+print(value);
     });
   }
   List<Widget> _buildScreens() {
