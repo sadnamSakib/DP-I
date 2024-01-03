@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'appointments.dart';
 import 'healthTrackerSummaryScreen.dart';
+import 'prescribeMedicine.dart';
 
 class AppointmentDetailScreen extends StatefulWidget {
   final Appointments appointment;
@@ -85,7 +86,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
               ),
             ),
             ListTile(
-              title: Text('Patient name'),
+              title: Text('Patient Name'),
               subtitle: Text(widget.appointment.patientName),
             ),
             ListTile(
@@ -114,14 +115,48 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.teal.shade800),
               ),
               onPressed: () {
+                _showBottomSheet(context);
+              },
+              child: Text('View Options'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showBottomSheet(BuildContext context){
+    showModalBottomSheet(
+      context : context,
+      builder: (context) => Container(
+        height: 150,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
+              ),
+              onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => HealthTrackersScreen(patientId: widget.appointment.patientId)));
               },
-              child: Text('View Health Tracker Information'),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.bar_chart, // Replace with the icon you want
+                    color: Colors.black,
+                  ),
+                  SizedBox(width: 8.0), // Adjust the spacing between the icon and text
+                  Text('View Health Trackers'),
+                ],
+              ),
             ),
 
-             widget.appointment.sessionType == 'Online' ?  ElevatedButton(
+            widget.appointment.sessionType == 'Online' ?  TextButton(
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.teal.shade800),
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
               ),
               onPressed: () {
                 Navigator.push(
@@ -129,11 +164,37 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                   MaterialPageRoute(builder: (context) => CallPage(callID: generateCallID(), userID: userId, userName: userName)),
                 );
               },
-              child: Text('Call into Session'),
-            ):
-                 Container()
-
-
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.call, // Replace with the icon you want
+                    color: Colors.black,
+                  ),
+                  SizedBox(width: 8.0), // Adjust the spacing between the icon and text
+                  Text('Call Into Session'),
+                ],
+              ),
+            ) : Container(),
+            TextButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
+              ),
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => PrescribeMedicineScreen(patientId: widget.appointment.patientId)));
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.content_paste_outlined,
+                    color: Colors.black,
+                  ),
+                  SizedBox(width: 8.0), // Adjust the spacing between the icon and text
+                  Text('Prescribe Medicine'),
+                ],
+              ),
+            ),
           ],
         ),
       ),

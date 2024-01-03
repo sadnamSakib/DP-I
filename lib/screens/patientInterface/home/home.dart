@@ -1,3 +1,4 @@
+import 'package:design_project_1/screens/doctorInterface/emergencyPortal/chat.dart';
 import 'package:design_project_1/screens/patientInterface/profile/profile.dart';
 import 'package:design_project_1/screens/patientInterface/BookAppointment/doctorFinderPage.dart';
 import 'package:design_project_1/screens/patientInterface/healthTracker/tracker.dart';
@@ -5,8 +6,12 @@ import 'package:design_project_1/screens/patientInterface/viewAppointment/appoin
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:design_project_1/services/auth.dart';
+import 'package:design_project_1/screens/patientInterface/emergencyPortal/requestEmergencyScreen.dart';
 
 import '../../../services/SearchBarDelegator.dart';
+
+import '../profile/InfromationSelectionPage.dart';
+
 import '../../../services/notification_services.dart';
 
 
@@ -38,11 +43,10 @@ print(value);
   List<Widget> _buildScreens() {
     return [
       Tracker(),
-      Text('Reports'),
+      RequestEmergencyScreen(),
       DoctorFinder(),
       AppointmentListPage(),
-      ProfileScreen(),
-
+      InformationSelectionScreen(),
     ];
   }
 

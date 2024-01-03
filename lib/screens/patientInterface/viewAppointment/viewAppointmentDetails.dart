@@ -6,10 +6,16 @@ import 'package:design_project_1/screens/patientInterface/viewAppointment/appoin
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
+
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
 
 import '../../../components/virtualConsultation/call.dart';
 import '../../../models/AppointmentModel.dart';
-import '../../../services/secret_key.dart';
 class ViewAppointmentDetailsPage extends StatefulWidget {
   final Appointment appointment;
   final String ID;
@@ -207,6 +213,7 @@ class _ViewAppointmentDetailsPageState extends State<ViewAppointmentDetailsPage>
     }
   }
 
+
 //   createPaymentIntent(String amount, String currency) async {
 //     try {
 //       String secretKey = 'sk_test_51MsksrAgd3wAxE6JZoeAMmpqAsFZvBvu2Rru45r8ismiD14M8OOf0ah3eEMwLkLurfhvRWHUKEaPgL1M98ZE7XaI004HuirWQP';
@@ -271,4 +278,5 @@ class _ViewAppointmentDetailsPageState extends State<ViewAppointmentDetailsPage>
 //
 //
 //
+
 }

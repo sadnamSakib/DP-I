@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:design_project_1/screens/doctorInterface/appointments/appointments.dart';
+import 'package:design_project_1/screens/doctorInterface/emergencyPortal/emergencyRequests.dart';
 import 'package:design_project_1/screens/doctorInterface/profile/profile.dart';
 import 'package:design_project_1/screens/doctorInterface/schedule/schedule.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,6 +9,7 @@ import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:design_project_1/services/auth.dart';
 
 // import '../schedule/weekly_calender.dart';
+import '../emergencyPortal/chat.dart';
 import 'Feed.dart';
 
 void main() {
@@ -45,7 +47,7 @@ class _HomeState extends State<Home> {
       ),
       Container(
         color: Colors.transparent,
-        child: Text('Emergency'),
+        child: EmergencyRequestList(),
       ),
       Container(
         color: Colors.transparent,
