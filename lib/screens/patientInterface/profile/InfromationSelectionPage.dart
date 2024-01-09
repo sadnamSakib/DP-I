@@ -1,3 +1,4 @@
+import 'package:design_project_1/screens/patientInterface/Storage/UploadFile.dart';
 import 'package:design_project_1/screens/patientInterface/medications/currentPrescription.dart';
 import 'package:flutter/material.dart';
 import 'package:design_project_1/screens/patientInterface/profile/profile.dart';
@@ -40,7 +41,7 @@ class _InformationSelectionScreenState extends State<InformationSelectionScreen>
             leading: Icon(Icons.description),
             title: Text('Reports and Prescriptions'),
             onTap: () {
-              // Navigate to Reports and Prescriptions page
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const UploadFile()));
             },
           ),
         ],
