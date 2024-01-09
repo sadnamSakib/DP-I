@@ -36,7 +36,7 @@ class DisplayFolderName extends StatelessWidget {
                     title,
                     style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 12),
+                  SizedBox(height: 5),
 
                 ],
               ),

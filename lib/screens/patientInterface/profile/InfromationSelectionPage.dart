@@ -1,4 +1,4 @@
-import 'package:design_project_1/screens/patientInterface/Storage/UploadFile.dart';
+import 'package:design_project_1/screens/patientInterface/Storage/Upload.dart';
 import 'package:design_project_1/screens/patientInterface/medications/currentPrescription.dart';
 import 'package:flutter/material.dart';
 import 'package:design_project_1/screens/patientInterface/profile/profile.dart';

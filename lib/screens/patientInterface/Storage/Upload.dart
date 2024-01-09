@@ -2,6 +2,8 @@
         import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:design_project_1/screens/patientInterface/Storage/DisplayFolderName.dart';
         import 'package:design_project_1/screens/patientInterface/Storage/FileViewer.dart';
+import 'package:design_project_1/screens/patientInterface/Storage/Folder.dart';
+import 'package:design_project_1/screens/patientInterface/home/home.dart';
 import 'package:design_project_1/screens/patientInterface/profile/profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
         import 'package:firebase_messaging/firebase_messaging.dart';
@@ -10,6 +12,9 @@ import 'package:firebase_auth/firebase_auth.dart';
         import 'package:flutter/material.dart';
         import 'package:file_picker/file_picker.dart';
         import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
+import '../BookAppointment/doctorFinderPage.dart';
 
         class UploadFile extends StatefulWidget {
           const UploadFile({super.key});
@@ -29,10 +34,6 @@ import 'package:firebase_auth/firebase_auth.dart';
         List<Map<String,dynamic>> fileData =[];
 
 
-
-
-
-
           Future<void> createFolder(String folderName) async {
 
             await _firebaseFirestore
@@ -47,12 +48,11 @@ import 'package:firebase_auth/firebase_auth.dart';
                 .doc(userUID)  // User's UID document
                 .set({'documents': true}, SetOptions(merge: true));
 
-            initState();
           }
 
           Future<String?> uploadFile(String fileName, File file) async{
 
-            final reference = FirebaseStorage.instance.ref().child("Reports/$fileName.pdf");
+            final reference = FirebaseStorage.instance.ref().child("Reports and Prescriptions/$fileName.pdf");
 
             final uploadTask = reference.putFile(file);
 
@@ -64,41 +64,55 @@ import 'package:firebase_auth/firebase_auth.dart';
 
           }
 
-        void pickFile() async{
-
-
+          void pickFile() async {
             final pickedFile = await FilePicker.platform.pickFiles(
               type: FileType.custom,
-              allowedExtensions: ['pdf','txt','doc'],
+              allowedExtensions: ['pdf', 'txt', 'doc'],
             );
 
-            if(pickedFile != null)
-              {
-                String fileName = pickedFile.files[0].name;
-                File file = File(pickedFile.files[0].path!);
-                final downloadLink = await uploadFile(fileName, file);
+            if (pickedFile != null) {
+              String originalFileName = pickedFile.files[0].name;
+              String userID = userUID;
 
-        _firebaseFirestore.collection("Documents").add({
-          "name": fileName,
-          "URL": downloadLink,
-        });
+              String fileName = "$userID" + "_" + originalFileName;
 
-        print("File UPLOADED SUCCESSFULLY");
-              }
+              File file = File(pickedFile.files[0].path!);
+              final downloadLink = await uploadFile(fileName, file);
+
+              _firebaseFirestore.collection("Documents").add({
+                "name": fileName,
+                "URL": downloadLink,
+              });
+
+              print("File UPLOADED SUCCESSFULLY");
+            }
+
+            Fluttertoast.showToast(
+              msg: 'File Uploaded',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.white,
+              textColor: Colors.red,
+            );
+          }
 
 
+          void getFiles() async {
+            String userID = userUID;
 
-        }
+            final files = await _firebaseFirestore.collection("Documents")
+                .where('name', isGreaterThanOrEqualTo: '$userID')
+                .where('name', isLessThan: '$userID' + 'z')
+                .get();
 
-        void getFiles() async {
-            final files = await _firebaseFirestore.collection("Documents").get();
 
-            fileData= files.docs.map((e) => e.data()).toList();
+              fileData= files.docs.map((e) => e.data()).toList();
 
             setState(() {
             });
-
           }
+
 
           @override
           void initState() {
@@ -122,7 +136,6 @@ import 'package:firebase_auth/firebase_auth.dart';
               for (QueryDocumentSnapshot doc in collectionSnapshot.docs) {
                 print('Document ID: ${doc.id}');
               }
-              // getFiles();
             }
 
             print('Does collection exist? $doesCollectionExist');
@@ -161,7 +174,7 @@ import 'package:firebase_auth/firebase_auth.dart';
                           return CircularProgressIndicator();
                         } else if (snapshot.hasError) {
                           return Text('Error: ${snapshot.error}');
-                        } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty || fileData.isEmpty) {
+                        } else if ((!snapshot.hasData || snapshot.data!.docs.isEmpty) && fileData.isEmpty) {
                           return Expanded(
                             child: Container(
                               padding: EdgeInsets.all(16.0),
@@ -196,22 +209,24 @@ import 'package:firebase_auth/firebase_auth.dart';
                                     padding: const EdgeInsets.all(8.0),
                                     child: InkWell(
                                       onTap: () {
-                                        // Handle tapping on the file
                                         String fileName = fileData[index]['name'];
                                         String fileURL = fileData[index]['URL'];
-                                        print('Tapped on file: $fileName, URL: $fileURL');
+
+                                        String originalFileName = fileName.split('_')[1];
+
+                                        print('Tapped on file: $originalFileName, URL: $fileURL');
                                         Navigator.pushReplacement(
                                           context,
                                           MaterialPageRoute(builder: (context) => FileViewer(URL: fileURL)),
                                         );
-                                        // Navigate or perform other actions as needed
                                       },
                                       child: DisplayFolderName(
-                                        title: fileData[index]['name'],
-
+                                        title: fileData[index]['name'].split('_')[1],
                                       ),
                                     ),
+
                                   );
+
                                 } else {
                                   // Display folder names
                                   int folderIndex = index - fileData.length;
@@ -219,10 +234,12 @@ import 'package:firebase_auth/firebase_auth.dart';
                                     padding: const EdgeInsets.all(8.0),
                                     child: InkWell(
                                       onTap: () {
-                                        // Handle tapping on the folder
                                         String collectionName = collectionSnapshot.docs[folderIndex].id;
                                         print('Tapped on collection: $collectionName');
-                                        // Navigate or perform other actions as needed
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => NewFolder(folderName: collectionName),
+                                        ));
                                       },
                                       child: DisplayFolderName(
                                         title: collectionSnapshot.docs[folderIndex].id,
@@ -268,7 +285,14 @@ import 'package:firebase_auth/firebase_auth.dart';
                               title: Text('Upload a File'),
                               onTap: () {
                                 Navigator.pop(context); // Close the bottom sheet
-                                pickFile(); // Perform file picking logic
+                                pickFile();
+
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const DoctorFinder()),
+                                );
+
+
                               },
                             ),
                           ],
@@ -279,7 +303,7 @@ import 'package:firebase_auth/firebase_auth.dart';
                 },
               ),
             );
-            ;
+
           }
 
           void _showCreateFolderDialog() {
