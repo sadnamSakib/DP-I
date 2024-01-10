@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:design_project_1/screens/doctorInterface/Emergency.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,8 +18,15 @@ Stream<DocumentSnapshot> getUserData() {
   String userUID = FirebaseAuth.instance.currentUser?.uid ?? '';
 
   return FirebaseFirestore.instance.collection('users').doc(userUID).snapshots();
+
 }
 
+Stream<DocumentSnapshot> getDoctorData() {
+  String userUID = FirebaseAuth.instance.currentUser?.uid ?? '';
+
+  return FirebaseFirestore.instance.collection('doctors').doc(userUID).snapshots();
+
+}
 
 class _FeedState extends State<Feed> {
 
@@ -51,9 +59,9 @@ class _FeedState extends State<Feed> {
             colors: [Colors.white70, Colors.pink.shade50], // whitish to gray// repeats the gradient over the canvas
           ),
         ),
-        child: Center(
+
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            // mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
@@ -94,9 +102,67 @@ class _FeedState extends State<Feed> {
                   },
                 ),
               ),
+
+      Container(
+        padding: EdgeInsets.all(16.0),
+        margin: EdgeInsets.symmetric(horizontal: 20),
+        child: StreamBuilder<DocumentSnapshot>(
+          stream: getDoctorData(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return CircularProgressIndicator();
+            }
+
+            final userData = snapshot.data?.data() as Map<String, dynamic>;
+
+            return Visibility(
+              visible: userData['emergency'] == false || userData['emergency'] == null,
+                child: GestureDetector(
+                onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Emergency()), // Replace YourNewPage with your actual new page
+              );
+            },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.blue.shade100,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Do you want to Register as an emergency doctor? Click here to know more.',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.blue.shade800,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.left,
+                      ),
+                    ),
+                    SizedBox(width: 40),
+                    Icon(
+                      Icons.emergency_rounded,
+                      color: Colors.red,
+                      size: 40,
+                    ),
+                  ],
+                ),
+              ),
+            ));
+          },
+        ),
+      ),
+
+
+
+
             ],
           ),
-        ),
+
       ),
     );
   }
