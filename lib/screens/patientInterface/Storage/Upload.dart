@@ -158,33 +158,9 @@ import '../BookAppointment/doctorFinderPage.dart';
                             child: ListView.builder(
                               itemCount: fileData.length + collectionSnapshot.docs.length,
                               itemBuilder: (context, index) {
-                                if (index < fileData.length) {
-                                  // Display file data
-                                  return Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: InkWell(
-                                      onTap: () {
-                                        String fileName = fileData[index]['name'];
-                                        String fileURL = fileData[index]['URL'];
-
-                                        String originalFileName = fileName.split('_')[1];
-
-                                        print('Tapped on file: $originalFileName, URL: $fileURL');
-                                        Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => FileViewer(URL: fileURL)),
-                                        );
-                                      },
-                                      child: DisplayFolderName(
-                                        title: fileData[index]['name'].split('_').skip(1).join('_'),
-                                      ),
-                                    ),
-
-                                  );
-
-                                } else {
+                                if (index < collectionSnapshot.docs.length) {
                                   // Display folder names
-                                  int folderIndex = index - fileData.length;
+                                  int folderIndex = index;
                                   return Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: InkWell(
@@ -193,8 +169,8 @@ import '../BookAppointment/doctorFinderPage.dart';
                                         print('Tapped on collection: $collectionName');
                                         Navigator.pushReplacement(
                                           context,
-                                          MaterialPageRoute(builder: (context) => NewFolder(folderName: collectionName),
-                                        ));
+                                          MaterialPageRoute(builder: (context) => NewFolder(folderName: collectionName)),
+                                        );
                                       },
                                       child: DisplayFolderName(
                                         title: collectionSnapshot.docs[folderIndex].id,
@@ -202,8 +178,39 @@ import '../BookAppointment/doctorFinderPage.dart';
                                     ),
                                   );
                                 }
+                                else {
+                                  // Display file data
+                                  int fileIndex = index - collectionSnapshot.docs.length;
+                                  return Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: InkWell(
+                                      onDoubleTap: () {
+                                        String fileName = fileData[fileIndex]['name'];
+                                        String fileURL = fileData[fileIndex]['URL'];
+
+                                        String originalFileName = fileName.split('_').skip(1).join('_');
+
+                                        print('Tapped on file: $originalFileName, URL: $fileURL');
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => FileViewer(URL: fileURL)),
+                                        );
+                                      },
+
+                                      onLongPress: () {
+                                        _showDeleteConfirmationDialog(fileData[fileIndex]['name']);
+
+                                      },
+
+                                      child: DisplayFolderName(
+                                        title: fileData[fileIndex]['name'].split('_').skip(1).join('_'),
+                                      ),
+                                    ),
+                                  );
+                                }
                               },
                             )
+
 
                           );
                         }
@@ -239,8 +246,8 @@ import '../BookAppointment/doctorFinderPage.dart';
                               leading: Icon(Icons.file_upload),
                               title: Text('Upload a File'),
                               onTap: () {
-                                Navigator.pop(context); // Close the bottom sheet
                                 UploadFiles().pickFile();
+                                Navigator.pop(context);
 
                                 Navigator.push(
                                   context,
@@ -280,7 +287,7 @@ import '../BookAppointment/doctorFinderPage.dart';
                     ),
                     TextButton(
                       onPressed: () {
-                        Navigator.pop(context); // Close the dialog
+                        Navigator.pop(context);
                         String folderName = folderNameController.text;
                        
                         print('FOLDER NAMEE: $folderName');
@@ -293,5 +300,76 @@ import '../BookAppointment/doctorFinderPage.dart';
               },
             );
           }
+
+          Future<void> _showDeleteConfirmationDialog(String fileName) async {
+            return showDialog<void>(
+              context: context,
+              barrierDismissible: false, // user must tap button!
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('Delete File'),
+                  content: SingleChildScrollView(
+                    child: ListBody(
+                      children: <Widget>[
+                        Text('Are you sure you want to delete this file?'),
+                      ],
+                    ),
+                  ),
+                  actions: <Widget>[
+                    TextButton(
+                      child: Text('Cancel'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    TextButton(
+                      child: Text('Delete'),
+                      onPressed: () {
+                        // Perform delete operation
+                        deleteFile(fileName);
+                        Navigator.of(context).pop();
+                        initState();
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          }
+
+          Future<void> deleteFile(String fileName) async {
+            try {
+             await _firebaseFirestore.collection("Documents").
+              where("name", isEqualTo: fileName)
+                  .get()
+                  .then((querySnapshot) {
+                querySnapshot.docs.forEach((doc) async {
+
+                  await doc.reference.delete();
+
+                  String fileURL = doc['URL'];
+                  Reference storageRef = FirebaseStorage.instance.refFromURL(fileURL);
+                  await storageRef.delete();
+                });
+              });
+
+              print("File deletedddddd successfully");
+              Fluttertoast.showToast(
+                msg: 'File Deleted',
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.white,
+                textColor: Colors.black,
+              );
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const UploadFile()),
+              );
+            } catch (error) {
+              print("Error deleting file: $error");
+            }
+          }
+
         }
 

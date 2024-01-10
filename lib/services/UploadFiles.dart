@@ -28,7 +28,7 @@ class UploadFiles{
   void pickFile() async {
     final pickedFile = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: ['pdf', 'txt', 'doc'],
+      allowedExtensions: ['pdf', 'txt', 'doc','img','png','jpg'],
     );
 
     if (pickedFile != null) {
@@ -46,7 +46,6 @@ class UploadFiles{
       });
 
       print("File UPLOADED SUCCESSFULLY");
-    }
 
     Fluttertoast.showToast(
       msg: 'File Uploaded',
@@ -56,6 +55,9 @@ class UploadFiles{
       backgroundColor: Colors.white,
       textColor: Colors.red,
     );
+
+
+    }
   }
 
 }
