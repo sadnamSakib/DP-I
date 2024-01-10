@@ -1,19 +1,20 @@
-        import 'dart:io';
-        import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:design_project_1/screens/patientInterface/Storage/DisplayFolderName.dart';
-        import 'package:design_project_1/screens/patientInterface/Storage/FileViewer.dart';
+import 'package:design_project_1/screens/patientInterface/Storage/FileViewer.dart';
 import 'package:design_project_1/screens/patientInterface/Storage/Folder.dart';
 import 'package:design_project_1/screens/patientInterface/home/home.dart';
 import 'package:design_project_1/screens/patientInterface/profile/profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-        import 'package:firebase_messaging/firebase_messaging.dart';
-        import 'package:firebase_storage/firebase_storage.dart';
-        import 'package:flutter/cupertino.dart';
-        import 'package:flutter/material.dart';
-        import 'package:file_picker/file_picker.dart';
-        import 'package:flutter/material.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../../../services/UploadFiles.dart';
 import '../BookAppointment/doctorFinderPage.dart';
 
         class UploadFile extends StatefulWidget {
@@ -50,52 +51,6 @@ import '../BookAppointment/doctorFinderPage.dart';
 
           }
 
-          Future<String?> uploadFile(String fileName, File file) async{
-
-            final reference = FirebaseStorage.instance.ref().child("Reports and Prescriptions/$fileName.pdf");
-
-            final uploadTask = reference.putFile(file);
-
-            await uploadTask.whenComplete(() => {});
-
-            final downloadLink = await reference.getDownloadURL();
-
-            return downloadLink;
-
-          }
-
-          void pickFile() async {
-            final pickedFile = await FilePicker.platform.pickFiles(
-              type: FileType.custom,
-              allowedExtensions: ['pdf', 'txt', 'doc'],
-            );
-
-            if (pickedFile != null) {
-              String originalFileName = pickedFile.files[0].name;
-              String userID = userUID;
-
-              String fileName = "$userID" + "_" + originalFileName;
-
-              File file = File(pickedFile.files[0].path!);
-              final downloadLink = await uploadFile(fileName, file);
-
-              _firebaseFirestore.collection("Documents").add({
-                "name": fileName,
-                "URL": downloadLink,
-              });
-
-              print("File UPLOADED SUCCESSFULLY");
-            }
-
-            Fluttertoast.showToast(
-              msg: 'File Uploaded',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.white,
-              textColor: Colors.red,
-            );
-          }
 
 
           void getFiles() async {
@@ -221,7 +176,7 @@ import '../BookAppointment/doctorFinderPage.dart';
                                         );
                                       },
                                       child: DisplayFolderName(
-                                        title: fileData[index]['name'].split('_')[1],
+                                        title: fileData[index]['name'].split('_').skip(1).join('_'),
                                       ),
                                     ),
 
@@ -285,7 +240,7 @@ import '../BookAppointment/doctorFinderPage.dart';
                               title: Text('Upload a File'),
                               onTap: () {
                                 Navigator.pop(context); // Close the bottom sheet
-                                pickFile();
+                                UploadFiles().pickFile();
 
                                 Navigator.push(
                                   context,
