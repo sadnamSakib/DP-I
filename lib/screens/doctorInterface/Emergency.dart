@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:design_project_1/screens/doctorInterface/home/Feed.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../services/auth.dart';
 
@@ -15,6 +17,27 @@ Stream<DocumentSnapshot> getDoctorData() {
   String userUID = FirebaseAuth.instance.currentUser?.uid ?? '';
 
   return FirebaseFirestore.instance.collection('doctors').doc(userUID).snapshots();
+
+}
+void updateEmergencyStatus() async {
+  try {
+    String userUID = FirebaseAuth.instance.currentUser?.uid ?? '';
+
+    DocumentReference doctorRef = FirebaseFirestore.instance.collection('doctors').doc(userUID);
+
+    DocumentSnapshot doctorSnapshot = await doctorRef.get();
+
+    if (doctorSnapshot.exists) {
+
+      await doctorRef.update({'emergency': true});
+      print('Doctor document updated successfully!');
+
+    } else {
+      print('Doctor document does not exist.');
+    }
+  } catch (error) {
+    print('Error updating doctor document: $error');
+  }
 
 }
 
@@ -152,16 +175,34 @@ class _EmergencyState extends State<Emergency> {
                   children: [
                     ElevatedButton(
                       onPressed: () {
-                        // Handle Accept button press
+
+                        updateEmergencyStatus();
                         print('Accepted');
+                        Fluttertoast.showToast(
+                          msg: 'You are now enlisted in Emergency Panel.',
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.white,
+                          textColor: Colors.blue,
+                        );
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Feed()),
+                        );
                       },
                       child: Text('Accept'),
                     ),
                     SizedBox(width: 20),
                     ElevatedButton(
                       onPressed: () {
-                        // Handle Decline button press
                         print('Declined');
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Feed()),
+                        );
                       },
                       child: Text('Decline'),
                     ),
