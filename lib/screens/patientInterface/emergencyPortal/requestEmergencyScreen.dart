@@ -95,9 +95,9 @@ class _RequestEmergencyScreenState extends State<RequestEmergencyScreen> {
                 _auth.currentUser!.uid).snapshots(),
             builder: (BuildContext context,
                 AsyncSnapshot<DocumentSnapshot> snapshot) {
-              if (snapshot.hasData && snapshot.data!.exists) {
+              if (snapshot.hasData && snapshot.data!.exists && snapshot.data?['active']==true) {
                 // If the current user's ID exists in the 'chatrooms' collection, navigate to the Chat screen
-                WidgetsBinding.instance!.addPostFrameCallback((_) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) =>
