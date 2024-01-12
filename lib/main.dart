@@ -14,7 +14,7 @@ import 'message.dart';
 import 'models/UserModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
-
+import 'package:design_project_1/services/notification_services.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
 
@@ -25,6 +25,11 @@ Future main() async {
   await AndroidAlarmManager.initialize();
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler) ;
+  // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+  //   if(message.notification != null){
+  //     NotificationServices.showNotification(title: message.notification!.title.toString(), body: message.notification!.body.toString(), payload: message.data.toString());
+  //   }
+  // });
 
   runApp(const MyApp());
   final alarmTime = DateTime(
@@ -52,9 +57,6 @@ Future<void> deleteSharedPreferenceData() async {
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async{
   await Firebase.initializeApp();
-  print(message.notification!.title.toString());
-  print(message.notification!.body.toString());
-
 }
 
 

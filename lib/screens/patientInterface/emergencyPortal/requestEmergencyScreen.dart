@@ -1,8 +1,12 @@
+import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:design_project_1/screens/patientInterface/emergencyPortal/chat.dart';
 import 'package:design_project_1/services/chat/chatService.dart';
+
+
+import '../../../services/notification_services.dart';
 class RequestEmergencyScreen extends StatefulWidget {
   const RequestEmergencyScreen({super.key});
 
@@ -14,15 +18,20 @@ class _RequestEmergencyScreenState extends State<RequestEmergencyScreen> {
   final _auth = FirebaseAuth.instance;
   final _firestore = FirebaseFirestore.instance;
   final ChatService _chatService = ChatService();
+  NotificationServices notificationServices = NotificationServices();
   final String receiverID = FirebaseAuth.instance.currentUser!.uid;
-  final String receiverEmail = FirebaseAuth.instance.currentUser!.email.toString();
+  final String receiverEmail = FirebaseAuth.instance.currentUser!.email
+      .toString();
   String initialMessage = "";
   final TextEditingController _messageController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<DocumentSnapshot>(
-      stream: _firestore.collection('emergencyRequests').doc(_auth.currentUser!.uid).snapshots(),
-      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+      stream: _firestore.collection('emergencyRequests').doc(
+          _auth.currentUser!.uid).snapshots(),
+      builder: (BuildContext context,
+          AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.hasData && snapshot.data!.exists) {
           // If the current user's ID exists in the 'emergencyRequests' collection, return the current widget
 
@@ -63,12 +72,15 @@ class _RequestEmergencyScreenState extends State<RequestEmergencyScreen> {
                     child: Icon(Icons.emergency_outlined,
                       size: 40.0,
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       initialMessage = _messageController.text;
-                      _chatService.requestEmergency();
+                      await _chatService.requestEmergency();
+
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => Chat(receiverUserID: receiverID, initialMessage: initialMessage,)),
+                        MaterialPageRoute(builder: (context) =>
+                            Chat(receiverUserID: receiverID,
+                              initialMessage: initialMessage,)),
                       );
                     },
                   ),
@@ -79,14 +91,18 @@ class _RequestEmergencyScreenState extends State<RequestEmergencyScreen> {
         } else {
           // If the current user's ID does not exist in the 'emergencyRequests' collection, check the 'chatrooms' collection
           return StreamBuilder<DocumentSnapshot>(
-            stream: _firestore.collection('chatrooms').doc(_auth.currentUser!.uid).snapshots(),
-            builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+            stream: _firestore.collection('chatrooms').doc(
+                _auth.currentUser!.uid).snapshots(),
+            builder: (BuildContext context,
+                AsyncSnapshot<DocumentSnapshot> snapshot) {
               if (snapshot.hasData && snapshot.data!.exists) {
                 // If the current user's ID exists in the 'chatrooms' collection, navigate to the Chat screen
                 WidgetsBinding.instance!.addPostFrameCallback((_) {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Chat(receiverUserID: receiverID, initialMessage: initialMessage,)),
+                    MaterialPageRoute(builder: (context) =>
+                        Chat(receiverUserID: receiverID,
+                          initialMessage: initialMessage,)),
                   );
                 });
                 return Container(); // Return an empty container while the navigation is being performed
@@ -135,7 +151,9 @@ class _RequestEmergencyScreenState extends State<RequestEmergencyScreen> {
                             _chatService.requestEmergency();
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => Chat(receiverUserID: receiverID, initialMessage: initialMessage,)),
+                              MaterialPageRoute(builder: (context) =>
+                                  Chat(receiverUserID: receiverID,
+                                    initialMessage: initialMessage,)),
                             );
                           },
                         ),
@@ -150,5 +168,6 @@ class _RequestEmergencyScreenState extends State<RequestEmergencyScreen> {
       },
     );
   }
+
 }
 
