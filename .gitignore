@@ -47,5 +47,7 @@ app.*.map.json
 /android/app/build.gradle
 /lib/firebase_options.dart
 /lib/services/nutritionixApi.dart
-/lib/services/secret_key.dart
+/lib/services/chat/ServerKey.dart
+/lib/services/.gitignore
 /pubspec.lock
+

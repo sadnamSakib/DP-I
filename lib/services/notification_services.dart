@@ -1,8 +1,12 @@
+import 'dart:io';
 import 'dart:math';
 import 'package:app_settings/app_settings.dart';
+import 'package:design_project_1/screens/patientInterface/medications/currentPrescription.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -44,57 +48,52 @@ class NotificationServices {
 //
     await _flutterLocalNotificationsPlugin.initialize(
       initializationSetting,
-      onSelectNotification: (String? payload){
-        print("Notification clicked with payload: $payload");
-        return Future.value(null);
+      onDidReceiveNotificationResponse: (payload) async {
+        debugPrint('notification payload: $payload');
+        handleMessage(context, message);
       },
-
+      onDidReceiveBackgroundNotificationResponse: (payload) async {
+        debugPrint('notification payload: $payload');
+        handleMessage(context, message);
+      },
+    );
+  }
+  Future<void> firebaseInit(BuildContext context) async {
+    await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+      alert: true,
+      badge: true,
+      sound: true,
     );
 
+    FirebaseMessaging.onMessage.listen((message) {
+      if (kDebugMode) {
+        print(message.notification!.title.toString());
+        print(message.notification!.body.toString());
+      }
+      showNotification(title: message.notification!.title.toString(), body: message.notification!.body.toString(), payload: message.data.toString());
+        initLocalNotification(context, message);
+        print(message.notification!.title.toString());
 
+
+    });
   }
 
-  void firebaseInit() =>
-
-      FirebaseMessaging.onMessage.listen((message) {
-        if (kDebugMode) {
-          print(message.notification!.title.toString());
-          print(message.notification!.body.toString());
-        }
-
-        showNotification(message);
-      });
-  Future <void> showNotification(RemoteMessage message) async {
-    AndroidNotificationChannel channel = AndroidNotificationChannel(
-      Random.secure().nextInt(100000).toString(),
-      'High Importance Channel',
-      'CHANNEL DESCRIPTION',
-      importance: Importance.max,
-
-
+  static Future showNotification({required String title, required String body, required String payload}) async {
+    final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    const AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
+      'high_priority_channel',
+      'high_priority_channel',
+      importance: Importance.high,
+      priority: Priority.max,
+      ticker: 'ticker',
     );
-
-
-    AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
-        channel.id.toString(),
-        channel.name.toString(),
-        'CHANNEL DESCRIPTION',
-        importance: Importance.high,
-        priority: Priority.high,
-        ticker: 'ticker'
-    );
-
-    NotificationDetails notificationDetails = NotificationDetails(
+    const NotificationDetails notificationDetails = NotificationDetails(
       android: androidNotificationDetails,
+    );
+    await flutterLocalNotificationsPlugin.show(
+      0, title, body, notificationDetails, payload: payload,
 
     );
-    Future.delayed(Duration.zero, () {
-      _flutterLocalNotificationsPlugin.show(
-          0,
-          message.notification!.title.toString(),
-          message.notification!.body.toString(),
-          notificationDetails);
-    });
   }
 
   Future<String> getDeviceToken() async {
@@ -107,6 +106,18 @@ class NotificationServices {
       event.toString();
       print("REFRESH        ");
     });
+  }
+  Future<void> setupInteractMessage(BuildContext context) async {
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print("onMessageOpenedApp: $message");
+      handleMessage(context, message);
+    });
+  }
+  void handleMessage(BuildContext context, RemoteMessage message) {
+    print("handle message cholse");
+    if(message.data['type'] == 'reminder'){
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const CurrentPrescriptionScreen()));
+    }
   }
 
 }

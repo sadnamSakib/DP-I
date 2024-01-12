@@ -27,7 +27,8 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
     namespace "com.DPI.design_project_1"
-    compileSdkVersion 33
+    compileSdkVersion flutter.compileSdkVersion
+
     ndkVersion flutter.ndkVersion
 
     compileOptions {
