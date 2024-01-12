@@ -123,7 +123,6 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
 
     String formattedTime = '$hour:$minute $period';
 
-    print('HOURRRRR');
     print("Formatted Time: $formattedTime");
 
     return formattedTime;
