@@ -11,7 +11,6 @@ import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 
 import '../BookAppointment/doctorFinderPage.dart';
-import 'DisplayFolderName.dart';
 import 'FileViewer.dart';
 
 class NewFolder extends StatefulWidget {
@@ -49,7 +48,6 @@ class _NewFolderState extends State<NewFolder> {
           .get();
 
       if (filesSnapshot.docs.isNotEmpty) {
-        // Retrieve and process data from each document in the subcollection
         allFilesData = filesSnapshot.docs
             .map((doc) => doc.data() as Map<String, dynamic>)
             .toList();
@@ -158,12 +156,14 @@ class _NewFolderState extends State<NewFolder> {
                   child: Column(
                     children: [
                       SizedBox(height: 20),
-                      Text(
-                  'Create folders or Upload your files',
-                        style: TextStyle(fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey.shade700,),
-                        textAlign: TextAlign.center,),
+                      Center(
+                        child: Text(
+                                          'Upload your files',
+                          style: TextStyle(fontSize: 24,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey.shade700,),
+                          textAlign: TextAlign.center,),
+                      ),
                     ],),
                 ),
               ),
@@ -177,31 +177,38 @@ class _NewFolderState extends State<NewFolder> {
                   String fileName = allFilesData[index]['name'];
                   String fileURL = allFilesData[index]['URL'];
                   return
-                    Padding(padding: const EdgeInsets.all(8.0),
-                    child: InkWell(
-                      onDoubleTap: () {
-                        print('Tapped on file: $fileName, URL: $fileURL');
-                  Navigator.pushReplacement(
-                  context,
-                    MaterialPageRoute(
-                      builder: (context) => FileViewer(URL: fileURL),
-                    ),);
-                  },
-                      onLongPress: () {
-                        _showDeleteConfirmationDialog(allFilesData[index]['name']);
 
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: InkWell(
+                        onDoubleTap: () {
+                          print('Tapped on file: $fileName, URL: $fileURL');
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FileViewer(URL: fileURL),
+                            ),
+                          );
                         },
-                      // onTap: () {
-                      //   String fileName = allFilesData[index]['name'];
-                      //   String fileURL = allFilesData[index]['URL'];
-                      //   downloadFile(fileURL, fileName);
-                      // },
-                    
-                      child: DisplayFolderName(
-                        title: allFilesData[index]['name'],
+                        onLongPress: () {
+                          _showDeleteConfirmationDialog(allFilesData[index]['name']);
+                        },
+                        child: Card(
+                          color: Colors.white,
+                          child: ListTile(
+                            leading: Icon(Icons.file_copy),
+                            title: Text(
+                              allFilesData[index]['name'],
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  );}
+                    );
+
+
+
+                  }
                   },
               ),
             ),

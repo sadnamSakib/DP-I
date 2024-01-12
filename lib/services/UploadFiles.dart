@@ -53,7 +53,7 @@ class UploadFiles{
       gravity: ToastGravity.BOTTOM,
       timeInSecForIosWeb: 1,
       backgroundColor: Colors.white,
-      textColor: Colors.red,
+      textColor: Colors.blue,
     );
 
 

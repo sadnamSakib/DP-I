@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:design_project_1/screens/patientInterface/Storage/DisplayFolderName.dart';
 import 'package:design_project_1/screens/patientInterface/Storage/FileViewer.dart';
 import 'package:design_project_1/screens/patientInterface/Storage/Folder.dart';
 import 'package:design_project_1/screens/patientInterface/home/home.dart';
@@ -97,6 +96,7 @@ import '../BookAppointment/doctorFinderPage.dart';
 
           }
 
+
           @override
           Widget build(BuildContext context) {
             return Scaffold(
@@ -138,82 +138,136 @@ import '../BookAppointment/doctorFinderPage.dart';
                                 child: Column(
                                   children: [
                                     SizedBox(height: 20),
-                                    Text(
-                                      'Create folders or Upload your files',
-                                      style: TextStyle(
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.grey.shade700,
+                                    Center(
+                                      child: Text(
+                                        'Create folders or Upload your files',
+                                        style: TextStyle(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey.shade700,
+                                        ),
+                                        textAlign: TextAlign.center,
                                       ),
-                                      textAlign: TextAlign.center,
                                     ),
                                   ],
                                 ),
                               ),
                             ),
                           );
-                        } else {
+                        }
+
+
+                        else {
                           var collectionSnapshot = snapshot.data!;
                           return Expanded(
-                            child: ListView.builder(
-                              itemCount: fileData.length + collectionSnapshot.docs.length,
-                              itemBuilder: (context, index) {
-                                if (index < collectionSnapshot.docs.length) {
-                                  // Display folder names
-                                  int folderIndex = index;
-                                  return Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: InkWell(
-                                      onTap: () {
-                                        String collectionName = collectionSnapshot.docs[folderIndex].id;
-                                        print('Tapped on collection: $collectionName');
-                                        Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => NewFolder(folderName: collectionName)),
+                            child: PageView.builder(
+                              itemCount: 2, // Two pages, one for folders and one for files
+                              controller: PageController(viewportFraction: 1),
+                              itemBuilder: (context, pageIndex) {
+                                if (pageIndex == 0) {
+                                  if (collectionSnapshot.docs.isEmpty) {
+                                    // Show a text when there are no folders
+                                    return Center(
+                                      child:  Text(
+                                        'Create your folders',
+                                        style: TextStyle(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey.shade700,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    );
+                                  } else {
+                                    // Show the ListView.builder for folders
+                                    return ListView.builder(
+                                      itemCount: collectionSnapshot.docs.length,
+                                      itemBuilder: (context, index) {
+                                        int folderIndex = index;
+                                        return Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: InkWell(
+                                            onTap: () {
+                                              String collectionName = collectionSnapshot.docs[folderIndex].id;
+                                              print('Tapped on collection: $collectionName');
+                                              Navigator.pushReplacement(
+                                                context,
+                                                MaterialPageRoute(builder: (context) => NewFolder(folderName: collectionName)),
+                                              );
+                                            },
+                                            child: Card(
+                                              color: Colors.white,
+                                              child: ListTile(
+                                                leading: Icon(Icons.folder),
+                                                title: Text(collectionSnapshot.docs[folderIndex].id),
+                                              ),
+                                            ),
+                                          ),
                                         );
                                       },
-                                      child: DisplayFolderName(
-                                        title: collectionSnapshot.docs[folderIndex].id,
-                                      ),
-                                    ),
-                                  );
-                                }
-                                else {
+                                    );
+                                  }
+
+
+                                } else {
+
+                                    if (fileData.isEmpty) {
+                                      return Center(
+                                        child: Text(
+                                          'Create your files',
+                                          style: TextStyle(
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.grey.shade700,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      );
+                                    }
+
+                                    else
+                                    {
+                                      return ListView.builder(
+                                        itemCount: fileData.length,
+                                        itemBuilder: (context, index) {
+                                          int fileIndex = index;
+                                          return Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: InkWell(
+                                              onDoubleTap: () {
+                                                String fileName = fileData[fileIndex]['name'];
+                                                String fileURL = fileData[fileIndex]['URL'];
+                                                String originalFileName = fileName.split('_').skip(1).join('_');
+                                                print('Tapped on file: $originalFileName, URL: $fileURL');
+                                                Navigator.pushReplacement(
+                                                  context,
+                                                  MaterialPageRoute(builder: (context) => FileViewer(URL: fileURL)),
+                                                );
+                                              },
+                                              onLongPress: () {
+                                                _showDeleteConfirmationDialog(fileData[fileIndex]['name']);
+                                              },
+                                              child: Card(
+                                                color: Colors.white,
+                                                child: ListTile(
+                                                  leading: Icon(Icons.file_copy_outlined),
+                                                  title: Text(fileData[fileIndex]['name'].split('_').skip(1).join('_')),
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    }
                                   // Display file data
-                                  int fileIndex = index - collectionSnapshot.docs.length;
-                                  return Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: InkWell(
-                                      onDoubleTap: () {
-                                        String fileName = fileData[fileIndex]['name'];
-                                        String fileURL = fileData[fileIndex]['URL'];
 
-                                        String originalFileName = fileName.split('_').skip(1).join('_');
 
-                                        print('Tapped on file: $originalFileName, URL: $fileURL');
-                                        Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => FileViewer(URL: fileURL)),
-                                        );
-                                      },
-
-                                      onLongPress: () {
-                                        _showDeleteConfirmationDialog(fileData[fileIndex]['name']);
-
-                                      },
-
-                                      child: DisplayFolderName(
-                                        title: fileData[fileIndex]['name'].split('_').skip(1).join('_'),
-                                      ),
-                                    ),
-                                  );
                                 }
                               },
-                            )
-
-
+                            ),
                           );
                         }
+
                       },
                     ),
                   ],
