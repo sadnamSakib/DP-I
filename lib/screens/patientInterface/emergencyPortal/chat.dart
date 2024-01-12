@@ -2,9 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:design_project_1/components/chatComponent/chatBubble.dart';
 import 'package:design_project_1/components/chatComponent/textField.dart';
 import 'package:design_project_1/services/chat/chatService.dart';
+import 'package:design_project_1/services/notification_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:http/http.dart' as http;
 class Chat extends StatefulWidget {
   final String receiverUserID;
   final String initialMessage;
@@ -18,6 +20,7 @@ class Chat extends StatefulWidget {
 
 class _ChatState extends State<Chat> {
   final TextEditingController _messageController = TextEditingController();
+  NotificationServices  notificationServices = NotificationServices();
   final ChatService _chatService = ChatService();
   final _auth = FirebaseAuth.instance;
 

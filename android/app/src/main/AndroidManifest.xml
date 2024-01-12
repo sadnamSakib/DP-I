@@ -20,7 +20,16 @@
         android:label="design_project_1"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
-        <activity
+      
+        <receiver
+        android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver"
+        android:exported="false"> <!-- Set the value based on your use case -->
+        <intent-filter>
+            <action android:name="android.intent.action.BOOT_COMPLETED" />
+            <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+        </intent-filter>
+    </receiver>
+      <activity
             android:name=".MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
@@ -36,6 +45,10 @@
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"
               />
+    <meta-data
+        android:name="com.google.firebase.messaging.default_notification_channel_id"
+        android:value="high_priority_channel" />
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

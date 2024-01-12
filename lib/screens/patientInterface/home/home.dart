@@ -1,15 +1,21 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:design_project_1/screens/doctorInterface/emergencyPortal/chat.dart';
 import 'package:design_project_1/screens/patientInterface/profile/profile.dart';
 import 'package:design_project_1/screens/patientInterface/BookAppointment/doctorFinderPage.dart';
 import 'package:design_project_1/screens/patientInterface/healthTracker/tracker.dart';
 import 'package:design_project_1/screens/patientInterface/viewAppointment/appointmentList.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:design_project_1/services/auth.dart';
 import 'package:design_project_1/screens/patientInterface/emergencyPortal/requestEmergencyScreen.dart';
-
+import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 import '../../../services/SearchBarDelegator.dart';
+
 import '../profile/InfromationSelectionPage.dart';
+
+import '../../../services/notification_services.dart';
+
 
 class Home extends StatefulWidget {
   Home({Key? key}) : super(key: key);
@@ -19,12 +25,26 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  NotificationServices notificationServices = NotificationServices();
+
   final AuthService _auth = AuthService();
   int _currentIndex = 2; // Track the current tab index
   @override
   void initState() {
+    super.initState();
     setState(() {
       _currentIndex = 2;
+    });
+    notificationServices.requestNotificationPermission();
+     notificationServices.firebaseInit(context);
+     notificationServices.setupInteractMessage(context);
+    notificationServices.isTokenRefresh();
+    notificationServices.getDeviceToken().then((value) async {
+    print("device   token");
+    print(value);
+    await FirebaseFirestore.instance.collection('patients').doc(FirebaseAuth.instance.currentUser?.uid).update({
+      'deviceToken': value,
+    });
     });
   }
   List<Widget> _buildScreens() {
@@ -57,19 +77,6 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar:  AppBar(
-      //   backgroundColor: Colors.blue.shade900,
-      //   title: Text('DocLinkr'),
-      //   actions: [
-      //     IconButton(
-      //       icon: Icon(Icons.logout),
-      //       onPressed: () async {
-      //         await _auth.signOut();
-      //       },
-      //     ),
-      //   ],
-      // )
-      //     ,
       resizeToAvoidBottomInset: false,
       body: Column(
         children: [
