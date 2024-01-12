@@ -9,6 +9,7 @@ import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:design_project_1/services/auth.dart';
 
 // import '../schedule/weekly_calender.dart';
+import '../../../services/notification_services.dart';
 import '../emergencyPortal/chat.dart';
 import 'Feed.dart';
 
@@ -19,6 +20,7 @@ void main() {
 
 
 class Home extends StatefulWidget {
+
   Home({Key? key}) : super(key: key);
 
   @override
@@ -26,14 +28,34 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
+  NotificationServices notificationServices = NotificationServices();
+  final AuthService _auth = AuthService();
   int _currentIndex = 2; // Track the current tab index
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      _currentIndex = 2;
+    });
+    notificationServices.requestNotificationPermission();
+    notificationServices.firebaseInit(context);
+    notificationServices.setupInteractMessage(context);
+    notificationServices.isTokenRefresh();
+    notificationServices.getDeviceToken().then((value) async {
+      print("device   token");
+      print(value);
+      await FirebaseFirestore.instance.collection('doctors').doc(FirebaseAuth.instance.currentUser?.uid).update({
+        'deviceToken': value,
+      });
+    });
+  }
 
   Stream<DocumentSnapshot> getUserData() {
     String userUID = FirebaseAuth.instance.currentUser?.uid ?? '';
 
     return FirebaseFirestore.instance.collection('users').doc(userUID).snapshots();
   }
+
 
 
   List<Widget> _buildScreens() {

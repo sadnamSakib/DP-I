@@ -1,7 +1,10 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:design_project_1/services/notification_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
+import 'package:design_project_1/services/chat/ServerKey.dart';
 import '../../models/Message.dart';
 
 class ChatService extends ChangeNotifier{
@@ -14,11 +17,48 @@ class ChatService extends ChangeNotifier{
     final currentUserData = await _firestore.collection('users').doc(currentUserID).get();
     final String currentUserName = currentUserData['name'] ?? 'CurrentUser';
     final Timestamp timestamp = Timestamp.now();
+    // await sendNotificationToAllDoctor();
     // need to handle if the emergency request already exists
     await _firestore.collection('emergencyRequests').doc(currentUserID).set({
       'senderID': currentUserID,
       'senderName': currentUserName,
       'timestamp': timestamp,
+    });
+  }
+  Future<void> sendNotificationToAllDoctor() async {
+    NotificationServices notificationServices = NotificationServices();
+    print("docotr ashche");
+    List<String> doctorTokenList = [];
+    await FirebaseFirestore.instance.collection('doctors').get().then((value) {
+      print('Number of docs: ${value.docs.length}');
+      for (var element in value.docs) {
+        doctorTokenList.add(element['deviceToken']);
+      }
+    });
+    print(doctorTokenList);
+    notificationServices.getDeviceToken().then((value) async {
+      for (var deviceToken in doctorTokenList) {
+        var data = {
+          'notification': {
+            'body': 'Emergency Request from Apurbo',
+            'title': 'New Emergency Request!',
+          },
+          'priority': 'high',
+          'to': deviceToken,
+          'data': {
+            'type': 'emergencyRequest',
+
+          }
+        };
+        print("notification jao");
+        await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+            body: jsonEncode(data),
+            headers: {
+              'Content-Type': 'application/json; charset=UTF-8',
+              'Authorization': key,
+            }
+        );
+      }
     });
   }
 
