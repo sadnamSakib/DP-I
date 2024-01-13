@@ -237,6 +237,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                                           child: ReusableRow(title: 'Chamber Address', value: doctorData?['chamberAddress'] ?? 'xxx-xxx-xxx', iconData: Icons.house),
                                         ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            provider.showFeeDialog(context, doctorData?['Fee'] ?? '');
+                                          },
+
+                                          child: ReusableRow(title: 'Fee', value: doctorData?['Fee'] ?? 'Insert your fee here', iconData: Icons.money),
+                                        ),
 
 
                                         ReusableRow(title: 'Degrees', value: degreesString, iconData: Icons.list_alt_outlined),
