@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vertical_weight_slider/vertical_weight_slider.dart';
-import 'package:design_project_1/services/healthTrackerService.dart';
+import 'package:design_project_1/services/trackerServices/healthTrackerService.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../../models/weightModel.dart';

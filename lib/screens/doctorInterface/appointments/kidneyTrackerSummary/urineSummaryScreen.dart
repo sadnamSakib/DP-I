@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../components/barChart/bar_graph.dart';
 import '../../../../models/UrineModel.dart';
-import '../../../../services/healthTrackerService.dart';
+import '../../../../services/trackerServices/healthTrackerService.dart';
 class UrineSummary extends StatefulWidget {
   final patientId;
   final days;

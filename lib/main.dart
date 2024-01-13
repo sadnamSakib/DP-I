@@ -1,20 +1,18 @@
 import 'dart:convert';
-
-import 'package:design_project_1/pushnotification.dart';
 import 'package:design_project_1/screens/authentication/resetPassword.dart';
 import 'package:design_project_1/screens/wrapper.dart';
-import 'package:design_project_1/services/auth.dart';
+import 'package:design_project_1/services/authServices/auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
-import 'message.dart';
+// import 'message.dart';
 import 'models/UserModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
-import 'package:design_project_1/services/notification_services.dart';
+import 'package:design_project_1/services/notificationServices/notification_services.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
 

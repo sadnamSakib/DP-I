@@ -3,10 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:design_project_1/screens/patientInterface/emergencyPortal/chat.dart';
-import 'package:design_project_1/services/chat/chatService.dart';
+import 'package:design_project_1/services/chatServices/chatService.dart';
 
 
-import '../../../services/notification_services.dart';
+import '../../../services/notificationServices/notification_services.dart';
 class RequestEmergencyScreen extends StatefulWidget {
   const RequestEmergencyScreen({super.key});
 

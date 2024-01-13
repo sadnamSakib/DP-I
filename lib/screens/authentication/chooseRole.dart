@@ -3,7 +3,7 @@ import 'package:design_project_1/screens/authentication/patientDetailsPage.dart'
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../../services/database.dart';
+import '../../services/profileServices/database.dart';
 
 class RoleSelectionPage extends StatefulWidget {
   @override

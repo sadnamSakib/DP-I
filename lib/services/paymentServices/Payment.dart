@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:design_project_1/screens/patientInterface/BookAppointment/doctorFinderPage.dart';
-import 'package:design_project_1/services/Payment/Store_Credentials.dart';
+import 'package:design_project_1/services/paymentServices/Store_Credentials.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

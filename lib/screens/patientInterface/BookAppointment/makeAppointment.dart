@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:design_project_1/screens/patientInterface/home/home.dart';
-import 'package:design_project_1/services/BookAppointement.dart';
+import 'package:design_project_1/services/appointmentServices/BookAppointement.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';

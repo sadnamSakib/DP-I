@@ -1,8 +1,8 @@
 import 'package:design_project_1/screens/wrapper.dart';
-import 'package:design_project_1/services/database.dart';
+import 'package:design_project_1/services/profileServices/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../../services/auth.dart';
+import '../../services/authServices/auth.dart';
 import 'DegreeCheckBox.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 

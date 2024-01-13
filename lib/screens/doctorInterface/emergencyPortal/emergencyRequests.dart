@@ -3,7 +3,7 @@ import 'package:design_project_1/screens/doctorInterface/emergencyPortal/previou
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../../../services/chat/chatService.dart';
+import '../../../services/chatServices/chatService.dart';
 import '../../doctorInterface/emergencyPortal/chat.dart';
 
 class EmergencyRequestList extends StatefulWidget {

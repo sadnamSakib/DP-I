@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:design_project_1/services/notification_services.dart';
+import 'package:design_project_1/services/notificationServices/notification_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:design_project_1/services/chat/ServerKey.dart';
+import 'package:design_project_1/services/chatServices/ServerKey.dart';
 import '../../models/Message.dart';
 
 class ChatService extends ChangeNotifier{
