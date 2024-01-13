@@ -23,6 +23,7 @@ class ProfileController with ChangeNotifier{
   final phoneController = TextEditingController();
   final addressController = TextEditingController();
   final degreeController = TextEditingController();
+  final feeController = TextEditingController();
 
 
 
@@ -352,5 +353,60 @@ class ProfileController with ChangeNotifier{
   }
 
 
+  Future<void> showFeeDialog(BuildContext context, String fee) {
+
+    return showDialog(context: context,
+        builder: (context){
+          return AlertDialog(
+            title: Text('Update your fee'),
+            content: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    TextField(
+                      controller: feeController,
+                      decoration: InputDecoration(labelText: 'New fee'),
+                    ),
+                  ],
+                )
+            ),
+            actions: [
+              TextButton(onPressed: (){
+                Navigator.pop(context);
+              }, child: Text('Cancel',
+                  style: TextStyle(color: Colors.red)),
+              ),
+
+              TextButton(onPressed: () async {
+                Navigator.pop(context);
+                String newfee = feeController.text;
+                if (newfee.isNotEmpty) {
+                  try {
+                    print('FEEEEEEEEEEEEEEEE');
+                    await doctors.doc(userUID).update({'Fee': newfee});
+                    feeController.clear();
+                    Fluttertoast.showToast(
+                      msg: 'Fee updated',
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.white,
+                      textColor: Colors.blue,
+                    );
+                  } catch (error) {
+                    print('Error updating fee: $error');
+
+                  }
+                }
+              },
+                  child: Text('OK')),
+            ],
+          );
+        });
+
+
+
+
+
+  }
 
 }
