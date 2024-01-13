@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:design_project_1/components/chatComponent/chatBubble.dart';
 import 'package:design_project_1/components/chatComponent/textField.dart';
-import 'package:design_project_1/services/chat/chatService.dart';
-import 'package:design_project_1/services/notification_services.dart';
+import 'package:design_project_1/screens/patientInterface/emergencyPortal/requestEmergencyScreen.dart';
+import 'package:design_project_1/services/chatServices/chatService.dart';
+import 'package:design_project_1/services/notificationServices/notification_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -23,7 +24,6 @@ class _ChatState extends State<Chat> {
   NotificationServices  notificationServices = NotificationServices();
   final ChatService _chatService = ChatService();
   final _auth = FirebaseAuth.instance;
-
   void sendMessage() async{
     if(_messageController.text.isNotEmpty){
       await _chatService.sendMessage(widget.receiverUserID, _messageController.text);
@@ -31,10 +31,12 @@ class _ChatState extends State<Chat> {
     }
   }
   @override
-  void initState() {
+    void initState() {
     super.initState();
-    _messageController.text = widget.initialMessage;
-    sendMessage();
+    if(widget.initialMessage.isNotEmpty){
+      _messageController.text = widget.initialMessage;
+      sendMessage();
+    }
   }
   @override
   Widget build(BuildContext context) {
@@ -59,6 +61,23 @@ class _ChatState extends State<Chat> {
                 alignment: Alignment.centerLeft,
                 child: Text("Emergency Portal"),
               ),
+              actions: [
+                ElevatedButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) => confirmDeleteDialog(context),
+                      );
+                    },
+                    child:
+                    const Text('End chat',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                      ),
+                    )
+                ),
+              ],
+
             ),
             body: Column(
               children:[
@@ -150,4 +169,30 @@ class _ChatState extends State<Chat> {
         )
     );
   }
+
+  Widget confirmDeleteDialog(BuildContext context) {
+    return AlertDialog(
+      title: Text("Confirm Delete"),
+      content: Text("Are you sure you want to delete this message?"),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text("Cancel"),
+        ),
+        TextButton(
+          onPressed: ()  {
+            _chatService.dismissEmergencyChat();
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const RequestEmergencyScreen()),
+            );
+          },
+          child: Text("Delete"),
+        ),
+      ],
+    );
+  }
 }
+

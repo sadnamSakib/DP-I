@@ -6,10 +6,10 @@ import 'package:design_project_1/screens/doctorInterface/schedule/schedule.dart'
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
-import 'package:design_project_1/services/auth.dart';
+import 'package:design_project_1/services/authServices/auth.dart';
 
 // import '../schedule/weekly_calender.dart';
-import '../../../services/notification_services.dart';
+import '../../../services/notificationServices/notification_services.dart';
 import '../emergencyPortal/chat.dart';
 import 'Feed.dart';
 

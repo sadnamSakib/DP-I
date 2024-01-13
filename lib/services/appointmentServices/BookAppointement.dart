@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
-import '../models/AppointmentModel.dart';
+import '../../models/AppointmentModel.dart';
 
 class BookAppointment{
   Future<void> bookAppointment(doctorID, String patientID, String slotID,

@@ -7,14 +7,14 @@ import 'package:design_project_1/screens/patientInterface/viewAppointment/appoin
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
-import 'package:design_project_1/services/auth.dart';
+import 'package:design_project_1/services/authServices/auth.dart';
 import 'package:design_project_1/screens/patientInterface/emergencyPortal/requestEmergencyScreen.dart';
 import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
-import '../../../services/SearchBarDelegator.dart';
+import '../../../services/searchServices/SearchBarDelegator.dart';
 
 import '../profile/InfromationSelectionPage.dart';
 
-import '../../../services/notification_services.dart';
+import '../../../services/notificationServices/notification_services.dart';
 
 
 class Home extends StatefulWidget {

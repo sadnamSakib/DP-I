@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:design_project_1/services/foodSelection.dart';
+import 'package:design_project_1/services/trackerServices/foodSelection.dart';
 
 import '../../../models/foodModel.dart';
-import '../../../services/healthTrackerService.dart';
+import '../../../services/trackerServices/healthTrackerService.dart';
 import 'kidneyDiseaseTracker/kidneyTracker.dart';
 
 class FoodSelectionScreen extends StatefulWidget {

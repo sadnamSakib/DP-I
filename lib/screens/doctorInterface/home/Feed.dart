@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:design_project_1/screens/doctorInterface/Emergency.dart';
+import 'package:design_project_1/screens/doctorInterface/home/Emergency.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:design_project_1/services/auth.dart';
+import 'package:design_project_1/services/authServices/auth.dart';
 
 class Feed extends StatefulWidget {
   const Feed({Key? key}) : super(key: key);

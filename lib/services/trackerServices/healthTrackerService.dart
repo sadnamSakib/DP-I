@@ -1,15 +1,15 @@
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../models/UrineModel.dart';
-import '../models/bloodPressureModel.dart';
-import '../models/foodModel.dart';
-import '../models/weightModel.dart';
-import 'trackerServices/waterTracker.dart';
-import 'trackerServices/proteinTracker.dart';
-import 'trackerServices/weightTracker.dart';
-import 'trackerServices/urineTracker.dart';
-import 'trackerServices/bpTracker.dart';
+import '../../models/UrineModel.dart';
+import '../../models/bloodPressureModel.dart';
+import '../../models/foodModel.dart';
+import '../../models/weightModel.dart';
+import 'waterTracker.dart';
+import 'proteinTracker.dart';
+import 'weightTracker.dart';
+import 'urineTracker.dart';
+import 'bpTracker.dart';
 
 class healthTrackerService {
   final String? uid;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../services/auth.dart';
+import '../../../services/authServices/auth.dart';
 
 class CalendarPage extends StatefulWidget {
   @override
