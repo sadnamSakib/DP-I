@@ -2,6 +2,8 @@ import 'package:design_project_1/screens/patientInterface/Storage/Upload.dart';
 import 'package:design_project_1/screens/patientInterface/medications/currentPrescription.dart';
 import 'package:flutter/material.dart';
 import 'package:design_project_1/screens/patientInterface/profile/profile.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
 class InformationSelectionScreen extends StatefulWidget {
   const InformationSelectionScreen({super.key});
 
@@ -44,6 +46,8 @@ class _InformationSelectionScreenState extends State<InformationSelectionScreen>
               Navigator.push(context, MaterialPageRoute(builder: (context) => const UploadFile()));
             },
           ),
+
+
         ],
       ),
     );

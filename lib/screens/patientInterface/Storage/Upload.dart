@@ -50,7 +50,54 @@ import '../BookAppointment/doctorFinderPage.dart';
 
           }
 
+          Future<void> deleteFolder(String folderName) async {
 
+            print('IN DELETE FOLDER');
+            final CollectionReference<Map<String, dynamic>> collectionRef =
+            FirebaseFirestore.instance
+                .collection('Documents')
+                .doc('Reports and Prescriptions')
+                .collection(userUID)
+                .doc(folderName)
+                .collection('Files');
+
+            try {
+              // Retrieve documents within the collection
+              final QuerySnapshot<Map<String, dynamic>> documentsSnapshot =
+              await collectionRef.get();
+
+              // Delete each document in a batch
+              final WriteBatch batch = FirebaseFirestore.instance.batch();
+              documentsSnapshot.docs.forEach((doc) async {
+                batch.delete(doc.reference);
+                String fileURL = doc['URL'];
+                Reference storageRef = FirebaseStorage.instance.refFromURL(fileURL);
+                await storageRef.delete();
+              });
+              await batch.commit();
+
+              await collectionRef.parent!.delete();
+
+
+              print("Collection '$folderName' deleted successfully.");
+              Fluttertoast.showToast(
+                msg: 'Folder Deleted',
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.white,
+                textColor: Colors.black,
+              );
+
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const UploadFile()),
+              );
+
+            } catch (error) {
+              print("Error deleting collection '$folderName': $error");
+            }
+          }
 
           void getFiles() async {
             String userID = userUID;
@@ -194,6 +241,11 @@ import '../BookAppointment/doctorFinderPage.dart';
                                                 context,
                                                 MaterialPageRoute(builder: (context) => NewFolder(folderName: collectionName)),
                                               );
+                                            },
+                                            onLongPress: () {
+                                              String collectionName = collectionSnapshot.docs[folderIndex].id;
+                                              print('Tapped on collection: $collectionName');
+                                              _showDeleteFolderConfirmationDialog(collectionSnapshot.docs[folderIndex].id);
                                             },
                                             child: Card(
                                               color: Colors.white,
@@ -383,6 +435,42 @@ import '../BookAppointment/doctorFinderPage.dart';
                         deleteFile(fileName);
                         Navigator.of(context).pop();
                         initState();
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          }
+
+          Future<void> _showDeleteFolderConfirmationDialog(String fileName) async {
+            return showDialog<void>(
+              context: context,
+              barrierDismissible: false, // user must tap button!
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('Delete Folder'),
+                  content: SingleChildScrollView(
+                    child: ListBody(
+                      children: <Widget>[
+                        Text('Are you sure you want to delete this folder?'),
+                      ],
+                    ),
+                  ),
+                  actions: <Widget>[
+                    TextButton(
+                      child: Text('Cancel'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    TextButton(
+                      child: Text('Delete'),
+                      onPressed: () {
+                        // Perform delete operation
+                        deleteFolder(fileName);
+                        Navigator.of(context).pop();
+                        // initState();
                       },
                     ),
                   ],
