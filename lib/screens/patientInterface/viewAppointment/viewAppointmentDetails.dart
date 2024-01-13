@@ -149,10 +149,31 @@ class _ViewAppointmentDetailsPageState extends State<ViewAppointmentDetailsPage>
                 ? ElevatedButton(
               onPressed: () async {
 
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SSLCommerze(appointmentID: widget.ID, appointment: widget.appointment, fee: doctorData?['Fee'],)),
-                );
+                if('${doctorData?['Fee']}' == '')
+                {
+                  Fluttertoast.showToast(
+                    msg: "Payment can not done now. Please try again later.",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 3,
+                    backgroundColor: Colors.blue,
+                    textColor: Colors.white,
+                    fontSize: 16.0,
+                  );
+
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const AppointmentListPage()),
+                  );
+                }
+                else{
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SSLCommerze(appointmentID: widget.ID, appointment: widget.appointment, fee: doctorData?['Fee'],)),
+                  );
+                }
+
+
               },
               child: Text('Pay Now'),
               style: ElevatedButton.styleFrom(

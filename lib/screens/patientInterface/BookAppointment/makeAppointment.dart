@@ -44,10 +44,9 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
         .where('slotID', isEqualTo: slotid)
         .get();
 
-    // Check if any matching appointments exist
     if (appointmentsQuery.docs.isNotEmpty) {
       // Appointments matching the current user exist for this slot
-      // print('Appointments exist for slot $slotid');
+      print('Appointments exist for slot $slotid');
       setState(() {
 
         hasAppointment = true;
@@ -55,16 +54,16 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
 
     } else {
       // No matching appointments found for this slot
-      // print('No appointments for slot $slotid');
+      print('No appointments for slot $slotid');
     }
   }
 
   Future<void> fetchTimeSlots(DateTime selectedDay) async {
     setState(() {
 
-    selectedTimeSlot=null;
-    hasAppointment=false;
-    timeSlots.clear();
+      selectedTimeSlot=null;
+      hasAppointment=false;
+      timeSlots.clear();
     });
     final scheduleCollection = FirebaseFirestore.instance.collection(
         'Schedule');
@@ -87,13 +86,13 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
           print(_StartTime);
 
           setState(() {
-          TimeSlots timeSlot = TimeSlots(
-            id: slots.id,
-            startTime: _StartTime,
-            endTime: _endTime,
-            sessionType: _sessionType,
-          );
-          timeSlots.add(timeSlot);
+            TimeSlots timeSlot = TimeSlots(
+              id: slots.id,
+              startTime: _StartTime,
+              endTime: _endTime,
+              sessionType: _sessionType,
+            );
+            timeSlots.add(timeSlot);
 
           });
 
@@ -172,9 +171,155 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
     }
   }
 
+  void fetchAppointments() async {
+
+
+    // DateTime firstDay = DateTime.now();
+    // DateTime lastDay = DateTime.now().add(Duration(days: 6));
+    //
+    // for (DateTime selectedDay = firstDay; selectedDay.isBefore(lastDay);
+    // selectedDay = selectedDay.add(Duration(days: 1))) {
+    //   print('selected DAY: ${selectedDay}');
+
+      // String Searchfordate = DateFormat('yyyy-MM-dd').format(selectedDay);
+      CollectionReference appointmentsCollection = FirebaseFirestore.instance.collection('Appointments');
+
+      String currentUserId = FirebaseAuth.instance.currentUser?.uid ?? '';
+
+      try {
+        final QuerySnapshot<Object?> querySnapshot = await appointmentsCollection
+            .where('patientId', isEqualTo: currentUserId)
+            .get();
+
+        for (var doc in querySnapshot.docs) {
+          final Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?;
+
+          if (data != null) {
+
+            String StartTime = data['startTime'];
+            String EndTime = data['endTime'];
+            String date = data['date'];
+
+            await missedAppointment(StartTime, EndTime, doc.id, date);
+
+          }
+        }
+      }
+      catch (e) {
+        print('Error fetching appointments: $e');
+      }
+    // }
+
+
+  }
+
+
+  Future<void> missedAppointment(String startTime, String endTime, String docID,
+      String documentDate) async
+  {
+
+
+    String EndTime = timeformatting(endTime);
+    DateTime endTimeFormat = DateFormat('h:mm a').parse(
+        EndTime);
+
+    DateTime parsedDateTime = DateTime.parse(documentDate);
+
+
+
+    String currentTime = DateFormat('h:mm a').format(DateTime.now());
+    DateTime currentTimeFormat = DateFormat('h:mm a').parse(
+        currentTime);
+
+    DateTime currentDateTime = DateTime.now();
+
+
+
+
+    if (parsedDateTime.isAtSameMomentAs(currentDateTime) || parsedDateTime.isBefore(currentDateTime)) {
+
+      if (parsedDateTime.isBefore(currentDateTime)) {
+        print('parsedDateTime.isBefore(currentDateTime)');
+      print(documentDate);
+
+        final appointmentRef = FirebaseFirestore.instance.collection(
+            'Appointments').doc(docID);
+
+
+        final DocumentSnapshot appointmentSnapshot = await appointmentRef.get();
+
+        final Map<String, dynamic> appointmentdata = appointmentSnapshot
+            .data() as Map<String, dynamic>;
+
+        // You can now access the fields in the appointment document
+        CollectionReference missedAppointmentsCollection = FirebaseFirestore
+            .instance.collection('MissedAppointments');
+
+        // Add the appointment data to the "MissedAppointments" collection
+        await missedAppointmentsCollection.add({
+          'patientId': appointmentdata['patientId'] ?? '',
+          'patientName': appointmentdata['patientName'] ?? '',
+          'issue': appointmentdata['issue'] ?? '',
+          'doctorId': appointmentdata['doctorId'] ?? '',
+          'date': appointmentdata['date'] ?? '',
+          'startTime': appointmentdata['startTime'] ?? '',
+          'endTime': appointmentdata['endTime'] ?? '',
+          'sessionType': appointmentdata['sessionType'] ?? '',
+          'slotID': appointmentdata['slotID'] ?? '',
+        });
+
+
+        await appointmentRef.delete();
+
+
+        print("Appointment withhhhhhhhhh ID $docID to beeeeeeeeeeeeee  deleted.");
+      }
+      else if (parsedDateTime.isAtSameMomentAs(currentDateTime) && currentTimeFormat.isAfter(endTimeFormat)) {
+        final appointmentRef = FirebaseFirestore.instance.collection(
+            'Appointments').doc(docID);
+
+
+        final DocumentSnapshot appointmentSnapshot = await appointmentRef.get();
+
+        final Map<String, dynamic> appointmentdata = appointmentSnapshot
+            .data() as Map<String, dynamic>;
+
+        CollectionReference missedAppointmentsCollection = FirebaseFirestore
+            .instance.collection('MissedAppointments');
+
+        // Add the appointment data to the "MissedAppointments" collection
+        await missedAppointmentsCollection.add({
+          'patientId': appointmentdata['patientId'] ?? '',
+          'patientName': appointmentdata['patientName'] ?? '',
+          'issue': appointmentdata['issue'] ?? '',
+          'doctorId': appointmentdata['doctorId'] ?? '',
+          'date': appointmentdata['date'] ?? '',
+          'startTime': appointmentdata['startTime'] ?? '',
+          'endTime': appointmentdata['endTime'] ?? '',
+          'sessionType': appointmentdata['sessionType'] ?? '',
+          'slotID': appointmentdata['slotID'] ?? '',
+        });
+
+
+        await appointmentRef.delete();
+
+
+        print("Appointment withhhhhhhhhh ID $docID to beeeeeeeeeeeeee  deleted.");
+
+      }
+
+      else {
+        // Current time is equal to end time
+        // Do something else
+      }
+    }
+
+  }
+
   @override
   void initState() {
     super.initState();
+    fetchAppointments();
     print(widget.doctorID);
     fetchTimeSlots(DateTime.now());
 
@@ -239,21 +384,21 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                           children: [
                             Text(
                               // 'as[pa',
-                              docUserData['name'] ?? 'Doctor Name', // Provide a default if the name is not available
+                              docUserData['name'] ?? 'Doctor Name',
                               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                             ),
                             SizedBox(height: 10),
                             Text(
-                              doctorData['specialization'] ?? '', // Replace with doctor speciality
+                              doctorData['specialization'] ?? '',
                               style: TextStyle(fontSize: 16),
                             ),
                             SizedBox(height: 10),
                             Text(
-                              doctorData['degrees']?.join(', ') ?? '', // Replace with doctor speciality
+                              doctorData['degrees']?.join(', ') ?? '',
                               style: TextStyle(fontSize: 14),
                             ),
                             Text(
-                              doctorData['chamberAddress'] ?? '', // Replace with doctor speciality
+                              doctorData['chamberAddress'] ?? '',
                               style: TextStyle(fontSize: 14),
                             ),
                           ],
@@ -410,7 +555,8 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                               builder: (BuildContext context) => BookAppointmentPage(doctorID: widget.doctorID),
                             ));
 
-                          }:
+                          }
+                              :
                               () {
                             if (selectedDate != null && selectedTimeSlot != null && Day != null) {
                               BookAppointment().bookAppointment(widget.doctorID,FirebaseAuth.instance.currentUser?.uid ?? '',
