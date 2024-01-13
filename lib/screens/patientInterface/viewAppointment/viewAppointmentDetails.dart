@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:design_project_1/screens/patientInterface/viewAppointment/appointmentList.dart';
-import 'package:design_project_1/services/Payment/Payment.dart';
+import 'package:design_project_1/services/paymentServices/Payment.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

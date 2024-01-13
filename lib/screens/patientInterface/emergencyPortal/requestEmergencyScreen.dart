@@ -6,7 +6,7 @@ import 'package:design_project_1/screens/patientInterface/emergencyPortal/chat.d
 import 'package:design_project_1/services/chatServices/chatService.dart';
 
 
-import '../../../services/notification_services.dart';
+import '../../../services/notificationServices/notification_services.dart';
 class RequestEmergencyScreen extends StatefulWidget {
   const RequestEmergencyScreen({super.key});
 

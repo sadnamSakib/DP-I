@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../components/barChart/bar_graph.dart';
-import '../../../../services/healthTrackerService.dart';
+import '../../../../services/trackerServices/healthTrackerService.dart';
 class WaterSummary extends StatefulWidget {
   final patientId;
   final days;

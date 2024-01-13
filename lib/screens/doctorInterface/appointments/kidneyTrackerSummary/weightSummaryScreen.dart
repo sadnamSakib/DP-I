@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../components/barChart/bar_graph.dart';
 import '../../../../models/weightModel.dart';
-import '../../../../services/healthTrackerService.dart';
+import '../../../../services/trackerServices/healthTrackerService.dart';
 class WeightSummary extends StatefulWidget {
   final patientId;
   final days;

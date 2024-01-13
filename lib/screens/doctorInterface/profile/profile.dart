@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:rxdart/rxdart.dart';
-import 'package:design_project_1/services/doctor_profile_controller.dart';
-import 'package:design_project_1/services/auth.dart';
+import 'package:design_project_1/services/profileServices/doctor_profile_controller.dart';
+import 'package:design_project_1/services/authServices/auth.dart';
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

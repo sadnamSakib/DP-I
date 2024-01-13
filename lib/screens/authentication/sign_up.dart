@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../services/auth.dart';
-import '../../squareTile.dart';
+import '../../services/authServices/auth.dart';
+import '../../utilities/squareTile.dart';
 import 'chooseRole.dart';
 import 'emailVerificationPage.dart';
 class SignUp extends StatefulWidget {

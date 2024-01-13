@@ -3,7 +3,7 @@ import 'package:design_project_1/components/chatComponent/chatBubble.dart';
 import 'package:design_project_1/components/chatComponent/textField.dart';
 import 'package:design_project_1/screens/patientInterface/emergencyPortal/requestEmergencyScreen.dart';
 import 'package:design_project_1/services/chatServices/chatService.dart';
-import 'package:design_project_1/services/notification_services.dart';
+import 'package:design_project_1/services/notificationServices/notification_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
