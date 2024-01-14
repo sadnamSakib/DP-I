@@ -36,7 +36,7 @@ class _InformationSelectionScreenState extends State<InformationSelectionScreen>
             leading: Icon(Icons.medical_services),
             title: Text('Medications'),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const CurrentPrescriptionScreen()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const CurrentPrescriptionScreen(medicationTime: 'morning',)));
             },
           ),
           ListTile(
