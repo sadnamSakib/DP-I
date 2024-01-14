@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:openfoodfacts/openfoodfacts.dart';
-import '../nutritionixApi.dart' as ntr;
+import 'nutritionixApi.dart' as ntr;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
