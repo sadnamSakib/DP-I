@@ -36,43 +36,43 @@ class _ChatState extends State<Chat> {
         if (snapshot.hasError) {
           return Text("Something went wrong");
         }
-
-        // if (snapshot.connectionState == ConnectionState.waiting) {
-        //   return Text("Loading");
-        // }
-
-        Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
-        String receiverName = data['name'];
-        String receiverPhoneNumber = data['phone'];
-
-        return Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.pink.shade900,
-            title: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(receiverName),
-            ),
-            actions: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(right: 20.0),
-                child: IconButton(
-                  icon: Icon(Icons.call),
-                  onPressed: () {
+        else if(!snapshot.hasData){
+          return CircularProgressIndicator();
+        }
+        else{
+          Map<String, dynamic> data = snapshot.data?.data() as Map<String, dynamic>;
+          String receiverName = data['name'];
+          String receiverPhoneNumber = data['phone'];
+          return Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.pink.shade900,
+              title: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(receiverName),
+              ),
+              actions: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(right: 20.0),
+                  child: IconButton(
+                    icon: Icon(Icons.call),
+                    onPressed: () {
                       showCallModal(receiverPhoneNumber);
-                  },
+                    },
+                  ),
                 ),
-              ),
-            ],
-          ),
-          body: Column(
-            children:[
-              Expanded(
-                child: _buildMessageList(),
-              ),
-              _buildMessageInput(),
-            ],
-          ),
-        );
+              ],
+            ),
+            body: Column(
+              children:[
+                Expanded(
+                  child: _buildMessageList(),
+                ),
+                _buildMessageInput(),
+              ],
+            ),
+          );
+        }
+
       },
     );
   }

@@ -21,51 +21,72 @@ class _PreviousEmergencyRequestListState extends State<PreviousEmergencyRequestL
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.pink.shade900,
         title: Text('Previous Emergency Chats'),
       ),
-      body: StreamBuilder(
-        stream: _chatService.getPreviousEmergencyChats(currentUserID),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-
-          if (snapshot.hasError) {
-            return Center(
-              child: Text('Error loading previous chats'),
-            );
-          }
-
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Center(
-              child: Text('No previous chats available.'),
-            );
-          }
-
-          return ListView(
-            children: snapshot.data!.docs.map((DocumentSnapshot document) {
-              Map<String?, dynamic> chatData = document.data() as Map<
-                  String?,
-                  dynamic>;
-
-              return ListTile(
-                title: Text(chatData['receiverName']),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Chat(
-                        receiverUserID: chatData['receiverID'],
-                      ),
-                    ),
-                  );
-                }
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter, // 10% of the width, so there are ten blinds.
+            colors: [Colors.white70, Colors.pink.shade50], // whitish to gray// repeats the gradient over the canvas
+          ),
+        ),
+        child: StreamBuilder(
+          stream: _chatService.getPreviousEmergencyChats(currentUserID),
+          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
               );
-            }).toList(),
-          );
-        },
+            }
+
+            if (snapshot.hasError) {
+              return Center(
+                child: Text('Error loading previous chats'),
+              );
+            }
+
+            if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+              return Center(
+                child: Text('No previous chats available.'),
+              );
+            }
+
+            return ListView(
+
+              children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                Map<String?, dynamic> chatData = document.data() as Map<
+                    String?,
+                    dynamic>;
+
+                return ListTile(
+                    contentPadding: EdgeInsets.all(10.0), // Adjust padding as needed
+                    tileColor: Colors.teal[50], // Change the background color as needed
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0), // Adjust the border radius as needed
+                      side: BorderSide(color: Colors.teal.shade50), // Add border if desired
+                    ),
+                  title: Text(chatData['receiverName'],
+                    style: TextStyle(
+                      fontSize: 20.0,
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Chat(
+                          receiverUserID: chatData['receiverID'],
+                        ),
+                      ),
+                    );
+                  }
+                );
+              }).toList(),
+            );
+          },
+        ),
       ),
     );
   }

@@ -46,66 +46,73 @@ class _ChatState extends State<Chat> {
     return StreamBuilder<DocumentSnapshot>(
       stream: FirebaseFirestore.instance.collection('emergencyRequests').doc(widget.receiverUserID).snapshots(),
       builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-
-
         if (snapshot.hasError) {
           return const Text('Something went wrong');
         }
+        else if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Text("Loading");
+        }
+        else{
+          if (!snapshot.hasData || !snapshot.data!.exists) {
+            return Scaffold(
+              appBar: AppBar(
+                backgroundColor: Colors.blue.shade900,
+                title: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("Emergency Portal"),
+                ),
+                actions: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.red.shade900,
+                          onPrimary: Colors.white,
+                        ),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) => confirmDeleteDialog(context),
+                          );
+                        },
+                        child:
+                        const Text('End chat',
+                          style: TextStyle(
+                            fontSize: 20.0,
+                          ),
+                        )
+                    ),
+                  ),
+                ],
 
-        if (!snapshot.hasData || !snapshot.data!.exists) {
-          print("ki je hoitese");
-          print(snapshot.data!.data());
-          return Scaffold(
-            appBar: AppBar(
-              backgroundColor: Colors.blue.shade900,
-              title: Align(
-                alignment: Alignment.centerLeft,
-                child: Text("Emergency Portal"),
               ),
-              actions: [
-                ElevatedButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) => confirmDeleteDialog(context),
-                      );
-                    },
-                    child:
-                    const Text('End chat',
+              body: Column(
+                children:[
+                  Expanded(
+                    child: _buildMessageList(),
+                  ),
+                  _buildMessageInput(),
+                ],
+              ),
+            );
+          }
+          else {
+            return const Scaffold(
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    CircularProgressIndicator(),
+                    Text('Trying to connect to an emergency doctor...',
                       style: TextStyle(
                         fontSize: 20.0,
                       ),
-                    )
+                    ),
+                  ],
                 ),
-              ],
-
-            ),
-            body: Column(
-              children:[
-                Expanded(
-                  child: _buildMessageList(),
-                ),
-                _buildMessageInput(),
-              ],
-            ),
-          );
-        } else {
-          print("data nai");
-          return const Scaffold(
-            body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  CircularProgressIndicator(),
-                  Text('Trying to connect to an emergency doctor...',
-                  style: TextStyle(
-                    fontSize: 20.0,
-                  ),
-                  ),
-                ],
               ),
-            ),
-          );
+            );
+          }
         }
       },
     );
@@ -118,7 +125,6 @@ class _ChatState extends State<Chat> {
           if(snapshot.hasError){
             return Text('Error: ${snapshot.error}');
           }
-
           if(snapshot.connectionState == ConnectionState.waiting){
             return Text('Loading...');
           }

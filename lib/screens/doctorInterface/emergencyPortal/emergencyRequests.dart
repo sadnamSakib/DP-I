@@ -42,54 +42,40 @@ class _EmergencyRequestListState extends State<EmergencyRequestList> {
           ),
         ],
       ),
-      body: StreamBuilder(
-        stream: _chatService.emergencyRequestList(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  CircularProgressIndicator(),
-                  Text('Loading...'),
-                ],
-              ),
-            );
-          }
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter, // 10% of the width, so there are ten blinds.
+            colors: [Colors.white70, Colors.pink.shade50], // whitish to gray// repeats the gradient over the canvas
+          ),
+        ),
+        child: StreamBuilder(
+          stream: _chatService.emergencyRequestList(),
+          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    CircularProgressIndicator(),
+                    Text('Loading...'),
+                  ],
+                ),
+              );
+            }
 
-          if (snapshot.hasError) {
-            return const Text('Something went wrong');
-          }
-          // Display current emergency requests
-            return ListView(
-              children: snapshot.data!.docs.map((DocumentSnapshot document) {
-                Map<String, dynamic> data =
-                document.data()! as Map<String, dynamic>;
-                return ListTile(
-                  onTap: () async {
-                    await _chatService.dismissEmergencyRequest(data['senderID']);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Chat(
-                          receiverUserID: data['senderID'],
-                        ),
-                      ),
-                    );
-                  },
-                  title: Text(data['senderName']),
-                  trailing: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.pink.shade900,
-                      onPrimary: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(40.0),
-                      ),
-                      fixedSize: const Size(100.0, 40.0),
-                    ),
-                    child: const Text("Respond"),
-                    onPressed: () {
-                      _chatService.dismissEmergencyRequest(data['senderID']);
+            if (snapshot.hasError) {
+              return const Text('Something went wrong');
+            }
+            // Display current emergency requests
+              return ListView(
+                children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                  Map<String, dynamic> data =
+                  document.data()! as Map<String, dynamic>;
+                  return ListTile(
+                    onTap: () async {
+                      await _chatService.dismissEmergencyRequest(data['senderID']);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -99,11 +85,34 @@ class _EmergencyRequestListState extends State<EmergencyRequestList> {
                         ),
                       );
                     },
-                  ),
-                );
-              }).toList(),
-            );
-          },
+                    title: Text(data['senderName']),
+                    trailing: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.pink.shade900,
+                        onPrimary: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(40.0),
+                        ),
+                        fixedSize: const Size(100.0, 40.0),
+                      ),
+                      child: const Text("Respond"),
+                      onPressed: () {
+                        _chatService.dismissEmergencyRequest(data['senderID']);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Chat(
+                              receiverUserID: data['senderID'],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                }).toList(),
+              );
+            },
+        ),
       ),
     );
   }
