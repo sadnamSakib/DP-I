@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:design_project_1/screens/patientInterface/Storage/DoctorswithAppointments.dart';
 import 'package:design_project_1/screens/patientInterface/Storage/FileViewer.dart';
 import 'package:design_project_1/screens/patientInterface/Storage/Folder.dart';
 import 'package:design_project_1/screens/patientInterface/home/home.dart';
@@ -13,6 +14,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../../../models/AppointmentModel.dart';
 import '../../../services/storageServices/UploadFiles.dart';
 import '../BookAppointment/doctorFinderPage.dart';
 
@@ -226,7 +228,7 @@ import '../BookAppointment/doctorFinderPage.dart';
                                       ),
                                     );
                                   } else {
-                                    // Show the ListView.builder for folders
+                                    /// Show the ListView.builder for folders
                                     return ListView.builder(
                                       itemCount: collectionSnapshot.docs.length,
                                       itemBuilder: (context, index) {
@@ -241,6 +243,7 @@ import '../BookAppointment/doctorFinderPage.dart';
                                                 context,
                                                 MaterialPageRoute(builder: (context) => NewFolder(folderName: collectionName)),
                                               );
+
                                             },
                                             onLongPress: () {
                                               String collectionName = collectionSnapshot.docs[folderIndex].id;
@@ -296,6 +299,17 @@ import '../BookAppointment/doctorFinderPage.dart';
                                                   MaterialPageRoute(builder: (context) => FileViewer(URL: fileURL)),
                                                 );
                                               },
+                                              onTap: () async {
+                                                String fileName = fileData[fileIndex]['name'];
+                                                String fileURL = fileData[fileIndex]['URL'];
+                                                String originalFileName = fileName.split('_').skip(1).join('_');
+                                                print('Tapppppped on file: $originalFileName, URL: $fileURL');
+
+                                                _createSharedDocumentDialogueBox(originalFileName,fileURL);
+                                                // Navigate back and pass the data as a result
+                                                // Navigator.pop(context, {'fileName': originalFileName, 'fileURL': fileURL});
+                                              },
+
                                               onLongPress: () {
                                                 _showDeleteConfirmationDialog(fileData[fileIndex]['name']);
                                               },
@@ -479,11 +493,48 @@ import '../BookAppointment/doctorFinderPage.dart';
             );
           }
 
+          Future<void> _createSharedDocumentDialogueBox(String fileName,String fileURL) async {
+            return showDialog<void>(
+              context: context,
+              barrierDismissible: false, // user must tap button!
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('Share Document'),
+                  content: SingleChildScrollView(
+                    child: ListBody(
+                      children: <Widget>[
+                        Text('Share this file with your doctors.'),
+                      ],
+                    ),
+                  ),
+                  actions: <Widget>[
+                    TextButton(
+                      child: Text('Cancel'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    TextButton(
+                      child: Text('OK'),
+                      onPressed: () {
+                        // Perform delete operation
+                        shareDocument(fileName,fileURL);
+                        Navigator.of(context).pop();
+                        initState();
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          }
+
           Future<void> deleteFile(String fileName) async {
             try {
              await _firebaseFirestore.collection("Documents").
               where("name", isEqualTo: fileName)
-                  .get()
+                 .limit(1)  // Limit to one document
+                 .get()
                   .then((querySnapshot) {
                 querySnapshot.docs.forEach((doc) async {
 
@@ -513,5 +564,45 @@ import '../BookAppointment/doctorFinderPage.dart';
             }
           }
 
+  Future<void> shareDocument(String fileName, String fileURL) async {
+
+    List<String> doctorIds = await getDoctorIdsForPatient();
+    for (String doctorId in doctorIds) {
+      print('DOCTOR ID: $doctorId');
+    }
+
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => DoctorswithAppointments(doctorIds: doctorIds, fileName: fileName,
+        fileURL: fileURL),
+      ),
+    );
+  }
+
+          Future<List<String>> getDoctorIdsForPatient() async {
+            try {
+              // Reference to the Appointments collection in Firestore
+              CollectionReference appointmentsCollection =
+              FirebaseFirestore.instance.collection('Appointments');
+
+              // Fetch appointments where patientId is the current UUID
+              QuerySnapshot querySnapshot = await appointmentsCollection
+                  .where('patientId', isEqualTo: userUID)
+                  .get();
+
+              // Extract doctorIds from the fetched appointments
+              List<String> doctorIds = querySnapshot.docs
+                  .map((doc) => doc['doctorId'] as String) // Adjust the type if needed
+                  .toList();
+
+
+              return doctorIds;
+            } catch (e) {
+              print('Error fetching appointments: $e');
+              return [];
+            }
+          }
         }
 

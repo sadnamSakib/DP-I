@@ -200,7 +200,8 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
       if (currentTimeFormat.isBefore(endTimeFormat)) {
       // Current time is before end time
       // Do something
-    } else if (currentTimeFormat.isAfter(endTimeFormat)) {
+    }
+      else if (currentTimeFormat.isAfter(endTimeFormat)) {
       final appointmentRef = FirebaseFirestore.instance.collection(
           'Appointments').doc(docID);
 
@@ -235,7 +236,9 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
       return true;
       // Current time is after end time
       // Do something else
-    } else {
+    }
+
+      else {
       // Current time is equal to end time
       // Do something else
     }

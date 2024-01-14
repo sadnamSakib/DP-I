@@ -18,6 +18,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../components/virtualConsultation/call.dart';
 import '../../../models/AppointmentModel.dart';
+import 'ShareDocuments.dart';
 
 class ViewAppointmentDetailsPage extends StatefulWidget {
   final Appointment appointment;
@@ -149,10 +150,31 @@ class _ViewAppointmentDetailsPageState extends State<ViewAppointmentDetailsPage>
                 ? ElevatedButton(
               onPressed: () async {
 
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SSLCommerze(appointmentID: widget.ID, appointment: widget.appointment, fee: doctorData?['Fee'],)),
-                );
+                if('${doctorData?['Fee']}' == '')
+                {
+                  Fluttertoast.showToast(
+                    msg: "Payment can not done now. Please try again later.",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 3,
+                    backgroundColor: Colors.blue,
+                    textColor: Colors.white,
+                    fontSize: 16.0,
+                  );
+
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const AppointmentListPage()),
+                  );
+                }
+                else{
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SSLCommerze(appointmentID: widget.ID, appointment: widget.appointment, fee: doctorData?['Fee'],)),
+                  );
+                }
+
+
               },
               child: Text('Pay Now'),
               style: ElevatedButton.styleFrom(
@@ -162,25 +184,18 @@ class _ViewAppointmentDetailsPageState extends State<ViewAppointmentDetailsPage>
                 : null,
           ),
           SizedBox(height: 16),
-              if (appointment.sessionType == 'Online')
-                Center(
-                  child: ElevatedButton(
-                    onPressed: () {
-
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => CallPage(callID: generateCallID() , userID: userId , userName: userName)));
-
-                    },
-                    child: Text('Join Session'),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.blue.shade900  ,
-                    )
+              Center(
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(Colors.blue.shade900),
                   ),
+                  onPressed: () {
+                    _showBottomSheet(context);
+                  },
+                  child: Text('View Options'),
                 ),
-              if (appointment.sessionType == 'Offline')
-                ListTile(
-                  leading: Icon(Icons.location_on),
-                  title: Text('Chamber Address : ${doctorData?['chamberAddress']}'),
-                ),
+              ),
+
 
             ],
           ),
@@ -191,6 +206,68 @@ class _ViewAppointmentDetailsPageState extends State<ViewAppointmentDetailsPage>
 
 
 
+
+  void _showBottomSheet(BuildContext context){
+    showModalBottomSheet(
+      context : context,
+      builder: (context) => Container(
+        height: 150,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
+              ),
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => SharedDocuments(doctorID: widget.appointment.doctorId)));
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.medical_services, // Replace with the icon you want
+                    color: Colors.black,
+                  ),
+                  SizedBox(width: 8.0), // Adjust the spacing between the icon and text
+                  Text('Your shared Reports and Prescriptions')
+                ],
+              ),
+            ),
+
+            appointment.sessionType == 'Online' ?  TextButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
+              ),
+
+              onPressed: () {
+
+                Navigator.push(context, MaterialPageRoute(builder: (context) => CallPage(callID: generateCallID() , userID: userId , userName: userName)));
+
+                },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.call, // Replace with the icon you want
+                    color: Colors.black,
+                  ),
+                  SizedBox(width: 8.0), // Adjust the spacing between the icon and text
+                  Text('Join Session'),
+                ],
+              ),
+            ) :
+
+            ListTile(
+               leading: Icon(Icons.location_on),
+                title: Text('Chamber Address : ${doctorData?['chamberAddress']}'),
+                ),
+          ],
+        ),
+      ),
+    );
+  }
 
 
 }
