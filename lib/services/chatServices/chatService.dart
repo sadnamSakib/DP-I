@@ -38,8 +38,7 @@ class ChatService extends ChangeNotifier{
       print('Number of docs: ${value.docs.length}');
       for (var element in value.docs) {
         if(element.data().containsKey('deviceToken') && element.data().containsKey('emergency') && element['emergency'] == true ){
-          String decryptedValue = _authservices.decrypt(element['deviceToken'].toString());
-          doctorTokenList.add(decryptedValue);
+          doctorTokenList.add(element['deviceToken'].toString());
         }
       }
     });
