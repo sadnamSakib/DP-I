@@ -107,14 +107,19 @@ class ChatService extends ChangeNotifier{
       'senderName': currentUserName,
       'receiverName': senderName,
     });
-    await _firestore.collection('chatrooms').doc(senderID).collection('messages').add({
-      'senderID': senderID,
-      'senderName': senderName,
-      'receiverID': currentUserID,
-      'receiverName': currentUserName,
-      'message': initialMessage,
-      'timestamp': timestamp,
-    });
+    if(initialMessage.isNotEmpty)
+      {
+        await _firestore.collection('chatrooms').doc(senderID).collection('messages').add({
+          'senderID': senderID,
+          'senderName': senderName,
+          'receiverID': currentUserID,
+          'receiverName': currentUserName,
+          'message': initialMessage,
+          'timestamp': timestamp,
+        });
+      }
+    await _firestore.collection('emergencyRequests').doc(senderID).delete();
+
     await _firestore.collection('patients').doc(senderID).update({
       'emergency': 'accepted',
     });
