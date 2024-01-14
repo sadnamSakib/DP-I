@@ -75,7 +75,7 @@ class _EmergencyRequestListState extends State<EmergencyRequestList> {
                   document.data()! as Map<String, dynamic>;
                   return ListTile(
                     onTap: () async {
-                      await _chatService.dismissEmergencyRequest(data['senderID']);
+                      await _chatService.dismissEmergencyRequest(data['senderID'],data['initialMessage']);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -97,7 +97,7 @@ class _EmergencyRequestListState extends State<EmergencyRequestList> {
                       ),
                       child: const Text("Respond"),
                       onPressed: () {
-                        _chatService.dismissEmergencyRequest(data['senderID']);
+                        _chatService.dismissEmergencyRequest(data['senderID'],data['initialMessage']);
                         Navigator.push(
                           context,
                           MaterialPageRoute(

@@ -26,12 +26,11 @@ class _RequestEmergencyScreenState extends State<RequestEmergencyScreen> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<DocumentSnapshot>(
-      stream: _firestore.collection('emergencyRequests').doc(
+      stream: _firestore.collection('patients').doc(
           _auth.currentUser!.uid).snapshots(),
       builder: (BuildContext context,
           AsyncSnapshot<DocumentSnapshot> snapshot) {
-        if (snapshot.hasData && snapshot.data!.exists) {
-          // If the current user's ID exists in the 'emergencyRequests' collection, return the current widget
+        if (snapshot.hasData && snapshot.data!.exists && snapshot.data?['emergency']=='none') {
 
           return Scaffold(
             appBar: AppBar(
@@ -72,7 +71,7 @@ class _RequestEmergencyScreenState extends State<RequestEmergencyScreen> {
                     ),
                     onPressed: () async {
                       initialMessage = _messageController.text;
-                      await _chatService.requestEmergency();
+                      await _chatService.requestEmergency(initialMessage);
 
                       Navigator.push(
                         context,
@@ -145,7 +144,7 @@ class _RequestEmergencyScreenState extends State<RequestEmergencyScreen> {
                           ),
                           onPressed: () {
                             initialMessage = _messageController.text;
-                            _chatService.requestEmergency();
+                            _chatService.requestEmergency(initialMessage);
                             Navigator.push(
                               context,
                               MaterialPageRoute(builder: (context) =>
