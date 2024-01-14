@@ -12,7 +12,7 @@ class ChatService extends ChangeNotifier{
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<void> requestEmergency() async {
+  Future<void> requestEmergency(String initialMessage) async {
     //get current user info
     final String currentUserID = _auth.currentUser!.uid;
     final currentUserData = await _firestore.collection('users').doc(currentUserID).get();
@@ -26,6 +26,7 @@ class ChatService extends ChangeNotifier{
       'senderID': currentUserID,
       'senderName': currentUserName,
       'timestamp': timestamp,
+      'initialMessage' : initialMessage,
     });
     await _firestore.collection('patients').doc(currentUserID).update({
       'emergency': 'pending',
@@ -85,7 +86,7 @@ class ChatService extends ChangeNotifier{
     }
   }
 
-  Future<void> dismissEmergencyRequest(String senderID) async {
+  Future<void> dismissEmergencyRequest(String senderID,String initialMessage) async {
     final String currentUserID = _auth.currentUser!.uid;
     final Timestamp timestamp = Timestamp.now();
 
@@ -106,7 +107,15 @@ class ChatService extends ChangeNotifier{
       'senderName': currentUserName,
       'receiverName': senderName,
     });
-    await _firestore.collection('patients').doc(currentUserID).update({
+    await _firestore.collection('chatrooms').doc(senderID).collection('messages').add({
+      'senderID': senderID,
+      'senderName': senderName,
+      'receiverID': currentUserID,
+      'receiverName': currentUserName,
+      'message': initialMessage,
+      'timestamp': timestamp,
+    });
+    await _firestore.collection('patients').doc(senderID).update({
       'emergency': 'accepted',
     });
     notifyListeners();
