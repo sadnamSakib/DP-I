@@ -37,7 +37,7 @@ class ChatService extends ChangeNotifier{
     await FirebaseFirestore.instance.collection('doctors').get().then((value) {
       print('Number of docs: ${value.docs.length}');
       for (var element in value.docs) {
-        if(element.data().containsKey('deviceToken')){
+        if(element.data().containsKey('deviceToken') && element.data().containsKey('emergency') && element['emergency'] == true ){
           String decryptedValue = _authservices.decrypt(element['deviceToken'].toString());
           doctorTokenList.add(decryptedValue);
         }
