@@ -36,6 +36,7 @@ class _SSLCommerzeState extends State<SSLCommerze> {
 
    String name="",phoneNumber="";
 
+
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
 
@@ -69,7 +70,9 @@ class _SSLCommerzeState extends State<SSLCommerze> {
   void initState(){
     super.initState();
 
+
     fetchData();
+
   }
   @override
   Widget build(BuildContext context) {
@@ -200,7 +203,7 @@ class _SSLCommerzeState extends State<SSLCommerze> {
         store_id: store_ID,
         store_passwd: store_password,
         total_amount: double.parse(widget.fee),
-        tran_id: "1231900",
+        tran_id: "123122",
       ),
     );
     try {
@@ -211,7 +214,7 @@ class _SSLCommerzeState extends State<SSLCommerze> {
           msg: "Transaction is Failed.Please try again later",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
+          timeInSecForIosWeb: 3,
           backgroundColor: Colors.red,
           textColor: Colors.white,
           fontSize: 16.0,
@@ -228,7 +231,7 @@ class _SSLCommerzeState extends State<SSLCommerze> {
           msg: "Portal Closed by User",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
+          timeInSecForIosWeb: 3,
           backgroundColor: Colors.blue,
           textColor: Colors.white,
           fontSize: 16.0,
@@ -254,7 +257,7 @@ class _SSLCommerzeState extends State<SSLCommerze> {
                 "Transaction is successfull",
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 1,
+                timeInSecForIosWeb: 3,
                 backgroundColor: Colors.blue,
                 textColor: Colors.white,
                 fontSize: 16.0);
@@ -272,7 +275,7 @@ class _SSLCommerzeState extends State<SSLCommerze> {
                 "Payment Updated Successfully",
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 1,
+                timeInSecForIosWeb: 3,
                 backgroundColor: Colors.red,
                 textColor: Colors.white,
                 fontSize: 16.0);
