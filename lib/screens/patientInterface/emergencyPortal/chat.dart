@@ -32,14 +32,6 @@ class _ChatState extends State<Chat> {
     }
   }
   @override
-    void initState() {
-    super.initState();
-    if(widget.initialMessage.isNotEmpty){
-      _messageController.text = widget.initialMessage;
-      // sendMessage();
-    }
-  }
-  @override
   Widget build(BuildContext context) {
     final String currentUserId = FirebaseAuth.instance.currentUser!.uid;
 
