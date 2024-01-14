@@ -533,7 +533,8 @@ import '../BookAppointment/doctorFinderPage.dart';
             try {
              await _firebaseFirestore.collection("Documents").
               where("name", isEqualTo: fileName)
-                  .get()
+                 .limit(1)  // Limit to one document
+                 .get()
                   .then((querySnapshot) {
                 querySnapshot.docs.forEach((doc) async {
 

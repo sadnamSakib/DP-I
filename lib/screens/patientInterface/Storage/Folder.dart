@@ -344,6 +344,7 @@ class _NewFolderState extends State<NewFolder> {
           .doc(widget.folderName)
           .collection('Files')
           .where("name", isEqualTo: fileName)
+          .limit(1)  // Limit to one document
           .get()
           .then((querySnapshot) {
         querySnapshot.docs.forEach((doc) async {
