@@ -12,6 +12,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../BookAppointment/doctorFinderPage.dart';
+import 'DoctorswithAppointments.dart';
 import 'FileViewer.dart';
 
 class NewFolder extends StatefulWidget {
@@ -192,6 +193,14 @@ class _NewFolderState extends State<NewFolder> {
                           );
                         },
 
+                        onTap: () async {
+                          String fileName = allFilesData[index]['name'];
+                          String fileURL = allFilesData[index]['URL'];
+
+                          _createSharedDocumentDialogueBox(fileName,fileURL);
+                          // Navigate back and pass the data as a result
+                          // Navigator.pop(context, {'fileName': originalFileName, 'fileURL': fileURL});
+                        },
                         onLongPress: () {
                           _showDeleteConfirmationDialog(allFilesData[index]['name']);
                         },
@@ -290,6 +299,42 @@ class _NewFolderState extends State<NewFolder> {
     );
   }
 
+  Future<void> _createSharedDocumentDialogueBox(String fileName,String fileURL) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Share Document'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Share this file with your doctors.'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                // Perform delete operation
+                shareDocument(fileName,fileURL);
+                Navigator.of(context).pop();
+                initState();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Future<void> deleteFile(String fileName) async {
     try {
       await _firebaseFirestore
@@ -329,29 +374,46 @@ class _NewFolderState extends State<NewFolder> {
     }
   }
 
-  // void downloadFile(String fileURL, String fileName) async {
-  //   try {
-  //     var request = await http.Client().get(Uri.parse(fileURL));
-  //     var bytes = request.bodyBytes;
-  //
-  //     var dir = await getApplicationDocumentsDirectory();
-  //     File file = File("${dir.path}/$fileName");
-  //
-  //     await file.writeAsBytes(bytes);
-  //     var dire = await getApplicationDocumentsDirectory();
-  //     print('Documentttttttttttttttttttts directory: ${dire.path}');
-  //
-  //     File fil = File("${dire.path}/$fileName");
-  //
-  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //       content: Text('File downloaded successfully'),
-  //     ));
-  //   } catch (error) {
-  //     print('Error downloading file: $error');
-  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //       content: Text('Error downloading file'),
-  //     ));
-  //   }
-  // }
+
+  Future<void> shareDocument(String fileName, String fileURL) async {
+
+    List<String> doctorIds = await getDoctorIdsForPatient();
+    for (String doctorId in doctorIds) {
+      print('DOCTOR ID: $doctorId');
+    }
+
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => DoctorswithAppointments(doctorIds: doctorIds, fileName: fileName,
+            fileURL: fileURL),
+      ),
+    );
+  }
+
+  Future<List<String>> getDoctorIdsForPatient() async {
+    try {
+      // Reference to the Appointments collection in Firestore
+      CollectionReference appointmentsCollection =
+      FirebaseFirestore.instance.collection('Appointments');
+
+      // Fetch appointments where patientId is the current UUID
+      QuerySnapshot querySnapshot = await appointmentsCollection
+          .where('patientId', isEqualTo: userUID)
+          .get();
+
+      // Extract doctorIds from the fetched appointments
+      List<String> doctorIds = querySnapshot.docs
+          .map((doc) => doc['doctorId'] as String) // Adjust the type if needed
+          .toList();
+
+
+      return doctorIds;
+    } catch (e) {
+      print('Error fetching appointments: $e');
+      return [];
+    }
+  }
 }
 
