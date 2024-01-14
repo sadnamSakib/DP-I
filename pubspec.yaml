@@ -76,6 +76,8 @@ dependencies:
   flutter_sslcommerz: ^2.2.2-nullsafety.0
 
   firebase_in_app_messaging: ^0.7.4+8
+  crypto: ^3.0.3
+  encrypt: ^5.0.3
 firebase_analytics: ^8.1.1
 
 

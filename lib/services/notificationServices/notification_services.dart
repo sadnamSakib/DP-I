@@ -115,8 +115,14 @@ class NotificationServices {
   }
   void handleMessage(BuildContext context, RemoteMessage message) {
     print("handle message cholse");
-    if(message.data['type'] == 'reminder'){
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const CurrentPrescriptionScreen()));
+    if(message.data['type'] == 'nightmed'){
+      Navigator.push(context, MaterialPageRoute(builder: (context) => CurrentPrescriptionScreen(medicationTime: 'night')));
+    }
+    else if(message.data['type'] == 'morningmed'){
+      Navigator.push(context, MaterialPageRoute(builder: (context) => CurrentPrescriptionScreen(medicationTime: 'morning')));
+    }
+    else if(message.data['type'] == 'noonmed'){
+      Navigator.push(context, MaterialPageRoute(builder: (context) => CurrentPrescriptionScreen(medicationTime: 'noon')));
     }
   }
 
