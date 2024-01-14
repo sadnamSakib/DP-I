@@ -7,7 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:design_project_1/services/chatServices/ServerKey.dart';
 import '../../models/Message.dart';
-
+import 'package:design_project_1/services/authServices/auth.dart';
 class ChatService extends ChangeNotifier{
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -19,6 +19,7 @@ class ChatService extends ChangeNotifier{
     final String currentUserName = currentUserData['name'] ?? 'CurrentUser';
     final Timestamp timestamp = Timestamp.now();
 
+
     // need to handle if the emergency request already exists
     await _firestore.collection('emergencyRequests').doc(currentUserID).set({
       'senderID': currentUserID,
@@ -26,8 +27,10 @@ class ChatService extends ChangeNotifier{
       'timestamp': timestamp,
     });
     await sendNotificationToAllDoctor();
+    notifyListeners();
   }
   Future<void> sendNotificationToAllDoctor() async {
+    final AuthService _authservices = AuthService();
     NotificationServices notificationServices = NotificationServices();
     print("docotr ashche");
     List<String> doctorTokenList = [];
@@ -35,7 +38,8 @@ class ChatService extends ChangeNotifier{
       print('Number of docs: ${value.docs.length}');
       for (var element in value.docs) {
         if(element.data().containsKey('deviceToken')){
-          doctorTokenList.add(element['deviceToken']);
+          String decryptedValue = _authservices.decrypt(element['deviceToken'].toString());
+          doctorTokenList.add(decryptedValue);
         }
       }
     });
@@ -106,6 +110,7 @@ class ChatService extends ChangeNotifier{
 
     // Delete the emergency request
     await _firestore.collection('emergencyRequests').doc(senderID).delete();
+    notifyListeners();
   }
 
   Future<void> dismissEmergencyChat() async {
@@ -113,6 +118,7 @@ class ChatService extends ChangeNotifier{
     await _firestore.collection('chatrooms').doc(currentUserID).update({
       'active' : false,
     });
+    notifyListeners();
   }
 
  Stream<QuerySnapshot>emergencyRequestList() {

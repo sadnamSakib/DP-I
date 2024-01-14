@@ -1,29 +1,45 @@
 import 'package:design_project_1/models/PrescriptionModel.dart';
+import 'package:design_project_1/screens/patientInterface/medications/previousMedicines.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:design_project_1/services/medicineServices/medicines.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 class CurrentPrescriptionScreen extends StatefulWidget {
-  const CurrentPrescriptionScreen({super.key});
+  final String medicationTime;
+  const CurrentPrescriptionScreen({super.key, required this.medicationTime});
 
   @override
   State<CurrentPrescriptionScreen> createState() => _CurrentPrescriptionScreenState();
 }
 
 class _CurrentPrescriptionScreenState extends State<CurrentPrescriptionScreen> {
-  final currentUserID = FirebaseAuth.instance.currentUser!.uid;
+  final String currentUserID = FirebaseAuth.instance.currentUser!.uid;
    List<PrescriptionModel> prescriptions= [];
+   late int initialTabIndex;
   @override
   void initState() {
     super.initState();
     loadPrescription(currentUserID).then((value) => setState(() {
       prescriptions = value;
     }));
+    if(widget.medicationTime == 'morning'){
+      initialTabIndex = 0;
+    }
+    else if(widget.medicationTime == 'noon'){
+      initialTabIndex = 1;
+    }
+    else if(widget.medicationTime == 'night'){
+      initialTabIndex = 2;
+    }
+    else{
+      initialTabIndex = 0;
+    }
   }
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 3,
+      initialIndex: initialTabIndex,
       child: Scaffold(
         appBar: AppBar(
           title: Text('Current Prescription'),
@@ -35,6 +51,10 @@ class _CurrentPrescriptionScreenState extends State<CurrentPrescriptionScreen> {
                     generatePrescriptionPDF(prescriptions[0]);
                   },
                   icon: Icon(Icons.picture_as_pdf)
+              ),
+              IconButton(onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) =>  PreviousMedicineScreen(currentUserID : currentUserID)));
+              }, icon: Icon(Icons.history_rounded)
               ),
           ],
           bottom: TabBar(
@@ -84,8 +104,15 @@ class _CurrentPrescriptionScreenState extends State<CurrentPrescriptionScreen> {
         return Column(
           children: morningMedicines.map((prescribedMedicine) {
             final lastDate = DateTime.parse(prescription.date).add(Duration(days: prescribedMedicine.days));
-            var remainingDays = DateTime.now().difference(lastDate).inDays;
-            remainingDays += prescribedMedicine.days;
+            var remainingDays = 0;
+            if(DateTime.now().isAfter(lastDate)){
+              remainingDays = 0;
+            }
+            else{
+              remainingDays = lastDate.difference(DateTime.now()).inDays;
+
+            }
+            print(remainingDays);
             if (remainingDays > 0) {
               return Column(
                 children: [

@@ -11,6 +11,7 @@ import 'package:design_project_1/services/authServices/auth.dart';
 import 'package:design_project_1/screens/patientInterface/emergencyPortal/requestEmergencyScreen.dart';
 import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 import '../../../services/searchServices/SearchBarDelegator.dart';
+import 'package:encrypt/encrypt.dart' as encrypt;
 
 import '../profile/InfromationSelectionPage.dart';
 
@@ -40,10 +41,9 @@ class _HomeState extends State<Home> {
      notificationServices.setupInteractMessage(context);
     notificationServices.isTokenRefresh();
     notificationServices.getDeviceToken().then((value) async {
-    print("device   token");
-    print(value);
+    String encryptedValue = _auth.encrypt(value);
     await FirebaseFirestore.instance.collection('patients').doc(FirebaseAuth.instance.currentUser?.uid).update({
-      'deviceToken': value,
+      'deviceToken': encryptedValue,
     });
     });
   }
@@ -61,8 +61,8 @@ class _HomeState extends State<Home> {
     return [
       PersistentBottomNavBarItem(icon: Icon(Icons.track_changes,color:Colors.indigo),
           inactiveIcon:  Icon(Icons.track_changes , color: Colors.grey)),
-      PersistentBottomNavBarItem(icon: Icon(Icons.summarize_outlined,color:Colors.indigo),
-          inactiveIcon:  Icon(Icons.summarize_outlined , color: Colors.grey)),
+      PersistentBottomNavBarItem(icon: Icon(Icons.emergency,color:Colors.indigo),
+          inactiveIcon:  Icon(Icons.emergency , color: Colors.grey)),
       PersistentBottomNavBarItem(icon: Icon(Icons.home,color:Colors.indigo),
           inactiveIcon:  Icon(Icons.home , color: Colors.grey)),
       PersistentBottomNavBarItem(icon: Icon(Icons.calendar_month,color:Colors.indigo),

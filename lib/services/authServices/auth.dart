@@ -1,8 +1,15 @@
 import 'dart:async';
-
+import 'package:encrypt/encrypt.dart';
 import 'package:design_project_1/models/UserModel.dart';
+import 'package:design_project_1/services/medicineServices/medicines.dart';
+import 'package:encrypt/encrypt.dart';
+import 'package:encrypt/encrypt.dart';
+import 'package:encrypt/encrypt.dart';
+import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'hashKey.dart';
 
 import '../profileServices/database.dart';
 class AuthService{
@@ -133,11 +140,48 @@ class AuthService{
   //sign out
   Future signOut() async{
     try{
+      final firestoreInstance = FirebaseFirestore.instance;
+      final User? user = _auth.currentUser;
+      final String? uid = user!.uid;
+      //check if the user is a doctor
+      final DocumentSnapshot doc = await firestoreInstance.collection('doctors').doc(uid).get();
+      //check if user is patient
+      final DocumentSnapshot doc2 = await firestoreInstance.collection('patients').doc(uid).get();
+      if(doc.exists){
+        // delete deviceToken from firestore
+        await firestoreInstance.collection('doctors').doc(uid).update({
+          'deviceToken': FieldValue.delete(),
+        });
+      }
+      else if(doc2.exists){
+        // delete deviceToken from firestore
+        await firestoreInstance.collection('patients').doc(uid).update({
+          'deviceToken': FieldValue.delete(),
+        });
+      }
       return await _auth.signOut();
     }
     catch(e){
       print(e.toString());
       return null;
     }
+  }
+
+  String decrypt( String encryptedData) {
+    String hash = HashKey.toString();
+    final key = Key.fromUtf8(hash);
+    final encrypter = Encrypter(AES(key, mode: AESMode.cbc));
+    final initVector = IV.fromUtf8(hash.substring(0, 16));
+    final decrypted = encrypter.decrypt(Encrypted.fromBase64(encryptedData), iv: initVector);
+    return decrypted;
+  }
+
+  String encrypt( String plainText) {
+    String hash = HashKey.toString();
+    final key = Key.fromUtf8(hash);
+    final encrypter = Encrypter(AES(key, mode: AESMode.cbc));
+    final initVector = IV.fromUtf8(hash.substring(0, 16));
+    Encrypted encryptedData = encrypter.encrypt(plainText, iv: initVector);
+    return encryptedData.base64;
   }
 }

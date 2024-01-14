@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:design_project_1/components/chatComponent/chatBubble.dart';
 import 'package:design_project_1/components/chatComponent/textField.dart';
 import 'package:design_project_1/screens/patientInterface/emergencyPortal/requestEmergencyScreen.dart';
+import 'package:design_project_1/screens/patientInterface/home/home.dart';
 import 'package:design_project_1/services/chatServices/chatService.dart';
 import 'package:design_project_1/services/notificationServices/notification_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -186,7 +187,7 @@ class _ChatState extends State<Chat> {
             _chatService.dismissEmergencyChat();
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const RequestEmergencyScreen()),
+              MaterialPageRoute(builder: (context) =>  Home()),
             );
           },
           child: Text("Delete"),

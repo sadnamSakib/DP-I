@@ -174,4 +174,10 @@ Future<void> addPrescribedMedicine(String patientId, PrescribeMedicineModel pres
   }
 }
 
+Future<String> getDoctorName(String doctorId) async {
+  String doctorName = '';
+  await FirebaseFirestore.instance.collection('doctors').doc(doctorId).get().then((value) => doctorName = value.data()!['name']);
+  return doctorName;
+}
+
 
