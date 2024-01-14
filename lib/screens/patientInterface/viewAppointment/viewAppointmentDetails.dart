@@ -18,6 +18,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../components/virtualConsultation/call.dart';
 import '../../../models/AppointmentModel.dart';
+import '../BookAppointment/ShareDocuments.dart';
 
 class ViewAppointmentDetailsPage extends StatefulWidget {
   final Appointment appointment;
@@ -183,25 +184,18 @@ class _ViewAppointmentDetailsPageState extends State<ViewAppointmentDetailsPage>
                 : null,
           ),
           SizedBox(height: 16),
-              if (appointment.sessionType == 'Online')
-                Center(
-                  child: ElevatedButton(
-                    onPressed: () {
-
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => CallPage(callID: generateCallID() , userID: userId , userName: userName)));
-
-                    },
-                    child: Text('Join Session'),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.blue.shade900  ,
-                    )
+              Center(
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(Colors.blue.shade900),
                   ),
+                  onPressed: () {
+                    _showBottomSheet(context);
+                  },
+                  child: Text('View Options'),
                 ),
-              if (appointment.sessionType == 'Offline')
-                ListTile(
-                  leading: Icon(Icons.location_on),
-                  title: Text('Chamber Address : ${doctorData?['chamberAddress']}'),
-                ),
+              ),
+
 
             ],
           ),
@@ -212,6 +206,86 @@ class _ViewAppointmentDetailsPageState extends State<ViewAppointmentDetailsPage>
 
 
 
+
+  void _showBottomSheet(BuildContext context){
+    showModalBottomSheet(
+      context : context,
+      builder: (context) => Container(
+        height: 150,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
+              ),
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ShareDocuments()));
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.medical_services, // Replace with the icon you want
+                    color: Colors.black,
+                  ),
+                  SizedBox(width: 8.0), // Adjust the spacing between the icon and text
+                  Text('Share your Reports and Prescriptions')
+                ],
+              ),
+            ),
+
+            appointment.sessionType == 'Online' ?  TextButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
+              ),
+
+              onPressed: () {
+
+                Navigator.push(context, MaterialPageRoute(builder: (context) => CallPage(callID: generateCallID() , userID: userId , userName: userName)));
+
+                },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.call, // Replace with the icon you want
+                    color: Colors.black,
+                  ),
+                  SizedBox(width: 8.0), // Adjust the spacing between the icon and text
+                  Text('Join Session'),
+                ],
+              ),
+            ) :
+            // TextButton(
+            //   style: ButtonStyle(
+            //     backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
+            //   ),
+            //
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.start,
+            //     children: [
+            //       Icon(
+            //         Icons.call, // Replace with the icon you want
+            //         color: Colors.black,
+            //       ),
+            //       SizedBox(width: 8.0), // Adjust the spacing between the icon and text
+            //       Icon(Icons.location_on),
+            //       Text('Chamber Address : ${doctorData?['chamberAddress']}'),
+            //
+            //     ],
+            //   ),
+            // ),
+                        ListTile(
+                          leading: Icon(Icons.location_on),
+                          title: Text('Chamber Address : ${doctorData?['chamberAddress']}'),
+                        ),
+          ],
+        ),
+      ),
+    );
+  }
 
 
 }
