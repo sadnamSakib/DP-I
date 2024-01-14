@@ -221,7 +221,7 @@ class _ViewAppointmentDetailsPageState extends State<ViewAppointmentDetailsPage>
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
               ),
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => ShareDocuments()));
+                // Navigator.push(context, MaterialPageRoute(builder: (context) => ShareDocuments()));
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,

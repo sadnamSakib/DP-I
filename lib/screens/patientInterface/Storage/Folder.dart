@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 
 import '../BookAppointment/doctorFinderPage.dart';
 import 'FileViewer.dart';
@@ -190,6 +191,7 @@ class _NewFolderState extends State<NewFolder> {
                             ),
                           );
                         },
+
                         onLongPress: () {
                           _showDeleteConfirmationDialog(allFilesData[index]['name']);
                         },
