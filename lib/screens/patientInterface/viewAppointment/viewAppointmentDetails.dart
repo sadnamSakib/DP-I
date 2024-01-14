@@ -18,7 +18,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../components/virtualConsultation/call.dart';
 import '../../../models/AppointmentModel.dart';
-import '../BookAppointment/ShareDocuments.dart';
+import 'ShareDocuments.dart';
 
 class ViewAppointmentDetailsPage extends StatefulWidget {
   final Appointment appointment;
@@ -221,7 +221,7 @@ class _ViewAppointmentDetailsPageState extends State<ViewAppointmentDetailsPage>
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
               ),
               onPressed: () {
-                // Navigator.push(context, MaterialPageRoute(builder: (context) => ShareDocuments()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => SharedDocuments(doctorID: widget.appointment.doctorId)));
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -231,7 +231,7 @@ class _ViewAppointmentDetailsPageState extends State<ViewAppointmentDetailsPage>
                     color: Colors.black,
                   ),
                   SizedBox(width: 8.0), // Adjust the spacing between the icon and text
-                  Text('Share your Reports and Prescriptions')
+                  Text('Your shared Reports and Prescriptions')
                 ],
               ),
             ),
@@ -258,29 +258,11 @@ class _ViewAppointmentDetailsPageState extends State<ViewAppointmentDetailsPage>
                 ],
               ),
             ) :
-            // TextButton(
-            //   style: ButtonStyle(
-            //     backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
-            //   ),
-            //
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.start,
-            //     children: [
-            //       Icon(
-            //         Icons.call, // Replace with the icon you want
-            //         color: Colors.black,
-            //       ),
-            //       SizedBox(width: 8.0), // Adjust the spacing between the icon and text
-            //       Icon(Icons.location_on),
-            //       Text('Chamber Address : ${doctorData?['chamberAddress']}'),
-            //
-            //     ],
-            //   ),
-            // ),
-                        ListTile(
-                          leading: Icon(Icons.location_on),
-                          title: Text('Chamber Address : ${doctorData?['chamberAddress']}'),
-                        ),
+
+            ListTile(
+               leading: Icon(Icons.location_on),
+                title: Text('Chamber Address : ${doctorData?['chamberAddress']}'),
+                ),
           ],
         ),
       ),
