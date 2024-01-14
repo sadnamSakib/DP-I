@@ -181,7 +181,7 @@ class _SharedDocumentsState extends State<SharedDocuments> {
               child: Text('Remove'),
               onPressed: () {
                 // Perform delete operation
-                deleteFile(fileName);
+                removefile(fileName);
                 Navigator.of(context).pop();
                 initState();
               },
@@ -192,7 +192,7 @@ class _SharedDocumentsState extends State<SharedDocuments> {
     );
   }
 
-  Future<void> deleteFile(String fileName) async {
+  Future<void> removefile(String fileName) async {
     try {
       await FirebaseFirestore.instance
           .collection("Documents")
