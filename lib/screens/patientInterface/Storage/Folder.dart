@@ -185,7 +185,7 @@ class _NewFolderState extends State<NewFolder> {
                       child: InkWell(
                         onDoubleTap: () {
                           print('Tapped on file: $fileName, URL: $fileURL');
-                          Navigator.pushReplacement(
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => FileViewer(URL: fileURL),

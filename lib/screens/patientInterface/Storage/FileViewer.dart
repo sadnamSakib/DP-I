@@ -22,67 +22,56 @@ class _FileViewerState extends State<FileViewer> {
     initialize();
   }
 
+
+
+
   PDFDocument? document;
 
-//   void initialize() async{
-//
-//     document = await PDFDocument.fromURL(widget.URL);
-//     if(document == null)
-//       {
-//         Fluttertoast.showToast(
-//           msg: 'This file can not be fetched at this moment',
-//           toastLength: Toast.LENGTH_SHORT,
-//           gravity: ToastGravity.BOTTOM,
-//           timeInSecForIosWeb: 1,
-//           backgroundColor: Colors.white,
-//           textColor: Colors.black,
-//         );
-//
-//       }
-// Navigator.pop(context);
-//     setState(() {
-//
-//     });
-//   }
+  void initialize() async{
 
-  void initialize() async {
-    try {
-      document = await PDFDocument.fromURL(widget.URL);
-      if (document == null) {
-        showFetchErrorToast();
-        Navigator.pop(context);
-      }
-    } catch (e) {
-      print("Error initializing file: $e");
-      showFetchErrorToast();
-      Navigator.pop(context);
-    }
+    document = await PDFDocument.fromURL(widget.URL);
 
-    setState(() {});
-  }
+    setState(() {
 
-  void showFetchErrorToast() {
-    Fluttertoast.showToast(
-      msg: 'This file could not be fetched at this moment',
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      timeInSecForIosWeb: 2,
-      backgroundColor: Colors.white,
-      textColor: Colors.black,
-    );
+    });
   }
 
 
+  // Future<void> initialize() async {
+  //   try {
+  //
+  //       document = await PDFDocument.fromURL(widget.URL);
+  //
+  //   } catch (e) {
+  //     print("Error initializing PDF document: $e");
+  //     Fluttertoast.showToast(
+  //       msg: 'Error loading the file',
+  //       toastLength: Toast.LENGTH_SHORT,
+  //       gravity: ToastGravity.BOTTOM,
+  //       timeInSecForIosWeb: 2,
+  //       backgroundColor: Colors.white,
+  //       textColor: Colors.red,
+  //     );
+  //     Navigator.pop(context);
+  //   }
+  //
+  //   if (mounted) {
+  //     setState(() {});
+  //   }
+  // }
   @override
   Widget build(BuildContext context) {
-    bool isImage = widget.URL.contains('.JPG') || widget.URL.endsWith('.png') || widget.URL.endsWith('.img');
+    bool isImage = widget.URL.contains('.JPG') || widget.URL.contains('.png') || widget.URL.contains('.img');
 
     return Scaffold(
       body: isImage
-          ? Image.network(
+          ?
+
+            Image.network(
         widget.URL.toString(),
         loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
           if (loadingProgress == null) {
+
             return child;
           } else {
             return Center(child: CircularProgressIndicator());

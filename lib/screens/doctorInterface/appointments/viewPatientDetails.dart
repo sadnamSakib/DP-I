@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:design_project_1/components/virtualConsultation/call.dart';
 import 'package:design_project_1/screens/doctorInterface/appointments/AppointmentClass.dart';
+import 'package:design_project_1/screens/doctorInterface/appointments/Reports_Prescriptions.dart';
 import 'package:design_project_1/screens/doctorInterface/appointments/viewAppointment.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +34,6 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
   Map<String, dynamic>? userData;
   @override
   void initState(){
-    print('INITSTATE OF ');
     print(widget.appointment.id);
     setState(() {
       username.then((value) => userName = value.toString());
@@ -52,8 +52,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
-            end: Alignment.bottomCenter, // 10% of the width, so there are ten blinds.
-            colors: [Colors.white70, Colors.pink.shade50], // whitish to gray// repeats the gradient over the canvas
+            end: Alignment.bottomCenter,
+            colors: [Colors.white70, Colors.pink.shade50],
           )
         ),
         child: Column(
@@ -129,7 +129,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     showModalBottomSheet(
       context : context,
       builder: (context) => Container(
-        height: 150,
+        height: 200,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -154,6 +154,25 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
               ),
             ),
 
+            TextButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
+              ),
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ReportsandPrescriptions(patientID: widget.appointment.patientId)));
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.medical_services,
+                    color: Colors.black,
+                  ),
+                  SizedBox(width: 8.0),
+                  Text('View Reports and Prescriptions'),
+                ],
+              ),
+            ),
             widget.appointment.sessionType == 'Online' ?  TextButton(
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
@@ -221,17 +240,37 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
   void markAsDone(String id) {
 
-    print('MARK ASSSSSSSSSSS DONEEEEEEEEEEEEEEE');
-    print(id);
+      print(id);
 
       final appointmentsCollection = FirebaseFirestore.instance.collection('Appointments');
 
-      // Delete the document with the specified ID
+
+       addVisit(widget.appointment.patientId, widget.appointment.doctorId);
+
       appointmentsCollection.doc(id).delete().then((_) {
         print("Document with ID $id deleted successfully.");
       }).catchError((error) {
         print("Error deleting document: $error");
       });
+  }
+
+
+  Future<void> addVisit(String patientId, String doctorId) async {
+    try {
+      CollectionReference visitsCollection = FirebaseFirestore.instance.collection('Visits');
+
+      DocumentReference visitDocument = visitsCollection.doc();
+
+
+      await visitDocument.set({
+        'patientId': patientId,
+        'doctorId': doctorId,
+      });
+
+      print('Visit added successfully!');
+    } catch (e) {
+      print('Error adding visit: $e');
+    }
   }
 
 }

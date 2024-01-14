@@ -294,7 +294,7 @@ import '../BookAppointment/doctorFinderPage.dart';
                                                 String fileURL = fileData[fileIndex]['URL'];
                                                 String originalFileName = fileName.split('_').skip(1).join('_');
                                                 print('Tapped on file: $originalFileName, URL: $fileURL');
-                                                Navigator.pushReplacement(
+                                                Navigator.push(
                                                   context,
                                                   MaterialPageRoute(builder: (context) => FileViewer(URL: fileURL)),
                                                 );
