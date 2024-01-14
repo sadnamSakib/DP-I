@@ -154,8 +154,7 @@ List<Appointments> appointments=[];
             });
           },
           calendarStyle: CalendarStyle(
-            // Add background color property here
-            outsideDaysVisible: false, // Optional: hide the days outside the range
+            outsideDaysVisible: false,
           ),
         ),
             Expanded(

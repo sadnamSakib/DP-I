@@ -176,7 +176,6 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
         final appointmentID = doc.id;
         print(appointmentID);
-        print('appppppp paiseeeeeeeeeeeeeeee');
 
         await addCancelledAppointment(appointmentID,slotID);
         // Reference to the document to delete
