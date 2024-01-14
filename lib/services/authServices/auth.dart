@@ -141,24 +141,23 @@ class AuthService{
   Future signOut() async{
     try{
       final firestoreInstance = FirebaseFirestore.instance;
-      final User? user = _auth.currentUser;
-      final String? uid = user!.uid;
-      //check if the user is a doctor
-      final DocumentSnapshot doc = await firestoreInstance.collection('doctors').doc(uid).get();
-      //check if user is patient
-      final DocumentSnapshot doc2 = await firestoreInstance.collection('patients').doc(uid).get();
-      if(doc.exists){
-        // delete deviceToken from firestore
+      final String? uid = FirebaseAuth.instance.currentUser?.uid;
+      final user = await firestoreInstance.collection('users').doc(uid).get();
+      final userRole = user['role'];
+      print(userRole);
+      if(userRole == 'doctor'){
+        //delete devictoken from the doctor
         await firestoreInstance.collection('doctors').doc(uid).update({
           'deviceToken': FieldValue.delete(),
         });
       }
-      else if(doc2.exists){
-        // delete deviceToken from firestore
+      else{
+        //delete devictoken from the patient
         await firestoreInstance.collection('patients').doc(uid).update({
           'deviceToken': FieldValue.delete(),
         });
       }
+      print("logging out");
       return await _auth.signOut();
     }
     catch(e){
