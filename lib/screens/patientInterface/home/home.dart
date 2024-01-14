@@ -41,7 +41,6 @@ class _HomeState extends State<Home> {
      notificationServices.setupInteractMessage(context);
     notificationServices.isTokenRefresh();
     notificationServices.getDeviceToken().then((value) async {
-    String encryptedValue = _auth.encrypt(value);
     await FirebaseFirestore.instance.collection('patients').doc(FirebaseAuth.instance.currentUser?.uid).update({
       'deviceToken': value,
     });

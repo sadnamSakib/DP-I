@@ -36,7 +36,7 @@ class _ChatState extends State<Chat> {
     super.initState();
     if(widget.initialMessage.isNotEmpty){
       _messageController.text = widget.initialMessage;
-      sendMessage();
+      // sendMessage();
     }
   }
   @override
@@ -44,18 +44,16 @@ class _ChatState extends State<Chat> {
     final String currentUserId = FirebaseAuth.instance.currentUser!.uid;
 
     return StreamBuilder<DocumentSnapshot>(
-      stream: FirebaseFirestore.instance.collection('emergencyRequests').doc(widget.receiverUserID).snapshots(),
+      stream: FirebaseFirestore.instance.collection('patients').doc(currentUserId).snapshots(),
       builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.hasError) {
           return const Text('Something went wrong');
         }
-        else if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Text("Loading");
-        }
         else{
-          if (!snapshot.hasData || !snapshot.data!.exists) {
+          if (snapshot.hasData && snapshot.data!.exists && snapshot.data!['emergency'] == 'accepted') {
             return Scaffold(
               appBar: AppBar(
+                automaticallyImplyLeading: false,
                 backgroundColor: Colors.blue.shade900,
                 title: Align(
                   alignment: Alignment.centerLeft,

@@ -4,8 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:design_project_1/screens/patientInterface/emergencyPortal/chat.dart';
 import 'package:design_project_1/services/chatServices/chatService.dart';
-
-
 import '../../../services/notificationServices/notification_services.dart';
 class RequestEmergencyScreen extends StatefulWidget {
   const RequestEmergencyScreen({super.key});
@@ -91,12 +89,11 @@ class _RequestEmergencyScreenState extends State<RequestEmergencyScreen> {
         } else {
           // If the current user's ID does not exist in the 'emergencyRequests' collection, check the 'chatrooms' collection
           return StreamBuilder<DocumentSnapshot>(
-            stream: _firestore.collection('chatrooms').doc(
+            stream: _firestore.collection('patients').doc(
                 _auth.currentUser!.uid).snapshots(),
             builder: (BuildContext context,
                 AsyncSnapshot<DocumentSnapshot> snapshot) {
-              if (snapshot.hasData && snapshot.data!.exists && snapshot.data?['active']==true) {
-                // If the current user's ID exists in the 'chatrooms' collection, navigate to the Chat screen
+              if (snapshot.hasData && snapshot.data!.exists && snapshot.data?['emergency']=='accepted') {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   Navigator.push(
                     context,
