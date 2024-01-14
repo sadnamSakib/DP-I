@@ -18,7 +18,6 @@ class DayBasedScheduleScreen extends StatefulWidget {
 class _DayBasedScheduleScreenState extends State<DayBasedScheduleScreen> {
 
   List<ScheduleItem> dayItems = [];
-  // List<ScheduleDay> schedule = [];
 
   void fetchSchedule() async {
     dayItems.clear();
@@ -247,18 +246,15 @@ void initState() {
     final appointmentsCollection = FirebaseFirestore.instance.collection('Appointments');
 
     try {
-      print('INNNN TRYYYYYYYYYYYYY');
       final appointmentDocument = await appointmentsCollection.doc(appointmentID).get();
       if (appointmentDocument.exists) {
-        print('EXISTSTTTTTTTTTTTTTTTTTTTTT');
         final Map<String, dynamic>? appointmentData = appointmentDocument.data() as Map<String, dynamic>?;
 
         if (appointmentData != null) {
-          final String date = appointmentData['date'] as String; // Replace 'date' with the actual field name
+          final String date = appointmentData['date'] as String;
 
           final collection = FirebaseFirestore.instance.collection('DeletedAppointment');
 
-          print('colectttttttttttttttttttionnnnnnnnnnnnn');
           collection.add({
             'appointmentID': appointmentID ?? '',
             'slotID': slotID ?? '',
@@ -268,7 +264,6 @@ void initState() {
             'issue': appointmentData['issue'] ?? '',
           });
 
-          // Now you have retrieved the 'date' field from the appointment document
           print('Date of the appointment: $date');
         } else {
           print('Appointment data is null for ID: $appointmentID');
@@ -283,13 +278,10 @@ void initState() {
 
   Future<void> deleteAppointmentsForSlot(String slotID) async {
     try {
-      // Reference to the Appointments collection
       final appointmentsCollection = FirebaseFirestore.instance.collection('Appointments');
 
-      // Define a query to find the appointments with matching slotID
       final query = appointmentsCollection.where('slotID', isEqualTo: slotID);
 
-      // Use the query to retrieve matching documents
       final querySnapshot = await query.get();
 
       for (final doc in querySnapshot.docs) {
@@ -298,13 +290,11 @@ void initState() {
         print(appointmentID);
 
         await addCancelledAppointment(appointmentID,slotID);
-        // Reference to the document to delete
         final docReference = appointmentsCollection.doc(doc.id);
 
         // Delete the document
         await docReference.delete();
 
-        // Log the deletion
         print('Appointment with ID ${doc.id} has been deleted for the slot with ID: $slotID');
       }
 
@@ -372,7 +362,7 @@ void initState() {
                 .doc(id);
 
             return AlertDialog(
-              title: Text("Update Session"), // Change the title to "Update Session"
+              title: Text("Update Session"),
               content: Form(
                 key: _formKey,
                 child: Column(
@@ -546,11 +536,11 @@ void initState() {
                             title: Text(
                               'Day: ${widget.selectedDay}',
                               style: TextStyle(fontSize: 20),
-                              textAlign: TextAlign.left, // Align title to the left
+                              textAlign: TextAlign.left,
                             ),
                             isThreeLine: true, // Make ListTile three-line
                             subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start, // Align subtitle to the left
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   'Start Time: ${timeformatting(slots.startTime)}',
@@ -562,7 +552,7 @@ void initState() {
                                 ),
                               ],
                             ),
-                            contentPadding: EdgeInsets.all(16), // Add more padding to the ListTile
+                            contentPadding: EdgeInsets.all(16),
                             onTap: () {
                               _showUpdateSessionDialog(slots.ID);
                             },
@@ -576,7 +566,6 @@ void initState() {
                                     actions: <Widget>[
                                       TextButton(
                                         onPressed: () {
-                                          // User confirmed deletion, call the deleteSlot function
                                           deleteSlot(slots.ID); // Pass the ID of the document to delete
                                           Navigator.of(context).pop(); // Close the dialog
                                         },
