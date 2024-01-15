@@ -48,7 +48,8 @@ class DatabaseService {
       'phone': phone,
       'emergencyPhone': emergencyPhone,
       'address': address,
-      'preExistingConditions': preExistingConditions
+      'preExistingConditions': preExistingConditions,
+      'emergency': 'none'
     });
   }
   Future setUserRole(String role) async{

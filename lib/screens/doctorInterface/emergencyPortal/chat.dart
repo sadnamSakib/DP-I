@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:design_project_1/components/chatComponent/chatBubble.dart';
 import 'package:design_project_1/components/chatComponent/textField.dart';
+import 'package:design_project_1/components/emergencyCall/call.dart';
 import 'package:design_project_1/services/chatServices/chatService.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -36,43 +37,43 @@ class _ChatState extends State<Chat> {
         if (snapshot.hasError) {
           return Text("Something went wrong");
         }
-
-        // if (snapshot.connectionState == ConnectionState.waiting) {
-        //   return Text("Loading");
-        // }
-
-        Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
-        String receiverName = data['name'];
-        String receiverPhoneNumber = data['phone'];
-
-        return Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.pink.shade900,
-            title: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(receiverName),
-            ),
-            actions: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(right: 20.0),
-                child: IconButton(
-                  icon: Icon(Icons.call),
-                  onPressed: () {
+        else if(!snapshot.hasData){
+          return CircularProgressIndicator();
+        }
+        else{
+          Map<String, dynamic> data = snapshot.data?.data() as Map<String, dynamic>;
+          String receiverName = data['name'];
+          String receiverPhoneNumber = data['phone'];
+          return Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.pink.shade900,
+              title: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(receiverName),
+              ),
+              actions: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(right: 20.0),
+                  child: IconButton(
+                    icon: Icon(Icons.call),
+                    onPressed: () {
                       showCallModal(receiverPhoneNumber);
-                  },
+                    },
+                  ),
                 ),
-              ),
-            ],
-          ),
-          body: Column(
-            children:[
-              Expanded(
-                child: _buildMessageList(),
-              ),
-              _buildMessageInput(),
-            ],
-          ),
-        );
+              ],
+            ),
+            body: Column(
+              children:[
+                Expanded(
+                  child: _buildMessageList(),
+                ),
+                _buildMessageInput(),
+              ],
+            ),
+          );
+        }
+
       },
     );
   }
@@ -118,8 +119,59 @@ class _ChatState extends State<Chat> {
   //build message item
   Widget _buildMessageItem(DocumentSnapshot document){
     Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-
+    String messageId = document.id;
     var alignment = data['senderID'] == _auth.currentUser?.uid ? Alignment.centerRight : Alignment.centerLeft;
+    if(data['message']=='Patient is requesting a call'){
+      return Container(
+        alignment: Alignment.center,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+              crossAxisAlignment: (data['senderID'] == _auth.currentUser?.uid) ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+              mainAxisAlignment: (data['senderID'] == _auth.currentUser?.uid) ? MainAxisAlignment.end : MainAxisAlignment.start,
+              children: [
+                Text(data['senderName']),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.blue.shade900,
+                    onPrimary: Colors.white,
+                  ),
+                  onPressed: () async {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => VoiceCallPage(callID: widget.receiverUserID, userID: _auth.currentUser!.uid, userName: _auth.currentUser!.displayName.toString())));
+                      await FirebaseFirestore.instance.collection('chatrooms').doc(widget.receiverUserID).collection('messages').doc(messageId).update(
+                          {
+                            'message': 'Call accepted'
+                          }
+                      );
+                  },
+                  child: const Text(
+                    'Accept call',
+                    style: TextStyle(
+                      fontSize: 20.0,
+                    ),
+                  ),
+                ),
+              ]
+          ),
+        ),
+      );
+    }
+    else if(data['message']=='Call accepted'){
+      return Container(
+        alignment: Alignment.center,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+              crossAxisAlignment: (data['senderID'] == _auth.currentUser?.uid) ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+              mainAxisAlignment: (data['senderID'] == _auth.currentUser?.uid) ? MainAxisAlignment.end : MainAxisAlignment.start,
+              children: [
+                Text("Call accepted at ${data['timestamp'].toDate().hour}:${data['timestamp'].toDate().minute}"),
+              ]
+          ),
+        ),
+      );
+    }
+    else
     return Container(
       alignment: alignment,
       child: Padding(

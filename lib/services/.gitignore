@@ -1,3 +1,4 @@
 /trackerServices/nutritionixApi.dart;
-chatServices/ServerKey.dart;
+/chatServices/ServerKey.dart;
 /paymentServices/Store_Credentials.dart;
+/authServices/hashKey.dart;

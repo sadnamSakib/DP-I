@@ -12,11 +12,12 @@ class ChatService extends ChangeNotifier{
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<void> requestEmergency() async {
+  Future<void> requestEmergency(String initialMessage) async {
     //get current user info
     final String currentUserID = _auth.currentUser!.uid;
     final currentUserData = await _firestore.collection('users').doc(currentUserID).get();
     final String currentUserName = currentUserData['name'] ?? 'CurrentUser';
+
     final Timestamp timestamp = Timestamp.now();
 
 
@@ -25,27 +26,28 @@ class ChatService extends ChangeNotifier{
       'senderID': currentUserID,
       'senderName': currentUserName,
       'timestamp': timestamp,
+      'initialMessage' : initialMessage,
+    });
+    await _firestore.collection('patients').doc(currentUserID).update({
+      'emergency': 'pending',
     });
     await sendNotificationToAllDoctor();
     notifyListeners();
   }
   Future<void> sendNotificationToAllDoctor() async {
-    final AuthService _authservices = AuthService();
-    NotificationServices notificationServices = NotificationServices();
     print("docotr ashche");
     List<String> doctorTokenList = [];
     await FirebaseFirestore.instance.collection('doctors').get().then((value) {
       print('Number of docs: ${value.docs.length}');
       for (var element in value.docs) {
-        if(element.data().containsKey('deviceToken')){
-          String decryptedValue = _authservices.decrypt(element['deviceToken'].toString());
-          doctorTokenList.add(decryptedValue);
+        if(element.data().containsKey('deviceToken') && element.data().containsKey('emergency') && element['emergency'] == true ){
+          doctorTokenList.add(element['deviceToken'].toString());
         }
       }
     });
     print(doctorTokenList);
     for(var doctorToken in doctorTokenList){
-      await sendNotificationToDoctor(doctorToken, "Emergency Request", "Emergency Request");
+      await sendNotificationToDoctor(doctorToken, "Emergency Request", "A new emergency request has been made");
     }
   }
   Future<void> sendNotificationToDoctor(String doctorToken, String body, String title) async {
@@ -65,6 +67,7 @@ class ChatService extends ChangeNotifier{
               'status': 'done',
               'body': body,
               'title': title,
+              'type': 'emergency',
             },
             'notification': <String, dynamic>{
               'body': body,
@@ -84,7 +87,7 @@ class ChatService extends ChangeNotifier{
     }
   }
 
-  Future<void> dismissEmergencyRequest(String senderID) async {
+  Future<void> dismissEmergencyRequest(String senderID,String initialMessage) async {
     final String currentUserID = _auth.currentUser!.uid;
     final Timestamp timestamp = Timestamp.now();
 
@@ -104,19 +107,30 @@ class ChatService extends ChangeNotifier{
       'senderID': currentUserID,
       'senderName': currentUserName,
       'receiverName': senderName,
-      'active' : true,
     });
-
-
-    // Delete the emergency request
+    if(initialMessage.isNotEmpty)
+      {
+        await _firestore.collection('chatrooms').doc(senderID).collection('messages').add({
+          'senderID': senderID,
+          'senderName': senderName,
+          'receiverID': currentUserID,
+          'receiverName': currentUserName,
+          'message': initialMessage,
+          'timestamp': timestamp,
+        });
+      }
     await _firestore.collection('emergencyRequests').doc(senderID).delete();
+
+    await _firestore.collection('patients').doc(senderID).update({
+      'emergency': 'accepted',
+    });
     notifyListeners();
   }
 
   Future<void> dismissEmergencyChat() async {
     final String currentUserID = _auth.currentUser!.uid;
-    await _firestore.collection('chatrooms').doc(currentUserID).update({
-      'active' : false,
+    await _firestore.collection('patients').doc(currentUserID).update({
+      'emergency': 'none',
     });
     notifyListeners();
   }

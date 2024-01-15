@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:design_project_1/components/chatComponent/chatBubble.dart';
 import 'package:design_project_1/components/chatComponent/textField.dart';
+import 'package:design_project_1/components/emergencyCall/call.dart';
 import 'package:design_project_1/screens/patientInterface/emergencyPortal/requestEmergencyScreen.dart';
 import 'package:design_project_1/screens/patientInterface/home/home.dart';
 import 'package:design_project_1/services/chatServices/chatService.dart';
@@ -31,81 +32,99 @@ class _ChatState extends State<Chat> {
       _messageController.clear();
     }
   }
-  @override
-    void initState() {
-    super.initState();
-    if(widget.initialMessage.isNotEmpty){
-      _messageController.text = widget.initialMessage;
-      sendMessage();
-    }
+  String generateCallID() {
+    String callID = '';
+    callID = widget.receiverUserID;
+    return callID;
+  }
+  void sendCallRequest() async{
+    await _chatService.sendMessage(widget.receiverUserID, "Patient is requesting a call");
   }
   @override
   Widget build(BuildContext context) {
     final String currentUserId = FirebaseAuth.instance.currentUser!.uid;
 
     return StreamBuilder<DocumentSnapshot>(
-      stream: FirebaseFirestore.instance.collection('emergencyRequests').doc(widget.receiverUserID).snapshots(),
+      stream: FirebaseFirestore.instance.collection('patients').doc(currentUserId).snapshots(),
       builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-
-
         if (snapshot.hasError) {
           return const Text('Something went wrong');
         }
+        else{
+          if (snapshot.hasData && snapshot.data!.exists && snapshot.data!['emergency'] == 'accepted') {
+            return Scaffold(
+              appBar: AppBar(
+                automaticallyImplyLeading: false,
+                backgroundColor: Colors.blue.shade900,
+                title: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("Emergency Portal"),
+                ),
+                actions: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.call),
+                          onPressed: () async {
+                            sendCallRequest();
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => VoiceCallPage(callID: generateCallID(), userID: currentUserId, userName: snapshot.data!['name'],)));
 
-        if (!snapshot.hasData || !snapshot.data!.exists) {
-          print("ki je hoitese");
-          print(snapshot.data!.data());
-          return Scaffold(
-            appBar: AppBar(
-              backgroundColor: Colors.blue.shade900,
-              title: Align(
-                alignment: Alignment.centerLeft,
-                child: Text("Emergency Portal"),
+                          },
+                        ),
+                        SizedBox(width: 8.0),  // Adjust the width as needed
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.red.shade900,
+                            onPrimary: Colors.white,
+                          ),
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) => confirmDeleteDialog(context),
+                            );
+                          },
+                          child: const Text(
+                            'End chat',
+                            style: TextStyle(
+                              fontSize: 20.0,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+
               ),
-              actions: [
-                ElevatedButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) => confirmDeleteDialog(context),
-                      );
-                    },
-                    child:
-                    const Text('End chat',
+              body: Column(
+                children:[
+                  Expanded(
+                    child: _buildMessageList(),
+                  ),
+                  _buildMessageInput(),
+                ],
+              ),
+            );
+          }
+          else {
+            return const Scaffold(
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    CircularProgressIndicator(),
+                    Text('Trying to connect to an emergency doctor...',
                       style: TextStyle(
                         fontSize: 20.0,
                       ),
-                    )
+                    ),
+                  ],
                 ),
-              ],
-
-            ),
-            body: Column(
-              children:[
-                Expanded(
-                  child: _buildMessageList(),
-                ),
-                _buildMessageInput(),
-              ],
-            ),
-          );
-        } else {
-          print("data nai");
-          return const Scaffold(
-            body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  CircularProgressIndicator(),
-                  Text('Trying to connect to an emergency doctor...',
-                  style: TextStyle(
-                    fontSize: 20.0,
-                  ),
-                  ),
-                ],
               ),
-            ),
-          );
+            );
+          }
         }
       },
     );
@@ -118,7 +137,6 @@ class _ChatState extends State<Chat> {
           if(snapshot.hasError){
             return Text('Error: ${snapshot.error}');
           }
-
           if(snapshot.connectionState == ConnectionState.waiting){
             return Text('Loading...');
           }
@@ -155,6 +173,38 @@ class _ChatState extends State<Chat> {
     Map<String, dynamic> data = document.data() as Map<String, dynamic>;
 
     var alignment = data['senderID'] == _auth.currentUser?.uid ? Alignment.centerRight : Alignment.centerLeft;
+    if(data['message']=='Patient is requesting a call'){
+      return Container(
+        alignment: Alignment.center,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+              crossAxisAlignment: (data['senderID'] == _auth.currentUser?.uid) ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+              mainAxisAlignment: (data['senderID'] == _auth.currentUser?.uid) ? MainAxisAlignment.end : MainAxisAlignment.start,
+            children:[
+              ChatBubble(message: 'Calling Doctor...',),
+            ]
+
+          ),
+        ),
+      );
+    }
+    else if(data['message']=='Call accepted'){
+      return Container(
+        alignment: Alignment.center,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+              crossAxisAlignment: (data['senderID'] == _auth.currentUser?.uid) ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+              mainAxisAlignment: (data['senderID'] == _auth.currentUser?.uid) ? MainAxisAlignment.end : MainAxisAlignment.start,
+              children: [
+                Text("Call ended at ${data['timestamp'].toDate().hour}:${data['timestamp'].toDate().minute}"),
+              ]
+          ),
+        ),
+      );
+    }
+    else
     return Container(
         alignment: alignment,
         child: Padding(

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 import 'package:app_settings/app_settings.dart';
+import 'package:design_project_1/screens/doctorInterface/emergencyPortal/emergencyRequests.dart';
 import 'package:design_project_1/screens/patientInterface/medications/currentPrescription.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,7 +9,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:rxdart/rxdart.dart';
+
+import '../../screens/doctorInterface/home/home.dart' as doctorhome;
+import '../../screens/patientInterface/home/home.dart' as patienthome;
 
 class NotificationServices {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
@@ -116,13 +121,19 @@ class NotificationServices {
   void handleMessage(BuildContext context, RemoteMessage message) {
     print("handle message cholse");
     if(message.data['type'] == 'nightmed'){
+
       Navigator.push(context, MaterialPageRoute(builder: (context) => CurrentPrescriptionScreen(medicationTime: 'night')));
     }
     else if(message.data['type'] == 'morningmed'){
+
       Navigator.push(context, MaterialPageRoute(builder: (context) => CurrentPrescriptionScreen(medicationTime: 'morning')));
     }
     else if(message.data['type'] == 'noonmed'){
+
       Navigator.push(context, MaterialPageRoute(builder: (context) => CurrentPrescriptionScreen(medicationTime: 'noon')));
+    }
+    else if(message.data['type'] == 'emergency'){
+      Navigator.push(context, MaterialPageRoute(builder: (context) =>  EmergencyRequestList()));
     }
   }
 
