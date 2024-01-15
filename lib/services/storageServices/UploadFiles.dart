@@ -13,7 +13,7 @@ class UploadFiles{
 
   Future<String?> uploadFile(String fileName, File file) async{
 
-    final reference = FirebaseStorage.instance.ref().child("Reports and Prescriptions/$fileName.pdf");
+    final reference = FirebaseStorage.instance.ref().child("Reports and Prescriptions/$fileName");
 
     final uploadTask = reference.putFile(file);
 

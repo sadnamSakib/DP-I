@@ -101,21 +101,49 @@ import '../BookAppointment/doctorFinderPage.dart';
             }
           }
 
+
+
           void getFiles() async {
-            String userID = userUID;
+            try {
+              String userID = userUID;
 
-            final files = await _firebaseFirestore.collection("Documents")
-                .where('name', isGreaterThanOrEqualTo: '$userID')
-                .where('name', isLessThan: '$userID' + 'z')
-                .get();
+              final files = await _firebaseFirestore
+                  .collection("Documents")
+                  .where('name', isGreaterThanOrEqualTo: '$userID')
+                  .where('name', isLessThan: '$userID' + 'z')
+                  .get();
 
+              if (files.docs.isNotEmpty) {
+                fileData = files.docs
+                    .map((doc) {
+                  // Create a map that includes both document ID and data
+                  Map<String, dynamic> dataWithId = {
+                    'id': doc.id,
+                    ...doc.data() as Map<String, dynamic>
+                  };
 
-              fileData= files.docs.map((e) => e.data()).toList();
+                  // Print the document ID
+                  print('File ID: ${doc.id}');
 
-            setState(() {
-            });
+                  return dataWithId;
+                })
+                    .toList();
+
+                setState(() {});
+
+                // Print data for debugging
+                for (var data in fileData) {
+                  print('File Data: $data');
+                }
+
+                print('All Files Data: $fileData');
+              } else {
+                print('No documents found in the Documents collection.');
+              }
+            } catch (e) {
+              print('Error retrieving files data: $e');
+            }
           }
-
 
           @override
           void initState() {
@@ -239,7 +267,7 @@ import '../BookAppointment/doctorFinderPage.dart';
                                             onTap: () {
                                               String collectionName = collectionSnapshot.docs[folderIndex].id;
                                               print('Tapped on collection: $collectionName');
-                                              Navigator.pushReplacement(
+                                              Navigator.push(
                                                 context,
                                                 MaterialPageRoute(builder: (context) => NewFolder(folderName: collectionName)),
                                               );
@@ -294,7 +322,7 @@ import '../BookAppointment/doctorFinderPage.dart';
                                                 String fileURL = fileData[fileIndex]['URL'];
                                                 String originalFileName = fileName.split('_').skip(1).join('_');
                                                 print('Tapped on file: $originalFileName, URL: $fileURL');
-                                                Navigator.pushReplacement(
+                                                Navigator.push(
                                                   context,
                                                   MaterialPageRoute(builder: (context) => FileViewer(URL: fileURL)),
                                                 );
@@ -311,7 +339,7 @@ import '../BookAppointment/doctorFinderPage.dart';
                                               },
 
                                               onLongPress: () {
-                                                _showDeleteConfirmationDialog(fileData[fileIndex]['name']);
+                                                _showDeleteConfirmationDialog(fileData[fileIndex]['id']);
                                               },
                                               child: Card(
                                                 color: Colors.white,
@@ -424,7 +452,7 @@ import '../BookAppointment/doctorFinderPage.dart';
           Future<void> _showDeleteConfirmationDialog(String fileName) async {
             return showDialog<void>(
               context: context,
-              barrierDismissible: false, // user must tap button!
+              barrierDismissible: true,
               builder: (BuildContext context) {
                 return AlertDialog(
                   title: Text('Delete File'),
@@ -448,7 +476,7 @@ import '../BookAppointment/doctorFinderPage.dart';
                         // Perform delete operation
                         deleteFile(fileName);
                         Navigator.of(context).pop();
-                        initState();
+                        // initState();
                       },
                     ),
                   ],
@@ -460,7 +488,7 @@ import '../BookAppointment/doctorFinderPage.dart';
           Future<void> _showDeleteFolderConfirmationDialog(String fileName) async {
             return showDialog<void>(
               context: context,
-              barrierDismissible: false, // user must tap button!
+              barrierDismissible: true,
               builder: (BuildContext context) {
                 return AlertDialog(
                   title: Text('Delete Folder'),
@@ -496,7 +524,7 @@ import '../BookAppointment/doctorFinderPage.dart';
           Future<void> _createSharedDocumentDialogueBox(String fileName,String fileURL) async {
             return showDialog<void>(
               context: context,
-              barrierDismissible: false, // user must tap button!
+              barrierDismissible: true,
               builder: (BuildContext context) {
                 return AlertDialog(
                   title: Text('Share Document'),
@@ -520,7 +548,7 @@ import '../BookAppointment/doctorFinderPage.dart';
                         // Perform delete operation
                         shareDocument(fileName,fileURL);
                         Navigator.of(context).pop();
-                        initState();
+                        // initState();
                       },
                     ),
                   ],
@@ -529,47 +557,60 @@ import '../BookAppointment/doctorFinderPage.dart';
             );
           }
 
-          Future<void> deleteFile(String fileName) async {
+
+
+          Future<void> deleteFile(String fileId) async {
             try {
-             await _firebaseFirestore.collection("Documents").
-              where("name", isEqualTo: fileName)
-                 .limit(1)  // Limit to one document
-                 .get()
-                  .then((querySnapshot) {
-                querySnapshot.docs.forEach((doc) async {
+              // Create a reference to the document using the Firestore generated unique ID
+              DocumentReference fileRef = _firebaseFirestore.collection("Documents").doc(fileId);
 
-                  await doc.reference.delete();
+              // Fetch the document
+              DocumentSnapshot fileDoc = await fileRef.get();
 
-                  String fileURL = doc['URL'];
-                  Reference storageRef = FirebaseStorage.instance.refFromURL(fileURL);
-                  await storageRef.delete();
-                });
-              });
+              // Check if the document exists
+              if (fileDoc.exists) {
+                // Get the file URL from the document
+                String fileURL = fileDoc['URL'];
 
-              print("File deletedddddd successfully");
-              Fluttertoast.showToast(
-                msg: 'File Deleted',
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIosWeb: 1,
-                backgroundColor: Colors.white,
-                textColor: Colors.black,
-              );
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const UploadFile()),
-              );
+                // Create a reference to the file in Firebase Storage
+                Reference storageRef = FirebaseStorage.instance.refFromURL(fileURL);
+
+                // Delete the document from Firestore
+                await fileRef.delete();
+
+                // Delete the file from Firebase Storage
+                await storageRef.delete();
+
+                print("File deleted successfully");
+
+                Fluttertoast.showToast(
+                  msg: 'File Deleted',
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.white,
+                  textColor: Colors.blue,
+                );
+
+                // Replace the current screen with UploadFile screen
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const UploadFile()),
+                );
+              } else {
+                print('File not found in Firestore');
+              }
             } catch (error) {
               print("Error deleting file: $error");
             }
           }
 
-  Future<void> shareDocument(String fileName, String fileURL) async {
+          Future<void> shareDocument(String fileName, String fileURL) async {
 
-    List<String> doctorIds = await getDoctorIdsForPatient();
-    for (String doctorId in doctorIds) {
-      print('DOCTOR ID: $doctorId');
-    }
+                        List<String> doctorIds = await getDoctorIdsForPatient();
+                        for (String doctorId in doctorIds) {
+                          print('DOCTOR ID: $doctorId');
+                        }
 
 
     Navigator.push(
@@ -583,16 +624,14 @@ import '../BookAppointment/doctorFinderPage.dart';
 
           Future<List<String>> getDoctorIdsForPatient() async {
             try {
-              // Reference to the Appointments collection in Firestore
+
               CollectionReference appointmentsCollection =
               FirebaseFirestore.instance.collection('Appointments');
 
-              // Fetch appointments where patientId is the current UUID
               QuerySnapshot querySnapshot = await appointmentsCollection
                   .where('patientId', isEqualTo: userUID)
                   .get();
 
-              // Extract doctorIds from the fetched appointments
               List<String> doctorIds = querySnapshot.docs
                   .map((doc) => doc['doctorId'] as String) // Adjust the type if needed
                   .toList();

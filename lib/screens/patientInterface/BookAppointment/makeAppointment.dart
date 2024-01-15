@@ -174,14 +174,6 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
   void fetchAppointments() async {
 
 
-    // DateTime firstDay = DateTime.now();
-    // DateTime lastDay = DateTime.now().add(Duration(days: 6));
-    //
-    // for (DateTime selectedDay = firstDay; selectedDay.isBefore(lastDay);
-    // selectedDay = selectedDay.add(Duration(days: 1))) {
-    //   print('selected DAY: ${selectedDay}');
-
-      // String Searchfordate = DateFormat('yyyy-MM-dd').format(selectedDay);
       CollectionReference appointmentsCollection = FirebaseFirestore.instance.collection('Appointments');
 
       String currentUserId = FirebaseAuth.instance.currentUser?.uid ?? '';

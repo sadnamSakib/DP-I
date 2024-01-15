@@ -111,23 +111,23 @@ class _HomeState extends State<Home> {
   List<PersistentBottomNavBarItem> _navBarItems() {
     return [
       PersistentBottomNavBarItem(
-        icon: Icon(Icons.schedule_outlined, color: Colors.indigo),
+        icon: Icon(Icons.schedule_outlined, color: Colors.pink.shade900),
         inactiveIcon: Icon(Icons.schedule_outlined, color: Colors.grey),
       ),
       PersistentBottomNavBarItem(
-        icon: Icon(Icons.calendar_month, color: Colors.indigo),
+        icon: Icon(Icons.calendar_month, color: Colors.pink.shade900),
         inactiveIcon: Icon(Icons.calendar_month, color: Colors.grey),
       ),
       PersistentBottomNavBarItem(
-        icon: Icon(Icons.home, color: Colors.indigo),
+        icon: Icon(Icons.home, color: Colors.pink.shade900),
         inactiveIcon: Icon(Icons.home, color: Colors.grey),
       ),
       PersistentBottomNavBarItem(
-        icon: Icon(Icons.emergency_outlined, color: Colors.indigo),
+        icon: Icon(Icons.emergency_outlined, color: Colors.pink.shade900),
         inactiveIcon: Icon(Icons.emergency_outlined, color: Colors.grey),
       ),
       PersistentBottomNavBarItem(
-        icon: Icon(Icons.person, color: Colors.indigo),
+        icon: Icon(Icons.person, color: Colors.pink.shade900),
         inactiveIcon: Icon(Icons.person, color: Colors.grey),
       ),
     ];
