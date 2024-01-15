@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:app_settings/app_settings.dart';
 import 'package:design_project_1/screens/doctorInterface/emergencyPortal/emergencyRequests.dart';
 import 'package:design_project_1/screens/patientInterface/medications/currentPrescription.dart';
+import 'package:design_project_1/screens/patientInterface/viewAppointment/appointmentList.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -134,6 +135,30 @@ class NotificationServices {
     }
     else if(message.data['type'] == 'emergency'){
       Navigator.push(context, MaterialPageRoute(builder: (context) =>  EmergencyRequestList()));
+    }
+    else if(message.data['type'] == 'cancelAppointment'){
+
+      showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Appointment Canceled'),
+            content: Text('Your appointment has been canceled. Check your Appointments for more details.'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.push(context, MaterialPageRoute(builder: (context) =>  AppointmentListPage()));
+
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+
     }
   }
 

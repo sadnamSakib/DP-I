@@ -31,7 +31,7 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('View Appointments'),
+        title: Text('Appointments'),
         backgroundColor: Colors.blue.shade900,
       ),
       body: Container(
@@ -232,7 +232,7 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
       await appointmentRef.delete();
 
 
-      print("Appointment withhhhhhhhhh ID $docID to beeeeeeeeeeeeee  deleted.");
+      print("Appointment with ID $docID to be  deleted.");
       return true;
       // Current time is after end time
       // Do something else
