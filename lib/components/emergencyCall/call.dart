@@ -1,4 +1,5 @@
 import 'package:agora_uikit/agora_uikit.dart';
+import 'package:agora_uikit/controllers/rtc_buttons.dart';
 import 'package:flutter/material.dart';
 import '../virtualConsultation/callSettings.dart';
 class VoiceCallPage extends StatefulWidget {
@@ -20,9 +21,10 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
       tempToken: token,
     ),
     enabledPermission: [
-      Permission.camera,
       Permission.microphone,
     ],
+
+
   );
 
   void initAgora() async {
@@ -36,6 +38,7 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
     print(widget.userID);
     print(widget.userName);
     initAgora();
+
   }
 
   @override
@@ -48,22 +51,9 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
               AgoraVideoViewer(
                   client: client,
                   layoutType: Layout.oneToOne,
-                disabledVideoWidget: Center(
-                  child: Text(
-                    'Video Disabled',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
               ),
               AgoraVideoButtons(
                 client: client,
-                enabledButtons: [
-                  BuiltInButtons.toggleMic,
-                  BuiltInButtons.callEnd,
-                ],
                 onDisconnect: () {
                   Navigator.pop(context);
                 },
