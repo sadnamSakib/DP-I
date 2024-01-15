@@ -22,9 +22,10 @@ class _SharedDocumentsState extends State<SharedDocuments> {
 
   List<Map<String, dynamic>> allFilesData=[];
 
+
+
   Future<void> getFiles() async {
     try {
-
       QuerySnapshot filesSnapshot = await FirebaseFirestore.instance
           .collection('Documents')
           .doc('Shared Documents')
@@ -35,12 +36,18 @@ class _SharedDocumentsState extends State<SharedDocuments> {
 
       if (filesSnapshot.docs.isNotEmpty) {
         allFilesData = filesSnapshot.docs
-            .map((doc) => doc.data() as Map<String, dynamic>)
+            .map((doc) {
+          Map<String, dynamic> dataWithId = {
+            'id': doc.id,
+            ...doc.data() as Map<String, dynamic>
+          };
+
+          print(doc.id);
+          return dataWithId;
+        })
             .toList();
 
-        setState(() {
-
-        });
+        setState(() {});
 
         for (var data in allFilesData) {
           print('File Data: $data');
@@ -55,10 +62,14 @@ class _SharedDocumentsState extends State<SharedDocuments> {
     }
   }
 
+
   @override
   void initState()
   {
     super.initState();
+    setState(() {
+      allFilesData=[];
+    });
     getFiles();
   }
 
@@ -127,7 +138,7 @@ class _SharedDocumentsState extends State<SharedDocuments> {
 
       
                             onLongPress: () {
-                              _showDeleteConfirmationDialog(allFilesData[index]['name']);
+                              _showDeleteConfirmationDialog(allFilesData[index]['id']);
                             },
                             child: Card(
                               color: Colors.white,
@@ -156,10 +167,10 @@ class _SharedDocumentsState extends State<SharedDocuments> {
 
 
 
-  Future<void> _showDeleteConfirmationDialog(String fileName) async {
+  Future<void> _showDeleteConfirmationDialog(String fileid) async {
     return showDialog<void>(
       context: context,
-      barrierDismissible: false, // user must tap button!
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Remove File'),
@@ -181,9 +192,13 @@ class _SharedDocumentsState extends State<SharedDocuments> {
               child: Text('Remove'),
               onPressed: () {
                 // Perform delete operation
-                removefile(fileName);
-                Navigator.of(context).pop();
-                initState();
+                removefile(fileid);
+                print(fileid);
+
+                Navigator.pop(context);
+                // initState();
+                Navigator.push(context, MaterialPageRoute(builder: (context) => SharedDocuments(doctorID: widget.doctorID)));
+
               },
             ),
           ],
@@ -192,7 +207,8 @@ class _SharedDocumentsState extends State<SharedDocuments> {
     );
   }
 
-  Future<void> removefile(String fileName) async {
+
+  Future<void> removefile(String fileid) async {
     try {
       await FirebaseFirestore.instance
           .collection("Documents")
@@ -200,18 +216,10 @@ class _SharedDocumentsState extends State<SharedDocuments> {
           .collection(userUID)
           .doc(widget.doctorID)
           .collection('Files')
-          .where("name", isEqualTo: fileName)
-          .limit(1)  // Limit to one document
-          .get()
-          .then((querySnapshot) {
-        querySnapshot.docs.forEach((doc) async {
-          await doc.reference.delete();
-        });
-      });
+          .doc(fileid)
+          .delete();
 
-
-
-      print("File deletedddddd successfully");
+      print("File deleted successfully");
       Fluttertoast.showToast(
         msg: 'File Removed',
         toastLength: Toast.LENGTH_SHORT,
@@ -221,7 +229,8 @@ class _SharedDocumentsState extends State<SharedDocuments> {
         textColor: Colors.black,
       );
 
-    Navigator.pop(context);
+      getFiles();
+      // Navigator.pop(context);
     } catch (error) {
       print("Error deleting file: $error");
     }
