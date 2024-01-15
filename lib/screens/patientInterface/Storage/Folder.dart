@@ -311,7 +311,7 @@ class _NewFolderState extends State<NewFolder> {
   Future<void> _showDeleteConfirmationDialog(String fileId) async {
     return showDialog<void>(
       context: context,
-      barrierDismissible: false, // user must tap button!
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Delete File'),
@@ -347,7 +347,7 @@ class _NewFolderState extends State<NewFolder> {
   Future<void> _createSharedDocumentDialogueBox(String fileName,String fileURL) async {
     return showDialog<void>(
       context: context,
-      barrierDismissible: false, // user must tap button!
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Share Document'),

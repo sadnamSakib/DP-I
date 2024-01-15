@@ -166,14 +166,13 @@ class _DoctorswithAppointmentsState extends State<DoctorswithAppointments> {
           backgroundColor: Colors.white,
           textColor: Colors.black,
         );
-        Navigator.pushReplacement(
+        Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const UploadFile()),
         );
 
       } catch (e) {
         print("Error sharing file: $e");
-        // Handle the error as needed
       }
     }
 

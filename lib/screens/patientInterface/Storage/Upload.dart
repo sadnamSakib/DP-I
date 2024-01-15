@@ -465,7 +465,7 @@ import '../BookAppointment/doctorFinderPage.dart';
           Future<void> _showDeleteConfirmationDialog(String fileName) async {
             return showDialog<void>(
               context: context,
-              barrierDismissible: false, // user must tap button!
+              barrierDismissible: true,
               builder: (BuildContext context) {
                 return AlertDialog(
                   title: Text('Delete File'),
@@ -501,7 +501,7 @@ import '../BookAppointment/doctorFinderPage.dart';
           Future<void> _showDeleteFolderConfirmationDialog(String fileName) async {
             return showDialog<void>(
               context: context,
-              barrierDismissible: false, // user must tap button!
+              barrierDismissible: true,
               builder: (BuildContext context) {
                 return AlertDialog(
                   title: Text('Delete Folder'),
@@ -537,7 +537,7 @@ import '../BookAppointment/doctorFinderPage.dart';
           Future<void> _createSharedDocumentDialogueBox(String fileName,String fileURL) async {
             return showDialog<void>(
               context: context,
-              barrierDismissible: false, // user must tap button!
+              barrierDismissible: true,
               builder: (BuildContext context) {
                 return AlertDialog(
                   title: Text('Share Document'),
