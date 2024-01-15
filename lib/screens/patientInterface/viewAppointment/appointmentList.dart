@@ -31,7 +31,7 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('View Appointments'),
+        title: Text('Appointments'),
         backgroundColor: Colors.blue.shade900,
       ),
       body: Container(

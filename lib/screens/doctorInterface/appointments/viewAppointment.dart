@@ -3,6 +3,8 @@ import 'package:design_project_1/screens/doctorInterface/appointments/viewPatien
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../../../services/cancellationServices/cancellationNotification.dart';
+import '../../../services/notificationServices/notification_services.dart';
 import 'AppointmentClass.dart';
 
 class ViewAppointmentScreen extends StatefulWidget {
@@ -15,9 +17,10 @@ class ViewAppointmentScreen extends StatefulWidget {
 
 class _ViewAppointmentScreenState extends State<ViewAppointmentScreen> {
   final List<Appointments> appointments = [];
+  NotificationServices notificationServices = NotificationServices();
 
   Future<void> fetchValidAppointments() async {
-    appointments.clear(); // Clear the list to avoid duplicates
+    appointments.clear();
 
     try {
       final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
@@ -44,7 +47,6 @@ class _ViewAppointmentScreenState extends State<ViewAppointmentScreen> {
             slotID: data['slotID'] ?? '',
           );
 
-          print('docccccccccccccccccccIddddddddddddddddddddddddddd');
           print(doc.id);
           appointments.add(appointment);
         }
@@ -123,7 +125,6 @@ class _ViewAppointmentScreenState extends State<ViewAppointmentScreen> {
 
 
               onLongPress: () {
-                // Implement cancellation logic here
                 _showCancellationDialog(appointment);
               },
             );
@@ -157,15 +158,14 @@ class _ViewAppointmentScreenState extends State<ViewAppointmentScreen> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
               },
               child: Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
-                // Implement your cancellation logic here, using `appointment` and `cancellationReason`
                 _cancelAppointment(appointment,cancellationReason);
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
                 Fluttertoast.showToast(
                   msg: 'Appointment deleted',
                   toastLength: Toast.LENGTH_SHORT,
@@ -198,10 +198,13 @@ class _ViewAppointmentScreenState extends State<ViewAppointmentScreen> {
       'patientID': appointment.patientId ?? '',
       'appointmentDate': appointment.date ?? '',
       'issue': appointment.issue ?? '',
+       'doctorID' : appointment.doctorId
     });
-    // Use the reference to delete the document
+    notifyPatient(appointment.patientId,appointment.doctorId,appointment.date,
+      appointment.startTime
+    );
+
     appointmentReference.delete().then((_) {
-      // The appointment has been deleted
       print('Appointment with ID ${appointment.id} has been deleted.');
     }).catchError((error) {
       print('Error deleting appointment: $error');
@@ -212,6 +215,11 @@ class _ViewAppointmentScreenState extends State<ViewAppointmentScreen> {
       appointments.remove(appointment);
     });
   }
-}
+
+  void notifyPatient(String patientId, String doctorId, String date, String startTime) {
+
+    cancellationOfNotification().notifyPatient(patientId,doctorId,date,startTime);
+
+  }}
 
 
