@@ -69,7 +69,7 @@ class _ReportsandPrescriptionsState extends State<ReportsandPrescriptions> {
 
         appBar: AppBar(
           title: Text('Reports and Prescriptions'),
-          backgroundColor: Colors.blue.shade900,
+          backgroundColor: Colors.pink.shade900,
         ),
         body:  Container(
           decoration: BoxDecoration(
