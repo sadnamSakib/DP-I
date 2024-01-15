@@ -39,38 +39,7 @@ class _NewFolderState extends State<NewFolder> {
     getFiles();
   }
 
-  // Future<void> getFiles() async {
-  //   try {
-  //     QuerySnapshot filesSnapshot = await FirebaseFirestore.instance
-  //         .collection('Documents')
-  //         .doc('Reports and Prescriptions')
-  //         .collection(userUID)
-  //         .doc(widget.folderName)
-  //         .collection('Files')
-  //         .get();
-  //
-  //     if (filesSnapshot.docs.isNotEmpty) {
-  //       allFilesData = filesSnapshot.docs
-  //           .map((doc) => doc.data() as Map<String, dynamic>)
-  //           .toList();
-  //
-  //       setState(() {
-  //
-  //       });
-  //
-  //       // Print data for debugging
-  //       for (var data in allFilesData) {
-  //         print('File Data: $data');
-  //       }
-  //
-  //       print('All Files Data: $allFilesData');
-  //     } else {
-  //       print('No documents found in the Files subcollection.');
-  //     }
-  //   } catch (e) {
-  //     print('Error retrieving files data: $e');
-  //   }
-  // }
+
 
 
   Future<void> getFiles() async {
@@ -380,45 +349,7 @@ class _NewFolderState extends State<NewFolder> {
     );
   }
 
-  // Future<void> deleteFile(String fileID) async {
-  //   try {
-  //     await _firebaseFirestore
-  //         .collection("Documents")
-  //         .doc('Reports and Prescriptions')
-  //         .collection(userUID)
-  //         .doc(widget.folderName)
-  //         .collection('Files')
-  //         .where("name", isEqualTo: fileName)
-  //         .limit(1)  // Limit to one document
-  //         .get()
-  //         .then((querySnapshot) {
-  //       querySnapshot.docs.forEach((doc) async {
-  //
-  //         await doc.reference.delete();
-  //
-  //         String fileURL = doc['URL'];
-  //         Reference storageRef = FirebaseStorage.instance.refFromURL(fileURL);
-  //         await storageRef.delete();
-  //       });
-  //     });
-  //
-  //     print("File deletedddddd successfully");
-  //     Fluttertoast.showToast(
-  //       msg: 'File Deleted',
-  //       toastLength: Toast.LENGTH_SHORT,
-  //       gravity: ToastGravity.BOTTOM,
-  //       timeInSecForIosWeb: 1,
-  //       backgroundColor: Colors.white,
-  //       textColor: Colors.black,
-  //     );
-  //     Navigator.pushReplacement(
-  //       context,
-  //       MaterialPageRoute(builder: (context) => const UploadFile()),
-  //     );
-  //   } catch (error) {
-  //     print("Error deleting file: $error");
-  //   }
-  // }
+
 
   Future<void> deleteFile(String fileID) async {
     try {
@@ -483,16 +414,14 @@ class _NewFolderState extends State<NewFolder> {
 
   Future<List<String>> getDoctorIdsForPatient() async {
     try {
-      // Reference to the Appointments collection in Firestore
+
       CollectionReference appointmentsCollection =
       FirebaseFirestore.instance.collection('Appointments');
 
-      // Fetch appointments where patientId is the current UUID
       QuerySnapshot querySnapshot = await appointmentsCollection
           .where('patientId', isEqualTo: userUID)
           .get();
 
-      // Extract doctorIds from the fetched appointments
       List<String> doctorIds = querySnapshot.docs
           .map((doc) => doc['doctorId'] as String) // Adjust the type if needed
           .toList();

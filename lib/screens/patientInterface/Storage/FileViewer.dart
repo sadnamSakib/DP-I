@@ -37,28 +37,7 @@ class _FileViewerState extends State<FileViewer> {
   }
 
 
-  // Future<void> initialize() async {
-  //   try {
-  //
-  //       document = await PDFDocument.fromURL(widget.URL);
-  //
-  //   } catch (e) {
-  //     print("Error initializing PDF document: $e");
-  //     Fluttertoast.showToast(
-  //       msg: 'Error loading the file',
-  //       toastLength: Toast.LENGTH_SHORT,
-  //       gravity: ToastGravity.BOTTOM,
-  //       timeInSecForIosWeb: 2,
-  //       backgroundColor: Colors.white,
-  //       textColor: Colors.red,
-  //     );
-  //     Navigator.pop(context);
-  //   }
-  //
-  //   if (mounted) {
-  //     setState(() {});
-  //   }
-  // }
+
   @override
   Widget build(BuildContext context) {
     bool isImage = widget.URL.contains('.JPG') || widget.URL.contains('.png') || widget.URL.contains('.img');
