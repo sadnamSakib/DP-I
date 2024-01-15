@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:design_project_1/components/chatComponent/chatBubble.dart';
 import 'package:design_project_1/components/chatComponent/textField.dart';
+import 'package:design_project_1/components/emergencyCall/call.dart';
 import 'package:design_project_1/screens/patientInterface/emergencyPortal/requestEmergencyScreen.dart';
 import 'package:design_project_1/screens/patientInterface/home/home.dart';
 import 'package:design_project_1/services/chatServices/chatService.dart';
@@ -31,6 +32,14 @@ class _ChatState extends State<Chat> {
       _messageController.clear();
     }
   }
+  String generateCallID() {
+    String callID = '';
+    callID = widget.receiverUserID;
+    return callID;
+  }
+  void sendCallRequest() async{
+    await _chatService.sendMessage(widget.receiverUserID, "Patient is requesting a call");
+  }
   @override
   Widget build(BuildContext context) {
     final String currentUserId = FirebaseAuth.instance.currentUser!.uid;
@@ -54,23 +63,36 @@ class _ChatState extends State<Chat> {
                 actions: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.red.shade900,
-                          onPrimary: Colors.white,
+                    child: Row(
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.call),
+                          onPressed: () async {
+                            sendCallRequest();
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => VoiceCallPage(callID: generateCallID(), userID: currentUserId, userName: snapshot.data!['name'],)));
+
+                          },
                         ),
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) => confirmDeleteDialog(context),
-                          );
-                        },
-                        child:
-                        const Text('End chat',
-                          style: TextStyle(
-                            fontSize: 20.0,
+                        SizedBox(width: 8.0),  // Adjust the width as needed
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.red.shade900,
+                            onPrimary: Colors.white,
                           ),
-                        )
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) => confirmDeleteDialog(context),
+                            );
+                          },
+                          child: const Text(
+                            'End chat',
+                            style: TextStyle(
+                              fontSize: 20.0,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -151,6 +173,23 @@ class _ChatState extends State<Chat> {
     Map<String, dynamic> data = document.data() as Map<String, dynamic>;
 
     var alignment = data['senderID'] == _auth.currentUser?.uid ? Alignment.centerRight : Alignment.centerLeft;
+    if(data['message']=='Patient is requesting a call'){
+      return Container(
+        alignment: Alignment.center,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+              crossAxisAlignment: (data['senderID'] == _auth.currentUser?.uid) ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+              mainAxisAlignment: (data['senderID'] == _auth.currentUser?.uid) ? MainAxisAlignment.end : MainAxisAlignment.start,
+            children:[
+              ChatBubble(message: 'Calling Doctor...',),
+            ]
+
+          ),
+        ),
+      );
+    }
+    else
     return Container(
         alignment: alignment,
         child: Padding(

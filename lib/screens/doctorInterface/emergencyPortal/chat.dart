@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:design_project_1/components/chatComponent/chatBubble.dart';
 import 'package:design_project_1/components/chatComponent/textField.dart';
+import 'package:design_project_1/components/emergencyCall/call.dart';
 import 'package:design_project_1/services/chatServices/chatService.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -120,6 +121,37 @@ class _ChatState extends State<Chat> {
     Map<String, dynamic> data = document.data() as Map<String, dynamic>;
 
     var alignment = data['senderID'] == _auth.currentUser?.uid ? Alignment.centerRight : Alignment.centerLeft;
+    if(data['message']=='Patient is requesting a call'){
+      return Container(
+        alignment: Alignment.center,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+              crossAxisAlignment: (data['senderID'] == _auth.currentUser?.uid) ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+              mainAxisAlignment: (data['senderID'] == _auth.currentUser?.uid) ? MainAxisAlignment.end : MainAxisAlignment.start,
+              children: [
+                Text(data['senderName']),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.blue.shade900,
+                    onPrimary: Colors.white,
+                  ),
+                  onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => VoiceCallPage(callID: widget.receiverUserID, userID: _auth.currentUser!.uid, userName: _auth.currentUser!.displayName.toString())));
+                  },
+                  child: const Text(
+                    'Accept call',
+                    style: TextStyle(
+                      fontSize: 20.0,
+                    ),
+                  ),
+                ),
+              ]
+          ),
+        ),
+      );
+    }
+    else
     return Container(
       alignment: alignment,
       child: Padding(
