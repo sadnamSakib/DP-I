@@ -47,7 +47,7 @@ class ChatService extends ChangeNotifier{
     });
     print(doctorTokenList);
     for(var doctorToken in doctorTokenList){
-      await sendNotificationToDoctor(doctorToken, "Emergency Request", "Emergency Request");
+      await sendNotificationToDoctor(doctorToken, "Emergency Request", "A new emergency request has been made");
     }
   }
   Future<void> sendNotificationToDoctor(String doctorToken, String body, String title) async {
@@ -67,6 +67,7 @@ class ChatService extends ChangeNotifier{
               'status': 'done',
               'body': body,
               'title': title,
+              'type': 'emergency',
             },
             'notification': <String, dynamic>{
               'body': body,

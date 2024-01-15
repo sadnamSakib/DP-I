@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 import 'package:app_settings/app_settings.dart';
+import 'package:design_project_1/screens/doctorInterface/emergencyPortal/emergencyRequests.dart';
 import 'package:design_project_1/screens/patientInterface/medications/currentPrescription.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
@@ -123,6 +124,9 @@ class NotificationServices {
     }
     else if(message.data['type'] == 'noonmed'){
       Navigator.push(context, MaterialPageRoute(builder: (context) => CurrentPrescriptionScreen(medicationTime: 'noon')));
+    }
+    else if(message.data['type'] == 'emergency'){
+      Navigator.push(context, MaterialPageRoute(builder: (context) =>  EmergencyRequestList()));
     }
   }
 
