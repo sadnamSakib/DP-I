@@ -132,6 +132,7 @@ class ChatService extends ChangeNotifier{
     await _firestore.collection('patients').doc(currentUserID).update({
       'emergency': 'none',
     });
+
     notifyListeners();
   }
 
