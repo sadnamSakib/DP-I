@@ -189,6 +189,21 @@ class _ChatState extends State<Chat> {
         ),
       );
     }
+    else if(data['message']=='Call accepted'){
+      return Container(
+        alignment: Alignment.center,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+              crossAxisAlignment: (data['senderID'] == _auth.currentUser?.uid) ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+              mainAxisAlignment: (data['senderID'] == _auth.currentUser?.uid) ? MainAxisAlignment.end : MainAxisAlignment.start,
+              children: [
+                Text("Call ended at ${data['timestamp'].toDate().hour}:${data['timestamp'].toDate().minute}"),
+              ]
+          ),
+        ),
+      );
+    }
     else
     return Container(
         alignment: alignment,

@@ -11,6 +11,8 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../screens/doctorInterface/home/home.dart';
+
 class NotificationServices {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -117,16 +119,23 @@ class NotificationServices {
   void handleMessage(BuildContext context, RemoteMessage message) {
     print("handle message cholse");
     if(message.data['type'] == 'nightmed'){
-      Navigator.push(context, MaterialPageRoute(builder: (context) => CurrentPrescriptionScreen(medicationTime: 'night')));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Home()))
+          .then((_) =>
+      Navigator.push(context, MaterialPageRoute(builder: (context) => CurrentPrescriptionScreen(medicationTime: 'night'))));
     }
     else if(message.data['type'] == 'morningmed'){
-      Navigator.push(context, MaterialPageRoute(builder: (context) => CurrentPrescriptionScreen(medicationTime: 'morning')));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Home()))
+          .then((_) =>
+      Navigator.push(context, MaterialPageRoute(builder: (context) => CurrentPrescriptionScreen(medicationTime: 'morning'))));
     }
     else if(message.data['type'] == 'noonmed'){
-      Navigator.push(context, MaterialPageRoute(builder: (context) => CurrentPrescriptionScreen(medicationTime: 'noon')));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Home()))
+          .then((_) =>
+      Navigator.push(context, MaterialPageRoute(builder: (context) => CurrentPrescriptionScreen(medicationTime: 'noon'))));
     }
     else if(message.data['type'] == 'emergency'){
-      Navigator.push(context, MaterialPageRoute(builder: (context) =>  EmergencyRequestList()));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Home()))
+          .then((_) => Navigator.push(context, MaterialPageRoute(builder: (context) => EmergencyRequestList())));
     }
   }
 
