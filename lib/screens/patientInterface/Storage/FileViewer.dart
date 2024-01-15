@@ -1,5 +1,8 @@
 import 'package:easy_pdf_viewer/easy_pdf_viewer.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class FileViewer extends StatefulWidget {
   final String URL;
@@ -16,27 +19,38 @@ class _FileViewerState extends State<FileViewer> {
   @override
   void initState() {
     super.initState();
-    initializePDF();
+    initialize();
   }
+
+
+
 
   PDFDocument? document;
 
-  void initializePDF() async{
+  void initialize() async{
+
     document = await PDFDocument.fromURL(widget.URL);
+
     setState(() {
 
     });
   }
+
+
+
   @override
   Widget build(BuildContext context) {
-    bool isImage = widget.URL.contains('.JPG') || widget.URL.endsWith('.png') || widget.URL.endsWith('.img');
+    bool isImage = widget.URL.contains('.JPG') || widget.URL.contains('.png') || widget.URL.contains('.img');
 
     return Scaffold(
       body: isImage
-          ? Image.network(
+          ?
+
+            Image.network(
         widget.URL.toString(),
         loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
           if (loadingProgress == null) {
+
             return child;
           } else {
             return Center(child: CircularProgressIndicator());

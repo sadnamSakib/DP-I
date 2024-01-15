@@ -1,8 +1,8 @@
 import 'package:design_project_1/screens/authentication/resetPassword.dart';
 import 'package:flutter/material.dart';
-import 'package:design_project_1/services/auth.dart';
+import 'package:design_project_1/services/authServices/auth.dart';
 
-import '../../squareTile.dart';
+import '../../utilities/squareTile.dart';
 
 class SignIn extends StatefulWidget {
   final Function toggleView;

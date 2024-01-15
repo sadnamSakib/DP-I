@@ -1,6 +1,6 @@
 import 'package:design_project_1/screens/doctorInterface/appointments/kidneyTrackerSummary/kidneyTrackerSummaryScreen.dart';
 import 'package:flutter/material.dart';
-import 'package:design_project_1/services/healthTrackerService.dart';
+import 'package:design_project_1/services/trackerServices/healthTrackerService.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'kidneyDiseaseTracker/kidneyTracker.dart';

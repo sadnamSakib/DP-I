@@ -8,7 +8,7 @@ import '../../../../components/barChart/bar_graph.dart';
 import '../../../../models/UrineModel.dart';
 import '../../../../models/bloodPressureModel.dart';
 import '../../../../models/weightModel.dart';
-import '../../../../services/healthTrackerService.dart';
+import '../../../../services/trackerServices/healthTrackerService.dart';
 import 'bloodPuressureSummary.dart';
 
 class KidneyTrackerSummaryScreen extends StatefulWidget {

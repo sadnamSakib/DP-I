@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:design_project_1/screens/doctorInterface/schedule/dayBasedSchedule.dart';
+import 'package:design_project_1/services/cancellationServices/cancellationNotification.dart';
+import 'package:design_project_1/services/notificationServices/notification_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:design_project_1/services/diseaseViewModel.dart';
+import 'package:design_project_1/models/diseaseViewModel.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 
@@ -18,8 +20,9 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   List<String>selectedDays = [];
   List<String>bookedDays = [];
 
+  NotificationServices notificationServices = NotificationServices();
   bool hasSchedule=false;
-  List<ScheduleDay> schedule = []; // Declare schedule here
+  List<ScheduleDay> schedule = [];
   List<ScheduleDay> fetchedSchedule =[];
 
 
@@ -73,11 +76,8 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
       }
 
-      // Add the schedule for this day to the list
-      // setState(() {
 
       schedule.add(ScheduleDay(day: day, items: dayItems));
-      // });
     }
 
     return schedule;
@@ -89,7 +89,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
       final scheduleDocument = await FirebaseFirestore.instance
           .collection('Schedule') // Outer collection
-          .doc(userUID) // Document within the outer collection
+          .doc(userUID)
           ; // Subcollection
       print(scheduleDocument.id);
       print(userUID);
@@ -113,10 +113,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
           availableDays.remove(days);
         }
       });
-      // setState(() async {
-      //   fetchedSchedule = await fetchSchedule(); // Update the class-level list
-      //
-      // });
+
     }
     }
 
@@ -125,10 +122,8 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     final appointmentsCollection = FirebaseFirestore.instance.collection('Appointments');
 
     try {
-      print('INNNN TRYYYYYYYYYYYYY');
       final appointmentDocument = await appointmentsCollection.doc(appointmentID).get();
       if (appointmentDocument.exists) {
-        print('EXISTSTTTTTTTTTTTTTTTTTTTTT');
         final Map<String, dynamic>? appointmentData = appointmentDocument.data() as Map<String, dynamic>?;
 
         if (appointmentData != null) {
@@ -136,7 +131,6 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
           final collection = FirebaseFirestore.instance.collection('DeletedAppointment');
 
-          print('colectttttttttttttttttttionnnnnnnnnnnnn');
           collection.add({
             'appointmentID': appointmentID ?? '',
             'slotID': slotID ?? '',
@@ -144,9 +138,12 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             'patientID': appointmentData['patientId'] ?? '',
             'appointmentDate': date ?? '',
             'issue': appointmentData['issue'] ?? '',
+            'doctorID' : appointmentData['doctorId']
           });
 
-          // Now you have retrieved the 'date' field from the appointment document
+          notifyPatient(appointmentData['patientId'], appointmentData['doctorId'],
+              appointmentData['date'],appointmentData['startTime']
+          );
           print('Date of the appointment: $date');
         } else {
           print('Appointment data is null for ID: $appointmentID');
@@ -163,26 +160,20 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
   Future<void> deleteAppointmentsForSlot(String slotID) async {
     try {
-      // Reference to the Appointments collection
       final appointmentsCollection = FirebaseFirestore.instance.collection('Appointments');
 
-      // Define a query to find the appointments with matching slotID
       final query = appointmentsCollection.where('slotID', isEqualTo: slotID);
 
-      // Use the query to retrieve matching documents
       final querySnapshot = await query.get();
 
       for (final doc in querySnapshot.docs) {
 
         final appointmentID = doc.id;
         print(appointmentID);
-        print('appppppp paiseeeeeeeeeeeeeeee');
 
         await addCancelledAppointment(appointmentID,slotID);
-        // Reference to the document to delete
         final docReference = appointmentsCollection.doc(doc.id);
 
-        // Delete the document
         await docReference.delete();
 
         // Log the deletion
@@ -210,7 +201,6 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       for (final slotDoc in slotsQuery.docs) {
         final slotID = slotDoc.id;
         print(slotID);
-        print('SLOT IDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD');
 
 
         deleteAppointmentsForSlot(slotID);
@@ -260,10 +250,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // if (hasSchedule) {
-    //
-    //
-    // else{
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.pink.shade900,
@@ -323,8 +310,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                                     backgroundColor: Colors.white,
                                     textColor: Colors.blue,
                                   );
-                                  // availableDays.add(selectedDays[index]);
-                                  // selectedDays.removeAt(index);
+
                                 });
                                 Navigator.of(context).pop();
                               },
@@ -393,8 +379,17 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     // }
   }
 
+  void notifyPatient(String patientId, String doctorId, String date, String startTime) {
 
-}
+    cancellationOfNotification().notifyPatient(patientId,doctorId,date,startTime);
+
+  }
+
+
+  }
+
+
+
 
 
 class ScheduleItem {

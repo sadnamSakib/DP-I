@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../components/barChart/bar_graph.dart';
 import '../../../../models/bloodPressureModel.dart';
 import '../../../../models/weightModel.dart';
-import '../../../../services/healthTrackerService.dart';
+import '../../../../services/trackerServices/healthTrackerService.dart';
 class BloodPressureSummary extends StatefulWidget {
   final patientId;
   final days;

@@ -2,7 +2,7 @@ import 'package:design_project_1/screens/patientInterface/BookAppointment/doctor
 import 'package:flutter/material.dart';
 
 class CategorySearchDelegate extends SearchDelegate<String> {
-  final List<String> specializations; // List of all specializations
+  final List<String> specializations;
 
   CategorySearchDelegate({required this.specializations});
 

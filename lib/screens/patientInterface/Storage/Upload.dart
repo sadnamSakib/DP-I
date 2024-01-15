@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:design_project_1/screens/patientInterface/Storage/DoctorswithAppointments.dart';
 import 'package:design_project_1/screens/patientInterface/Storage/FileViewer.dart';
 import 'package:design_project_1/screens/patientInterface/Storage/Folder.dart';
 import 'package:design_project_1/screens/patientInterface/home/home.dart';
@@ -13,7 +14,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-import '../../../services/UploadFiles.dart';
+import '../../../models/AppointmentModel.dart';
+import '../../../services/storageServices/UploadFiles.dart';
 import '../BookAppointment/doctorFinderPage.dart';
 
         class UploadFile extends StatefulWidget {
@@ -50,23 +52,98 @@ import '../BookAppointment/doctorFinderPage.dart';
 
           }
 
+          Future<void> deleteFolder(String folderName) async {
+
+            print('IN DELETE FOLDER');
+            final CollectionReference<Map<String, dynamic>> collectionRef =
+            FirebaseFirestore.instance
+                .collection('Documents')
+                .doc('Reports and Prescriptions')
+                .collection(userUID)
+                .doc(folderName)
+                .collection('Files');
+
+            try {
+              // Retrieve documents within the collection
+              final QuerySnapshot<Map<String, dynamic>> documentsSnapshot =
+              await collectionRef.get();
+
+              // Delete each document in a batch
+              final WriteBatch batch = FirebaseFirestore.instance.batch();
+              documentsSnapshot.docs.forEach((doc) async {
+                batch.delete(doc.reference);
+                String fileURL = doc['URL'];
+                Reference storageRef = FirebaseStorage.instance.refFromURL(fileURL);
+                await storageRef.delete();
+              });
+              await batch.commit();
+
+              await collectionRef.parent!.delete();
+
+
+              print("Collection '$folderName' deleted successfully.");
+              Fluttertoast.showToast(
+                msg: 'Folder Deleted',
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.white,
+                textColor: Colors.black,
+              );
+
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const UploadFile()),
+              );
+
+            } catch (error) {
+              print("Error deleting collection '$folderName': $error");
+            }
+          }
+
 
 
           void getFiles() async {
-            String userID = userUID;
+            try {
+              String userID = userUID;
 
-            final files = await _firebaseFirestore.collection("Documents")
-                .where('name', isGreaterThanOrEqualTo: '$userID')
-                .where('name', isLessThan: '$userID' + 'z')
-                .get();
+              final files = await _firebaseFirestore
+                  .collection("Documents")
+                  .where('name', isGreaterThanOrEqualTo: '$userID')
+                  .where('name', isLessThan: '$userID' + 'z')
+                  .get();
 
+              if (files.docs.isNotEmpty) {
+                fileData = files.docs
+                    .map((doc) {
+                  // Create a map that includes both document ID and data
+                  Map<String, dynamic> dataWithId = {
+                    'id': doc.id,
+                    ...doc.data() as Map<String, dynamic>
+                  };
 
-              fileData= files.docs.map((e) => e.data()).toList();
+                  // Print the document ID
+                  print('File ID: ${doc.id}');
 
-            setState(() {
-            });
+                  return dataWithId;
+                })
+                    .toList();
+
+                setState(() {});
+
+                // Print data for debugging
+                for (var data in fileData) {
+                  print('File Data: $data');
+                }
+
+                print('All Files Data: $fileData');
+              } else {
+                print('No documents found in the Documents collection.');
+              }
+            } catch (e) {
+              print('Error retrieving files data: $e');
+            }
           }
-
 
           @override
           void initState() {
@@ -179,7 +256,7 @@ import '../BookAppointment/doctorFinderPage.dart';
                                       ),
                                     );
                                   } else {
-                                    // Show the ListView.builder for folders
+                                    /// Show the ListView.builder for folders
                                     return ListView.builder(
                                       itemCount: collectionSnapshot.docs.length,
                                       itemBuilder: (context, index) {
@@ -190,10 +267,16 @@ import '../BookAppointment/doctorFinderPage.dart';
                                             onTap: () {
                                               String collectionName = collectionSnapshot.docs[folderIndex].id;
                                               print('Tapped on collection: $collectionName');
-                                              Navigator.pushReplacement(
+                                              Navigator.push(
                                                 context,
                                                 MaterialPageRoute(builder: (context) => NewFolder(folderName: collectionName)),
                                               );
+
+                                            },
+                                            onLongPress: () {
+                                              String collectionName = collectionSnapshot.docs[folderIndex].id;
+                                              print('Tapped on collection: $collectionName');
+                                              _showDeleteFolderConfirmationDialog(collectionSnapshot.docs[folderIndex].id);
                                             },
                                             child: Card(
                                               color: Colors.white,
@@ -239,13 +322,24 @@ import '../BookAppointment/doctorFinderPage.dart';
                                                 String fileURL = fileData[fileIndex]['URL'];
                                                 String originalFileName = fileName.split('_').skip(1).join('_');
                                                 print('Tapped on file: $originalFileName, URL: $fileURL');
-                                                Navigator.pushReplacement(
+                                                Navigator.push(
                                                   context,
                                                   MaterialPageRoute(builder: (context) => FileViewer(URL: fileURL)),
                                                 );
                                               },
+                                              onTap: () async {
+                                                String fileName = fileData[fileIndex]['name'];
+                                                String fileURL = fileData[fileIndex]['URL'];
+                                                String originalFileName = fileName.split('_').skip(1).join('_');
+                                                print('Tapppppped on file: $originalFileName, URL: $fileURL');
+
+                                                _createSharedDocumentDialogueBox(originalFileName,fileURL);
+                                                // Navigate back and pass the data as a result
+                                                // Navigator.pop(context, {'fileName': originalFileName, 'fileURL': fileURL});
+                                              },
+
                                               onLongPress: () {
-                                                _showDeleteConfirmationDialog(fileData[fileIndex]['name']);
+                                                _showDeleteConfirmationDialog(fileData[fileIndex]['id']);
                                               },
                                               child: Card(
                                                 color: Colors.white,
@@ -358,7 +452,7 @@ import '../BookAppointment/doctorFinderPage.dart';
           Future<void> _showDeleteConfirmationDialog(String fileName) async {
             return showDialog<void>(
               context: context,
-              barrierDismissible: false, // user must tap button!
+              barrierDismissible: true,
               builder: (BuildContext context) {
                 return AlertDialog(
                   title: Text('Delete File'),
@@ -382,7 +476,7 @@ import '../BookAppointment/doctorFinderPage.dart';
                         // Perform delete operation
                         deleteFile(fileName);
                         Navigator.of(context).pop();
-                        initState();
+                        // initState();
                       },
                     ),
                   ],
@@ -391,39 +485,163 @@ import '../BookAppointment/doctorFinderPage.dart';
             );
           }
 
-          Future<void> deleteFile(String fileName) async {
+          Future<void> _showDeleteFolderConfirmationDialog(String fileName) async {
+            return showDialog<void>(
+              context: context,
+              barrierDismissible: true,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('Delete Folder'),
+                  content: SingleChildScrollView(
+                    child: ListBody(
+                      children: <Widget>[
+                        Text('Are you sure you want to delete this folder?'),
+                      ],
+                    ),
+                  ),
+                  actions: <Widget>[
+                    TextButton(
+                      child: Text('Cancel'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    TextButton(
+                      child: Text('Delete'),
+                      onPressed: () {
+                        // Perform delete operation
+                        deleteFolder(fileName);
+                        Navigator.of(context).pop();
+                        // initState();
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          }
+
+          Future<void> _createSharedDocumentDialogueBox(String fileName,String fileURL) async {
+            return showDialog<void>(
+              context: context,
+              barrierDismissible: true,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('Share Document'),
+                  content: SingleChildScrollView(
+                    child: ListBody(
+                      children: <Widget>[
+                        Text('Share this file with your doctors.'),
+                      ],
+                    ),
+                  ),
+                  actions: <Widget>[
+                    TextButton(
+                      child: Text('Cancel'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    TextButton(
+                      child: Text('OK'),
+                      onPressed: () {
+                        // Perform delete operation
+                        shareDocument(fileName,fileURL);
+                        Navigator.of(context).pop();
+                        // initState();
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          }
+
+
+
+          Future<void> deleteFile(String fileId) async {
             try {
-             await _firebaseFirestore.collection("Documents").
-              where("name", isEqualTo: fileName)
-                  .get()
-                  .then((querySnapshot) {
-                querySnapshot.docs.forEach((doc) async {
+              // Create a reference to the document using the Firestore generated unique ID
+              DocumentReference fileRef = _firebaseFirestore.collection("Documents").doc(fileId);
 
-                  await doc.reference.delete();
+              // Fetch the document
+              DocumentSnapshot fileDoc = await fileRef.get();
 
-                  String fileURL = doc['URL'];
-                  Reference storageRef = FirebaseStorage.instance.refFromURL(fileURL);
-                  await storageRef.delete();
-                });
-              });
+              // Check if the document exists
+              if (fileDoc.exists) {
+                // Get the file URL from the document
+                String fileURL = fileDoc['URL'];
 
-              print("File deletedddddd successfully");
-              Fluttertoast.showToast(
-                msg: 'File Deleted',
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIosWeb: 1,
-                backgroundColor: Colors.white,
-                textColor: Colors.black,
-              );
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const UploadFile()),
-              );
+                // Create a reference to the file in Firebase Storage
+                Reference storageRef = FirebaseStorage.instance.refFromURL(fileURL);
+
+                // Delete the document from Firestore
+                await fileRef.delete();
+
+                // Delete the file from Firebase Storage
+                await storageRef.delete();
+
+                print("File deleted successfully");
+
+                Fluttertoast.showToast(
+                  msg: 'File Deleted',
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.white,
+                  textColor: Colors.blue,
+                );
+
+                // Replace the current screen with UploadFile screen
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const UploadFile()),
+                );
+              } else {
+                print('File not found in Firestore');
+              }
             } catch (error) {
               print("Error deleting file: $error");
             }
           }
 
+          Future<void> shareDocument(String fileName, String fileURL) async {
+
+                        List<String> doctorIds = await getDoctorIdsForPatient();
+                        for (String doctorId in doctorIds) {
+                          print('DOCTOR ID: $doctorId');
+                        }
+
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => DoctorswithAppointments(doctorIds: doctorIds, fileName: fileName,
+        fileURL: fileURL),
+      ),
+    );
+  }
+
+          Future<List<String>> getDoctorIdsForPatient() async {
+            try {
+
+              CollectionReference appointmentsCollection =
+              FirebaseFirestore.instance.collection('Appointments');
+
+              QuerySnapshot querySnapshot = await appointmentsCollection
+                  .where('patientId', isEqualTo: userUID)
+                  .get();
+
+              List<String> doctorIds = querySnapshot.docs
+                  .map((doc) => doc['doctorId'] as String) // Adjust the type if needed
+                  .toList();
+
+
+              return doctorIds;
+            } catch (e) {
+              print('Error fetching appointments: $e');
+              return [];
+            }
+          }
         }
 

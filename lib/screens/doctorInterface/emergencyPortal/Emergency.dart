@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:design_project_1/screens/doctorInterface/emergencyPortal/emergencyRequests.dart';
 import 'package:design_project_1/screens/doctorInterface/home/Feed.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-import '../../services/auth.dart';
+import '../../../services/authServices/auth.dart';
 
 class Emergency extends StatefulWidget {
   const Emergency({Key? key}) : super(key: key);
@@ -55,14 +56,6 @@ class _EmergencyState extends State<Emergency> {
             child: Text('DocLinkr'),
 
           ),
-          actions: [
-            IconButton(
-              icon: Icon(Icons.logout),
-              onPressed: () async {
-                await _auth.signOut();
-              },
-            ),
-          ],
         ),
       body: Container(
         padding: EdgeInsets.all(16.0),
@@ -187,9 +180,9 @@ class _EmergencyState extends State<Emergency> {
                           textColor: Colors.blue,
                         );
 
-                        Navigator.push(
+                        Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => Feed()),
+                          MaterialPageRoute(builder: (context) => EmergencyRequestList()),
                         );
                       },
                       child: Text('Accept'),

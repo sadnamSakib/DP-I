@@ -7,14 +7,15 @@ import 'package:design_project_1/screens/patientInterface/viewAppointment/appoin
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
-import 'package:design_project_1/services/auth.dart';
+import 'package:design_project_1/services/authServices/auth.dart';
 import 'package:design_project_1/screens/patientInterface/emergencyPortal/requestEmergencyScreen.dart';
 import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
-import '../../../services/SearchBarDelegator.dart';
+import '../../../services/searchServices/SearchBarDelegator.dart';
+import 'package:encrypt/encrypt.dart' as encrypt;
 
 import '../profile/InfromationSelectionPage.dart';
 
-import '../../../services/notification_services.dart';
+import '../../../services/notificationServices/notification_services.dart';
 
 
 class Home extends StatefulWidget {
@@ -40,8 +41,6 @@ class _HomeState extends State<Home> {
      notificationServices.setupInteractMessage(context);
     notificationServices.isTokenRefresh();
     notificationServices.getDeviceToken().then((value) async {
-    print("device   token");
-    print(value);
     await FirebaseFirestore.instance.collection('patients').doc(FirebaseAuth.instance.currentUser?.uid).update({
       'deviceToken': value,
     });
@@ -61,8 +60,8 @@ class _HomeState extends State<Home> {
     return [
       PersistentBottomNavBarItem(icon: Icon(Icons.track_changes,color:Colors.indigo),
           inactiveIcon:  Icon(Icons.track_changes , color: Colors.grey)),
-      PersistentBottomNavBarItem(icon: Icon(Icons.summarize_outlined,color:Colors.indigo),
-          inactiveIcon:  Icon(Icons.summarize_outlined , color: Colors.grey)),
+      PersistentBottomNavBarItem(icon: Icon(Icons.emergency,color:Colors.indigo),
+          inactiveIcon:  Icon(Icons.emergency , color: Colors.grey)),
       PersistentBottomNavBarItem(icon: Icon(Icons.home,color:Colors.indigo),
           inactiveIcon:  Icon(Icons.home , color: Colors.grey)),
       PersistentBottomNavBarItem(icon: Icon(Icons.calendar_month,color:Colors.indigo),

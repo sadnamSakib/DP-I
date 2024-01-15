@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:design_project_1/screens/patientInterface/BookAppointment/doctorsListPage.dart';
 import 'package:flutter/material.dart';
-import '../../../services/SearchBarDelegator.dart';
-import '../../../services/auth.dart';
-import '../../../services/categorySearchDelegate.dart';
+import '../../../services/searchServices/SearchBarDelegator.dart';
+import '../../../services/authServices/auth.dart';
+import '../../../services/searchServices/categorySearchDelegate.dart';
 import '../../../utilities/doctorSpecialization.dart';
 import './makeAppointment.dart';
 

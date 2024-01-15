@@ -3,8 +3,8 @@ import 'package:design_project_1/screens/authentication/Change%20Password.dart';
 import 'package:design_project_1/screens/authentication/resetPassword.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:design_project_1/services/Patient_profile_controller.dart';
-import 'package:design_project_1/services/auth.dart';
+import 'package:design_project_1/services/profileServices/Patient_profile_controller.dart';
+import 'package:design_project_1/services/authServices/auth.dart';
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

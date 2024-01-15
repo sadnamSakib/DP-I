@@ -7,6 +7,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import '../../../services/cancellationServices/cancellationNotification.dart';
+import '../../../services/notificationServices/notification_services.dart';
 import '../schedule/dayBasedSchedule.dart';
 import 'AppointmentClass.dart';
 
@@ -28,6 +30,8 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
   bool _isLoading = true;
 
 List<Appointments> appointments=[];
+  NotificationServices notificationServices = NotificationServices();
+
   final currentDayOfWeek = DateTime.now().weekday; // Ensure DateTime.now() is not null
   final daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
@@ -70,7 +74,6 @@ List<Appointments> appointments=[];
   // List<ScheduleDay> schedule = [];
 
   void fetchSchedule(String selectedDay) async {
-    print('hhhhhhhhhhhhhhhhhhhhhhhh');
     String searchForDay = selectedDay;
 
     print(searchForDay);
@@ -102,22 +105,20 @@ List<Appointments> appointments=[];
           sessionType: sessionType,
           numberOfPatients: numberOfPatients,
         ));
-        // schedule.add(ScheduleDay(day: widget.selectedDay, items: dayItems));
       });
 
     }
     setState(() {
       _isLoading = false;
     });
-    // return schedule;
   }
 
 
 
 
   void _setWeekRange(DateTime selectedDate) {
-    _firstDay = DateTime(2000); // Change this to your desired start date
-    _lastDay = DateTime(2101); // Change this to your desired end date
+    _firstDay = DateTime(2000);
+    _lastDay = DateTime(2101);
   }
 
   @override
@@ -127,7 +128,8 @@ List<Appointments> appointments=[];
         backgroundColor: Colors.pink.shade900,
         title: Text('Appointments'),
       ),
-      body: Container(
+      body:
+      Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -154,16 +156,15 @@ List<Appointments> appointments=[];
             });
           },
           calendarStyle: CalendarStyle(
-            // Add background color property here
-            outsideDaysVisible: false, // Optional: hide the days outside the range
+            outsideDaysVisible: false,
           ),
         ),
             Expanded(
               child: _isLoading
                   ? Center(
                 child: SpinKitCircle(
-                  color: Colors.blue, // Choose your desired color
-                  size: 50.0, // Choose the size of the indicator
+                  color: Colors.blue,
+                  size: 50.0,
                 ),
               ): dayItems.isEmpty? Text("No slots") : _buildAppointmentsForDate(_selectedDay ?? DateTime.now()),
             ),
@@ -176,20 +177,19 @@ List<Appointments> appointments=[];
   Widget _buildAppointmentsForDate(DateTime date) {
 
 
-    Future<void> addCanceledAppointment(String appointmentID, String slotID, String cancellationReason) async {
+    Future<void> addCanceledAppointment(String appointmentID, String slotID, String cancellationReason) async
+
+    {
+
       final collection = FirebaseFirestore.instance.collection('DeletedAppointment');
 
       try {
-        print('IN TRYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY');
-        // Fetch the appointment data from the "Appointments" collection
         final appointmentReference = FirebaseFirestore.instance.collection('Appointments').doc(appointmentID);
         final appointmentSnapshot = await appointmentReference.get();
         final appointmentData = appointmentSnapshot.data();
 
         if (appointmentData != null) {
-          print('NOT NULLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL');
 
-          // Extract the specific fields you need
           final patientID = appointmentData['patientID'] as String?;
           final appointmentDate = appointmentData['date'] as String?;
           final issue = appointmentData['issue'] as String?;
@@ -202,8 +202,12 @@ List<Appointments> appointments=[];
             'patientID': patientID ?? '',
             'appointmentDate': appointmentDate ?? '',
             'issue': issue ?? '',
+            'doctorID' : appointmentData['doctorId']
           });
 
+          notifyPatient(appointmentData['patientId'], appointmentData['doctorId'],
+              appointmentData['date'],appointmentData['startTime']
+          );
           print('Canceled appointment added to DeletedAppointment collection.');
         } else {
           print('Document data is null, cannot add canceled appointment.');
@@ -213,15 +217,14 @@ List<Appointments> appointments=[];
       }
     }
 
-    Future<void> deleteSlot(String id) async {
-      print('looooooooooooooopppppppppppppppppppp');
+    Future<void> deleteSlot(String id) async
+    {
+
       String searchForDay = DateFormat('EEEE').format(_selectedDay!);
 
       print(searchForDay);
 
       try {
-        print(id);
-
 
         final scheduleCollection = FirebaseFirestore.instance.collection('Schedule');
         final userUID = FirebaseAuth.instance.currentUser?.uid;
@@ -245,7 +248,7 @@ List<Appointments> appointments=[];
 
 
     void _cancelAppointment(ScheduleItem schedule, String cancellationReason) {
-      // Reference to the Appointments collection
+
       final appointmentsCollection = FirebaseFirestore.instance.collection('Appointments');
 
       // Define a query to find the appointments with matching slotID
@@ -302,14 +305,14 @@ List<Appointments> appointments=[];
             actions: <Widget>[
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop(); // Close the dialog
+                  Navigator.of(context).pop();
                 },
                 child: Text('Cancel'),
               ),
               TextButton(
                 onPressed: () {
                   _cancelAppointment(scheduleItem, cancellationReason);
-                  Navigator.of(context).pop(); // Close the dialog
+                  Navigator.of(context).pop();
                 },
                 child: Text('Confirm'),
               ),
@@ -335,20 +338,20 @@ List<Appointments> appointments=[];
         child: ListTile(
             title: Text(
               'Start Time: ${timeformatting(dayItem.startTime)}',
-              style: TextStyle(fontSize: 16), // Adjust the font size as needed
+              style: TextStyle(fontSize: 16),
             ),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   'End Time: ${timeformatting(dayItem.endTime)}',
-                  style: TextStyle(fontSize: 16), // Adjust the font size as needed
+                  style: TextStyle(fontSize: 16),
                 ),
                 Row(
                   children: [
                     Text(
                       'Type: ${dayItem.sessionType == 'Online' ? 'Online' : 'Offline'}',
-                      style: TextStyle(fontSize: 16), // Adjust the font size as needed
+                      style: TextStyle(fontSize: 16),
                     ),
                     SizedBox(width: 8),
                     Icon(
@@ -374,6 +377,11 @@ List<Appointments> appointments=[];
 
   }
 
+  void notifyPatient(String patientId, String doctorId, String date, String startTime) {
+
+    cancellationOfNotification().notifyPatient(patientId,doctorId,date,startTime);
+
+  }
 
 
 
