@@ -5,6 +5,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../../../services/cancellationServices/cancellationNotification.dart';
+import '../../../services/notificationServices/notification_services.dart';
+
 class DayBasedScheduleScreen extends StatefulWidget {
   final String selectedDay;
 
@@ -18,6 +21,7 @@ class DayBasedScheduleScreen extends StatefulWidget {
 class _DayBasedScheduleScreenState extends State<DayBasedScheduleScreen> {
 
   List<ScheduleItem> dayItems = [];
+  NotificationServices notificationServices = NotificationServices();
 
   void fetchSchedule() async {
     dayItems.clear();
@@ -262,8 +266,12 @@ void initState() {
             'patientID': appointmentData['patientId'] ?? '',
             'appointmentDate': date ?? '',
             'issue': appointmentData['issue'] ?? '',
+            'doctorID' : appointmentData['doctorId']
           });
 
+          notifyPatient(appointmentData['patientId'], appointmentData['doctorId'],
+              appointmentData['date'],appointmentData['startTime']
+          );
           print('Date of the appointment: $date');
         } else {
           print('Appointment data is null for ID: $appointmentID');
@@ -601,6 +609,11 @@ void initState() {
       );
     }
 
+  void notifyPatient(String patientId, String doctorId, String date, String startTime) {
+
+    cancellationOfNotification().notifyPatient(patientId,doctorId,date,startTime);
+
+  }
   }
 
 

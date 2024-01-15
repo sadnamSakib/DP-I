@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:design_project_1/screens/doctorInterface/schedule/dayBasedSchedule.dart';
+import 'package:design_project_1/services/cancellationServices/cancellationNotification.dart';
+import 'package:design_project_1/services/notificationServices/notification_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:design_project_1/models/diseaseViewModel.dart';
@@ -18,8 +20,9 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   List<String>selectedDays = [];
   List<String>bookedDays = [];
 
+  NotificationServices notificationServices = NotificationServices();
   bool hasSchedule=false;
-  List<ScheduleDay> schedule = []; // Declare schedule here
+  List<ScheduleDay> schedule = [];
   List<ScheduleDay> fetchedSchedule =[];
 
 
@@ -135,8 +138,12 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             'patientID': appointmentData['patientId'] ?? '',
             'appointmentDate': date ?? '',
             'issue': appointmentData['issue'] ?? '',
+            'doctorID' : appointmentData['doctorId']
           });
 
+          notifyPatient(appointmentData['patientId'], appointmentData['doctorId'],
+              appointmentData['date'],appointmentData['startTime']
+          );
           print('Date of the appointment: $date');
         } else {
           print('Appointment data is null for ID: $appointmentID');
@@ -167,7 +174,6 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
         await addCancelledAppointment(appointmentID,slotID);
         final docReference = appointmentsCollection.doc(doc.id);
 
-        // Delete the document
         await docReference.delete();
 
         // Log the deletion
@@ -373,8 +379,17 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     // }
   }
 
+  void notifyPatient(String patientId, String doctorId, String date, String startTime) {
 
-}
+    cancellationOfNotification().notifyPatient(patientId,doctorId,date,startTime);
+
+  }
+
+
+  }
+
+
+
 
 
 class ScheduleItem {
