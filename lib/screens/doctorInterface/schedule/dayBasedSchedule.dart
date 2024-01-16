@@ -526,7 +526,7 @@ void initState() {
               gradient: LinearGradient(
                   begin: Alignment.topRight,
                   end: Alignment.bottomLeft,
-                  colors: [Colors.white70, Colors.pink.shade100])),
+                  colors: [Colors.white70, Colors.pink.shade50])),
           child: Column(
             children: [
               Expanded(

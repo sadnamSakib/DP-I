@@ -44,6 +44,7 @@ class _PrescribeMedicineScreenState extends State<PrescribeMedicineScreen> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text('Search Medicine'),
+        backgroundColor: Colors.pink.shade900,
       ),
       body:SingleChildScrollView(
         child: Column(
@@ -63,6 +64,7 @@ class _PrescribeMedicineScreenState extends State<PrescribeMedicineScreen> {
                   });
                 },
                 decoration: InputDecoration(
+
                   labelText: "Search",
                   hintText: "Search for medicine",
                   prefixIcon: Icon(Icons.search),

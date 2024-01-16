@@ -67,7 +67,16 @@ class _EmergencyRequestListState extends State<EmergencyRequestList> {
             if (snapshot.hasError) {
               return const Text('Something went wrong');
             }
-            // Display current emergency requests
+            if(snapshot.data!.docs.isEmpty){
+              return const Center(
+
+                child: Text("No emergency requests",
+                  style: TextStyle(
+                    fontSize: 20.0,
+                  ),
+                ),
+              );
+            }
               return ListView(
                 children: snapshot.data!.docs.map((DocumentSnapshot document) {
                   Map<String, dynamic> data =
