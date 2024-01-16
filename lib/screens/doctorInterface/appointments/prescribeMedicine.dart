@@ -41,7 +41,7 @@ class _PrescribeMedicineScreenState extends State<PrescribeMedicineScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false, // This avoids the overflow error when keyboard appears
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text('Search Medicine'),
       ),

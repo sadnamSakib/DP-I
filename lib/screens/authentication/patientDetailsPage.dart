@@ -43,7 +43,6 @@ class _PatientDetailsPageState extends State<PatientDetailsPage> {
     'Obesity',
     'Osteoporosis',
     'Chronic Migraines',
-    // You can add more conditions here
   ];
 
   List<bool> checkedConditions = List.filled(14, false);

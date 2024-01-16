@@ -16,7 +16,7 @@ class _CallPageState extends State<CallPage> {
   final AgoraClient client = AgoraClient(
     agoraConnectionData: AgoraConnectionData(
       appId: appId,
-      channelName: "doclinkr", // Assuming this is your channel name
+      channelName: "doclinkr",
       tempToken: token,
     ),
     enabledPermission: [

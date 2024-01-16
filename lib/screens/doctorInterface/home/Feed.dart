@@ -55,8 +55,8 @@ class _FeedState extends State<Feed> {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
-            end: Alignment.bottomCenter, // 10% of the width, so there are ten blinds.
-            colors: [Colors.white70, Colors.pink.shade50], // whitish to gray// repeats the gradient over the canvas
+            end: Alignment.bottomCenter,
+            colors: [Colors.white70, Colors.pink.shade50],
           ),
         ),
 

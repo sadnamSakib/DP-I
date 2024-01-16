@@ -1,5 +1,4 @@
 import 'package:design_project_1/screens/authentication/sign_up.dart';
-import 'package:design_project_1/services/authServices/auth.dart';
 import 'package:flutter/material.dart';
 import 'sign_in.dart';
 

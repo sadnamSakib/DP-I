@@ -209,7 +209,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                     Icons.content_paste_outlined,
                     color: Colors.black,
                   ),
-                  SizedBox(width: 8.0), // Adjust the spacing between the icon and text
+                  SizedBox(width: 8.0),
                   Text('Prescribe Medicine'),
                 ],
               ),

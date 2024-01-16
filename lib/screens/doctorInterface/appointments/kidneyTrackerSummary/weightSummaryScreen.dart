@@ -49,8 +49,8 @@ class _WeightSummaryState extends State<WeightSummary> {
             padding: const EdgeInsets.only(bottom: 12.0),
             child: Text("Weight Summary", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.red)),
           ),
-          weightAfterMealList.isEmpty // Check if the data is empty
-              ? CircularProgressIndicator() // Show loading indicator
+          weightAfterMealList.isEmpty
+              ? CircularProgressIndicator()
               : SizedBox(
             height: 300,
             width: 400,

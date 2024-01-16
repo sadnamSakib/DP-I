@@ -268,7 +268,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             },
                                             child: Text(
                                               'Change Password',
-                                              style: TextStyle(color: Colors.white), // Set the text color to black
+                                              style: TextStyle(color: Colors.white),
                                             ),
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor: Colors.teal.shade800,
