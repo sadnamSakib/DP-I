@@ -20,22 +20,20 @@ class _InformationSelectionScreenState extends State<InformationSelectionScreen>
         backgroundColor: Colors.blue.shade900,
 
       ),
-      body:
-
-      Container(
+      body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Colors.white70, Colors.blue.shade200],
+            colors: [Colors.white70, Colors.blue.shade100],
           ),
         ),
         child: ListView(
+
           children: <Widget>[
             ListTile(
 
-              title: ReusableRow(title:'Account Information' , iconData: Icons.account_circle),
-
+              leading: Icon(Icons.account_circle),
+              title: Text('Account Information'),
               onTap: () {
                 Navigator.push(
                   context,
@@ -43,22 +41,21 @@ class _InformationSelectionScreenState extends State<InformationSelectionScreen>
                 );
               },
             ),
-            ListTile(
-              title:ReusableRow(title:'Medications' , iconData: Icons.medical_services),
 
+            ListTile(
+              leading: Icon(Icons.medical_services),
+              title: Text('Medications'),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => const CurrentPrescriptionScreen(medicationTime: 'morning',)));
               },
             ),
             ListTile(
-              title:
-            ReusableRow(title:'Reports and Prescriptions' , iconData: Icons.description),
-
-            onTap: () {
+              leading: Icon(Icons.description),
+              title: Text('Reports and Prescriptions'),
+              onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => const UploadFile()));
               },
             ),
-
 
           ],
         ),
