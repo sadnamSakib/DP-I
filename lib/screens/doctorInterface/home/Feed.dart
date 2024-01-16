@@ -174,6 +174,21 @@ class _FeedState extends State<Feed> {
                   },
                 ),
               ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: dayItems.length,
+                  itemBuilder: (context, index) {
+                    final item = dayItems[index];
+                    return Card(
+                      child: ListTile(
+                        title: Text(item.sessionType),
+                        subtitle: Text(item.startTime + ' - ' + item.endTime),
+                        trailing: Text(item.numberOfPatients.toString()),
+                      ),
+                    );
+                  },
+                ),
+              ),
             ],
           ),
 

@@ -224,10 +224,10 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Icon(
-                    Icons.call, // Replace with the icon you want
+                    Icons.call,
                     color: Colors.black,
                   ),
-                  SizedBox(width: 8.0), // Adjust the spacing between the icon and text
+                  SizedBox(width: 8.0),
                   Text('Call Into Session'),
                 ],
               ),

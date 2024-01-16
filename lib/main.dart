@@ -23,11 +23,7 @@ Future main() async {
   await AndroidAlarmManager.initialize();
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler) ;
-  // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-  //   if(message.notification != null){
-  //     NotificationServices.showNotification(title: message.notification!.title.toString(), body: message.notification!.body.toString(), payload: message.data.toString());
-  //   }
-  // });
+
 
   runApp(const MyApp());
   final alarmTime = DateTime(
@@ -38,14 +34,14 @@ Future main() async {
 
   AndroidAlarmManager.oneShotAt(
     alarmTime,
-    1,  // An ID to identify this alarm
-    callback,  // The function to call when the alarm triggers
-    exact: true,  // Trigger alarm at the exact time
+    1,
+    callback,
+    exact: true,
   );
 }
 
 void callback() {
-  // This function will be executed when the alarm triggers
+
   deleteSharedPreferenceData();
 }
 Future<void> deleteSharedPreferenceData() async {
@@ -61,7 +57,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async{
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
     return StreamProvider<UserModel?>.value(
@@ -69,7 +65,7 @@ class MyApp extends StatelessWidget {
       initialData: UserModel(uid: ''),
 
       child: MaterialApp(
-        // navigatorKey: navigatorKey,
+
 
         title: 'DocLinkr',
         theme: ThemeData(
@@ -77,7 +73,7 @@ class MyApp extends StatelessWidget {
         ),
         routes: {
           ForgotPassword.id: (context) => const ForgotPassword(),
-          // '/message': (context) => const Message()
+
 
         },
         home: const Wrapper(),

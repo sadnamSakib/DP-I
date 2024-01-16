@@ -108,7 +108,6 @@ class _ViewAppointmentDetailsPageState extends State<ViewAppointmentDetailsPage>
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            // colors: [Colors.white70, Colors.blue.shade200],
             colors: [Colors.white70, Colors.blue.shade100],
           ),
         ),
@@ -216,7 +215,7 @@ class _ViewAppointmentDetailsPageState extends State<ViewAppointmentDetailsPage>
     showModalBottomSheet(
       context : context,
       builder: (context) => Container(
-        height: 150,
+        height: 120,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -232,10 +231,10 @@ class _ViewAppointmentDetailsPageState extends State<ViewAppointmentDetailsPage>
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Icon(
-                    Icons.medical_services, // Replace with the icon you want
+                    Icons.medical_services,
                     color: Colors.black,
                   ),
-                  SizedBox(width: 8.0), // Adjust the spacing between the icon and text
+                  SizedBox(width: 8.0),
                   Text('Your shared Reports and Prescriptions')
                 ],
               ),
@@ -255,10 +254,10 @@ class _ViewAppointmentDetailsPageState extends State<ViewAppointmentDetailsPage>
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Icon(
-                    Icons.call, // Replace with the icon you want
+                    Icons.call,
                     color: Colors.black,
                   ),
-                  SizedBox(width: 8.0), // Adjust the spacing between the icon and text
+                  SizedBox(width: 8.0),
                   Text('Join Session'),
                 ],
               ),
