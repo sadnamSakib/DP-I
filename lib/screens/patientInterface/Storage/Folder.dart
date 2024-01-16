@@ -216,16 +216,7 @@ class _NewFolderState extends State<NewFolder> {
                           _showDeleteConfirmationDialog(allFilesData[index]['id']);
                         },
                         child:
-                        // Card(
-                        //   color: Colors.white,
-                        //   child: ListTile(
-                        //     leading: Icon(Icons.file_copy),
-                        //     title: Text(
-                        //       allFilesData[index]['name'],
-                        //       style: TextStyle(color: Colors.black),
-                        //     ),
-                        //   ),
-                        // ),
+
                         Container(
                           margin: EdgeInsets.only(bottom: 15),
                           decoration: BoxDecoration(

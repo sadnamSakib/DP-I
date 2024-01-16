@@ -277,13 +277,7 @@ import '../BookAppointment/doctorFinderPage.dart';
                                               _showDeleteFolderConfirmationDialog(collectionSnapshot.docs[folderIndex].id);
                                             },
                                             child:
-                                            // Card(
-                                            //   color: Colors.white,
-                                            //   child: ListTile(
-                                            //     leading: Icon(Icons.folder),
-                                            //     title: Text(collectionSnapshot.docs[folderIndex].id),
-                                            //   ),
-                                            // ),
+
                                             Container(
                                                 // height: 50,
                                               margin: EdgeInsets.only(bottom: 15),
@@ -381,13 +375,7 @@ import '../BookAppointment/doctorFinderPage.dart';
                                                 _showDeleteConfirmationDialog(fileData[fileIndex]['id']);
                                               },
                                               child:
-                                              // Card(
-                                              //   color: Colors.white,
-                                              //   child: ListTile(
-                                              //     leading: Icon(Icons.file_copy_outlined),
-                                              //     title: Text(fileData[fileIndex]['name'].split('_').skip(1).join('_')),
-                                              //   ),
-                                              // ),
+
                                               Container(
                                                 // height: 50,
                                                 margin: EdgeInsets.only(bottom: 15),
