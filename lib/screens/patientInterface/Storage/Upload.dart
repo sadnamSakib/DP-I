@@ -39,22 +39,21 @@ import '../BookAppointment/doctorFinderPage.dart';
           Future<void> createFolder(String folderName) async {
 
             await _firebaseFirestore
-                .collection('Documents')  // Parent collection
+                .collection('Documents')
             .doc('Reports and Prescriptions')
-                .collection(userUID)  // User's UID document
-                .doc(folderName).set({}) // Folder name collection
+                .collection(userUID)
+                .doc(folderName).set({})
                ;
 
             await _firebaseFirestore
-                .collection('patients')  // Doctors collection
-                .doc(userUID)  // User's UID document
+                .collection('patients')
+                .doc(userUID)
                 .set({'documents': true}, SetOptions(merge: true));
 
           }
 
           Future<void> deleteFolder(String folderName) async {
 
-            print('IN DELETE FOLDER');
             final CollectionReference<Map<String, dynamic>> collectionRef =
             FirebaseFirestore.instance
                 .collection('Documents')
@@ -64,11 +63,10 @@ import '../BookAppointment/doctorFinderPage.dart';
                 .collection('Files');
 
             try {
-              // Retrieve documents within the collection
               final QuerySnapshot<Map<String, dynamic>> documentsSnapshot =
               await collectionRef.get();
 
-              // Delete each document in a batch
+
               final WriteBatch batch = FirebaseFirestore.instance.batch();
               documentsSnapshot.docs.forEach((doc) async {
                 batch.delete(doc.reference);
@@ -88,7 +86,7 @@ import '../BookAppointment/doctorFinderPage.dart';
                 gravity: ToastGravity.BOTTOM,
                 timeInSecForIosWeb: 1,
                 backgroundColor: Colors.white,
-                textColor: Colors.black,
+                textColor: Colors.blue,
               );
 
               Navigator.pushReplacement(
@@ -116,13 +114,13 @@ import '../BookAppointment/doctorFinderPage.dart';
               if (files.docs.isNotEmpty) {
                 fileData = files.docs
                     .map((doc) {
-                  // Create a map that includes both document ID and data
+
                   Map<String, dynamic> dataWithId = {
                     'id': doc.id,
                     ...doc.data() as Map<String, dynamic>
                   };
 
-                  // Print the document ID
+
                   print('File ID: ${doc.id}');
 
                   return dataWithId;
@@ -131,7 +129,7 @@ import '../BookAppointment/doctorFinderPage.dart';
 
                 setState(() {});
 
-                // Print data for debugging
+
                 for (var data in fileData) {
                   print('File Data: $data');
                 }
@@ -181,7 +179,7 @@ import '../BookAppointment/doctorFinderPage.dart';
                 backgroundColor: Colors.blue.shade900,
                 title: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text('DocLinkr'),
+                  child: Text('Reports and Prescriptions'),
                 ),
               ),
               body: Container(
@@ -238,12 +236,12 @@ import '../BookAppointment/doctorFinderPage.dart';
                           var collectionSnapshot = snapshot.data!;
                           return Expanded(
                             child: PageView.builder(
-                              itemCount: 2, // Two pages, one for folders and one for files
+                              itemCount: 2,
                               controller: PageController(viewportFraction: 1),
                               itemBuilder: (context, pageIndex) {
                                 if (pageIndex == 0) {
                                   if (collectionSnapshot.docs.isEmpty) {
-                                    // Show a text when there are no folders
+
                                     return Center(
                                       child:  Text(
                                         'Create your folders',
@@ -278,13 +276,55 @@ import '../BookAppointment/doctorFinderPage.dart';
                                               print('Tapped on collection: $collectionName');
                                               _showDeleteFolderConfirmationDialog(collectionSnapshot.docs[folderIndex].id);
                                             },
-                                            child: Card(
-                                              color: Colors.white,
-                                              child: ListTile(
-                                                leading: Icon(Icons.folder),
-                                                title: Text(collectionSnapshot.docs[folderIndex].id),
+                                            child:
+                                            // Card(
+                                            //   color: Colors.white,
+                                            //   child: ListTile(
+                                            //     leading: Icon(Icons.folder),
+                                            //     title: Text(collectionSnapshot.docs[folderIndex].id),
+                                            //   ),
+                                            // ),
+                                            Container(
+                                                // height: 50,
+                                              margin: EdgeInsets.only(bottom: 15),
+                                              decoration: BoxDecoration(
+                                                color: Colors.white70,
+                                                borderRadius: BorderRadius.circular(10),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.blueGrey.withOpacity(0.5),
+                                                    spreadRadius: 1,
+                                                    blurRadius: 5,
+                                                    offset: Offset(0, 2),
+                                                  ),
+                                                ],
                                               ),
-                                            ),
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(10),
+                                                child: Row(
+                                                  children: [
+                                                    Icon(
+                                                      Icons.folder,
+                                                      color: Colors.black,
+                                                    ),
+                                                    SizedBox(width: 10),
+                                                    Expanded(
+                                                      child: Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          Text(
+                                                            collectionSnapshot.docs[folderIndex].id,
+                                                            style: TextStyle(color: Colors.black, fontSize: 18),
+                                                          ),
+
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            )
+
                                           ),
                                         );
                                       },
@@ -331,23 +371,65 @@ import '../BookAppointment/doctorFinderPage.dart';
                                                 String fileName = fileData[fileIndex]['name'];
                                                 String fileURL = fileData[fileIndex]['URL'];
                                                 String originalFileName = fileName.split('_').skip(1).join('_');
-                                                print('Tapppppped on file: $originalFileName, URL: $fileURL');
+                                                print('Tapped on file: $originalFileName, URL: $fileURL');
 
                                                 _createSharedDocumentDialogueBox(originalFileName,fileURL);
-                                                // Navigate back and pass the data as a result
-                                                // Navigator.pop(context, {'fileName': originalFileName, 'fileURL': fileURL});
+
                                               },
 
                                               onLongPress: () {
                                                 _showDeleteConfirmationDialog(fileData[fileIndex]['id']);
                                               },
-                                              child: Card(
-                                                color: Colors.white,
-                                                child: ListTile(
-                                                  leading: Icon(Icons.file_copy_outlined),
-                                                  title: Text(fileData[fileIndex]['name'].split('_').skip(1).join('_')),
+                                              child:
+                                              // Card(
+                                              //   color: Colors.white,
+                                              //   child: ListTile(
+                                              //     leading: Icon(Icons.file_copy_outlined),
+                                              //     title: Text(fileData[fileIndex]['name'].split('_').skip(1).join('_')),
+                                              //   ),
+                                              // ),
+                                              Container(
+                                                // height: 50,
+                                                margin: EdgeInsets.only(bottom: 15),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white70,
+                                                  borderRadius: BorderRadius.circular(10),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.blueGrey.withOpacity(0.5),
+                                                      spreadRadius: 1,
+                                                      blurRadius: 5,
+                                                      offset: Offset(0, 2),
+                                                    ),
+                                                  ],
                                                 ),
-                                              ),
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(10),
+                                                  child: Row(
+                                                    children: [
+                                                      Icon(
+                                                        Icons.file_copy_outlined,
+                                                        color: Colors.black,
+                                                      ),
+                                                      SizedBox(width: 10),
+                                                      Expanded(
+                                                        child: Column(
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: [
+                                                            Text(
+                                                          fileData[fileIndex]['name'].split('_').skip(1).join('_'),
+
+                                                         style: TextStyle(color: Colors.black, fontSize: 18),
+                                                            ),
+
+
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              )
                                             ),
                                           );
                                         },
@@ -382,8 +464,8 @@ import '../BookAppointment/doctorFinderPage.dart';
                               
                               title: Text('Create a Folder'),
                               onTap: () {
-                                Navigator.pop(context); // Close the bottom sheet
-                                _showCreateFolderDialog(); // Show the folder creation dialog
+                                Navigator.pop(context);
+                                _showCreateFolderDialog();
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(builder: (context) => UploadFile()),
@@ -429,7 +511,7 @@ import '../BookAppointment/doctorFinderPage.dart';
                   actions: <Widget>[
                     TextButton(
                       onPressed: () {
-                        Navigator.pop(context); // Close the dialog
+                        Navigator.pop(context);
                       },
                       child: Text('Cancel'),
                     ),
@@ -438,7 +520,7 @@ import '../BookAppointment/doctorFinderPage.dart';
                         Navigator.pop(context);
                         String folderName = folderNameController.text;
                        
-                        print('FOLDER NAMEE: $folderName');
+                        print('FOLDER NAME: $folderName');
                         createFolder(folderName);
                       },
                       child: Text('Create'),
@@ -473,10 +555,8 @@ import '../BookAppointment/doctorFinderPage.dart';
                     TextButton(
                       child: Text('Delete'),
                       onPressed: () {
-                        // Perform delete operation
                         deleteFile(fileName);
                         Navigator.of(context).pop();
-                        // initState();
                       },
                     ),
                   ],
@@ -512,7 +592,6 @@ import '../BookAppointment/doctorFinderPage.dart';
                         // Perform delete operation
                         deleteFolder(fileName);
                         Navigator.of(context).pop();
-                        // initState();
                       },
                     ),
                   ],
@@ -561,24 +640,24 @@ import '../BookAppointment/doctorFinderPage.dart';
 
           Future<void> deleteFile(String fileId) async {
             try {
-              // Create a reference to the document using the Firestore generated unique ID
+
               DocumentReference fileRef = _firebaseFirestore.collection("Documents").doc(fileId);
 
-              // Fetch the document
+
               DocumentSnapshot fileDoc = await fileRef.get();
 
-              // Check if the document exists
+
               if (fileDoc.exists) {
-                // Get the file URL from the document
+
                 String fileURL = fileDoc['URL'];
 
-                // Create a reference to the file in Firebase Storage
+
                 Reference storageRef = FirebaseStorage.instance.refFromURL(fileURL);
 
-                // Delete the document from Firestore
+
                 await fileRef.delete();
 
-                // Delete the file from Firebase Storage
+
                 await storageRef.delete();
 
                 print("File deleted successfully");
@@ -592,7 +671,7 @@ import '../BookAppointment/doctorFinderPage.dart';
                   textColor: Colors.blue,
                 );
 
-                // Replace the current screen with UploadFile screen
+
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => const UploadFile()),
@@ -633,7 +712,7 @@ import '../BookAppointment/doctorFinderPage.dart';
                   .get();
 
               List<String> doctorIds = querySnapshot.docs
-                  .map((doc) => doc['doctorId'] as String) // Adjust the type if needed
+                  .map((doc) => doc['doctorId'] as String)
                   .toList();
 
 
