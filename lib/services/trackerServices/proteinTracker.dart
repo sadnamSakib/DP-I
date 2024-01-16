@@ -8,7 +8,7 @@ class proteinTrackerService{
 
   Future <void> updateProteinData(double protein) async {
     final now = DateTime.now();
-    final formattedDate = "${now.year}-${now.month}-${now.day}";
+    final formattedDate = DateFormat('yyyy-MM-dd').format(now);
 
     final docRef = diseaseCollection!.doc(uid);
 
@@ -49,7 +49,6 @@ class proteinTrackerService{
     // Calculate the end date for the past week (today)
     final now = DateTime.now();
     var endFormattedDate = DateFormat('yyyy-MM-dd').format(now);
-
     // Calculate the start date for the past week (7 days ago)
     final startFormattedDate = DateFormat('yyyy-MM-dd').format(now.subtract(Duration(days: days)));
 
@@ -61,6 +60,7 @@ class proteinTrackerService{
     while (endFormattedDate != startFormattedDate) {
       final docSnapshot = await docRef.collection('records').doc(endFormattedDate).get();
       if (docSnapshot.exists && docSnapshot.data() != null && docSnapshot.data()!['protein'] != null) {
+        print('RECORDSSSSSSSS');
         records.add(docSnapshot.data()!['protein'].toDouble());
       }
 
