@@ -28,6 +28,8 @@ class _ProteinSummaryState extends State<ProteinSummary> {
       proteinList = proteinData;
       for(var data in proteinList){
         averageProteinIntake += data;
+        print("Ekhane protein print hobe");
+        print(averageProteinIntake);
       }
       averageProteinIntake = (averageProteinIntake / proteinList.length);
 averageProtein = averageProteinIntake.toStringAsFixed(2);
