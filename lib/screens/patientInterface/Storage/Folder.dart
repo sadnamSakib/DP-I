@@ -55,7 +55,6 @@ class _NewFolderState extends State<NewFolder> {
       if (filesSnapshot.docs.isNotEmpty) {
         allFilesData = filesSnapshot.docs
             .map((doc) {
-          // Create a map that includes both document ID and data
           Map<String, dynamic> dataWithId = {
             'id': doc.id,
             ...doc.data() as Map<String, dynamic>
@@ -69,7 +68,7 @@ class _NewFolderState extends State<NewFolder> {
 
         setState(() {});
 
-        // Print data for debugging
+
         for (var data in allFilesData) {
           print('File Data: $data');
         }
@@ -174,7 +173,7 @@ class _NewFolderState extends State<NewFolder> {
                       SizedBox(height: 20),
                       Center(
                         child: Text(
-                                          'Upload your files',
+                           'Upload your files',
                           style: TextStyle(fontSize: 24,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.grey.shade700,),
@@ -212,22 +211,53 @@ class _NewFolderState extends State<NewFolder> {
                           String fileURL = allFilesData[index]['URL'];
 
                           _createSharedDocumentDialogueBox(fileName,fileURL);
-                          // Navigate back and pass the data as a result
-                          // Navigator.pop(context, {'fileName': originalFileName, 'fileURL': fileURL});
                         },
                         onLongPress: () {
                           _showDeleteConfirmationDialog(allFilesData[index]['id']);
                         },
-                        child: Card(
-                          color: Colors.white,
-                          child: ListTile(
-                            leading: Icon(Icons.file_copy),
-                            title: Text(
-                              allFilesData[index]['name'],
-                              style: TextStyle(color: Colors.black),
+                        child:
+
+                        Container(
+                          margin: EdgeInsets.only(bottom: 15),
+                          decoration: BoxDecoration(
+                            color: Colors.white70,
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.blueGrey.withOpacity(0.5),
+                                spreadRadius: 1,
+                                blurRadius: 5,
+                                offset: Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.file_copy_outlined,
+                                  color: Colors.black,
+                                ),
+                                SizedBox(width: 10),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        allFilesData[index]['name'],
+                                        style: TextStyle(color: Colors.black,  fontSize: 18),
+                                      ),
+                                      SizedBox(height: 8),
+
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ),
+                        )
+
                       ),
                     );
 
@@ -259,10 +289,7 @@ class _NewFolderState extends State<NewFolder> {
                         onTap: () {
                           pickFileForFolder();
                           Navigator.pop(context);
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(builder: (context) => const DoctorFinder()),
-                          // );
+
 
 
                         },
@@ -301,10 +328,8 @@ class _NewFolderState extends State<NewFolder> {
             TextButton(
               child: Text('Delete'),
               onPressed: () {
-                // Perform delete operation
                   deleteFile(fileId);
                 Navigator.of(context).pop();
-              // initState();
               },
             ),
           ],
@@ -337,10 +362,8 @@ class _NewFolderState extends State<NewFolder> {
             TextButton(
               child: Text('OK'),
               onPressed: () {
-                // Perform delete operation
                 shareDocument(fileName,fileURL);
                 Navigator.of(context).pop();
-                // initState();
               },
             ),
           ],
@@ -381,7 +404,7 @@ class _NewFolderState extends State<NewFolder> {
             textColor: Colors.black,
           );
 
-          Navigator.push(
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const UploadFile()),
           );
@@ -412,9 +435,31 @@ class _NewFolderState extends State<NewFolder> {
     );
   }
 
+  // Future<List<String>> getDoctorIdsForPatient() async {
+  //   try {
+  //
+  //     CollectionReference appointmentsCollection =
+  //     FirebaseFirestore.instance.collection('Appointments');
+  //
+  //     QuerySnapshot querySnapshot = await appointmentsCollection
+  //         .where('patientId', isEqualTo: userUID)
+  //         .get();
+  //
+  //     List<String> doctorIds = querySnapshot.docs
+  //         .map((doc) => doc['doctorId'] as String) // Adjust the type if needed
+  //         .toList();
+  //
+  //
+  //     return doctorIds;
+  //   } catch (e) {
+  //     print('Error fetching appointments: $e');
+  //     return [];
+  //   }
+  // }
+
+
   Future<List<String>> getDoctorIdsForPatient() async {
     try {
-
       CollectionReference appointmentsCollection =
       FirebaseFirestore.instance.collection('Appointments');
 
@@ -422,10 +467,13 @@ class _NewFolderState extends State<NewFolder> {
           .where('patientId', isEqualTo: userUID)
           .get();
 
-      List<String> doctorIds = querySnapshot.docs
-          .map((doc) => doc['doctorId'] as String) // Adjust the type if needed
-          .toList();
+      Set<String> uniqueDoctorIds = Set<String>();
 
+      querySnapshot.docs.forEach((doc) {
+        uniqueDoctorIds.add(doc['doctorId'] as String);
+      });
+
+      List<String> doctorIds = uniqueDoctorIds.toList();
 
       return doctorIds;
     } catch (e) {
@@ -433,5 +481,6 @@ class _NewFolderState extends State<NewFolder> {
       return [];
     }
   }
+
 }
 
