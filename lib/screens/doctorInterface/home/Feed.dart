@@ -5,6 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:design_project_1/services/authServices/auth.dart';
 
+import '../schedule/dayBasedSchedule.dart';
+
 class Feed extends StatefulWidget {
   const Feed({Key? key}) : super(key: key);
 
@@ -25,12 +27,56 @@ Stream<DocumentSnapshot> getDoctorData() {
   String userUID = FirebaseAuth.instance.currentUser?.uid ?? '';
 
   return FirebaseFirestore.instance.collection('doctors').doc(userUID).snapshots();
-
 }
+
 
 class _FeedState extends State<Feed> {
 
   final AuthService _auth = AuthService();
+
+  List<ScheduleItem> dayItems = [];
+
+
+  void fetchSchedule(String today) async {
+    print(today);
+    dayItems.clear();
+    final scheduleCollection = FirebaseFirestore.instance.collection(
+        'Schedule');
+    final userUID = FirebaseAuth.instance.currentUser?.uid;
+    final scheduleQuery = scheduleCollection.doc(userUID);
+    final dayScheduleQuery = await scheduleQuery.collection('Days').doc(
+        today).collection('Slots').get();
+      print(dayScheduleQuery.docs.length);
+
+    for (final slots in dayScheduleQuery.docs) {
+      final id = slots.id;
+      final startTime = slots['Start Time'];
+      final endTime = slots['End Time'];
+      final sessionType = slots['Session Type'];
+      final numberOfPatients = slots['Number of Patients'];
+      setState(() {
+        dayItems.add(ScheduleItem(
+          ID : id,
+          startTime: startTime,
+          endTime: endTime,
+          sessionType: sessionType,
+          numberOfPatients: numberOfPatients,
+        ));
+      });
+
+    }
+
+    // return schedule;
+  }
+  @override
+  void initState() {
+    List<String> days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    String today = days[DateTime.now().weekday - 1];
+    print(today);
+
+    fetchSchedule(today);
+    // print(schedule);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +143,39 @@ class _FeedState extends State<Feed> {
 
                         ),
                         SizedBox(height: 30),
+                        Text(
+                          'Your Schedule for today is:',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey.shade700,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                         SizedBox(height: 10),
+
+
+
+
+
+
+
                       ],
+                    );
+                  },
+                ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: dayItems.length,
+                  itemBuilder: (context, index) {
+                    final item = dayItems[index];
+                    return Card(
+                      child: ListTile(
+                        title: Text(item.sessionType),
+                        subtitle: Text(item.startTime + ' - ' + item.endTime),
+                        trailing: Text(item.numberOfPatients.toString()),
+                      ),
                     );
                   },
                 ),
