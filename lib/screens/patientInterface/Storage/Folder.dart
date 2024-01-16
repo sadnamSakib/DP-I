@@ -435,9 +435,31 @@ class _NewFolderState extends State<NewFolder> {
     );
   }
 
+  // Future<List<String>> getDoctorIdsForPatient() async {
+  //   try {
+  //
+  //     CollectionReference appointmentsCollection =
+  //     FirebaseFirestore.instance.collection('Appointments');
+  //
+  //     QuerySnapshot querySnapshot = await appointmentsCollection
+  //         .where('patientId', isEqualTo: userUID)
+  //         .get();
+  //
+  //     List<String> doctorIds = querySnapshot.docs
+  //         .map((doc) => doc['doctorId'] as String) // Adjust the type if needed
+  //         .toList();
+  //
+  //
+  //     return doctorIds;
+  //   } catch (e) {
+  //     print('Error fetching appointments: $e');
+  //     return [];
+  //   }
+  // }
+
+
   Future<List<String>> getDoctorIdsForPatient() async {
     try {
-
       CollectionReference appointmentsCollection =
       FirebaseFirestore.instance.collection('Appointments');
 
@@ -445,10 +467,13 @@ class _NewFolderState extends State<NewFolder> {
           .where('patientId', isEqualTo: userUID)
           .get();
 
-      List<String> doctorIds = querySnapshot.docs
-          .map((doc) => doc['doctorId'] as String) // Adjust the type if needed
-          .toList();
+      Set<String> uniqueDoctorIds = Set<String>();
 
+      querySnapshot.docs.forEach((doc) {
+        uniqueDoctorIds.add(doc['doctorId'] as String);
+      });
+
+      List<String> doctorIds = uniqueDoctorIds.toList();
 
       return doctorIds;
     } catch (e) {
@@ -456,5 +481,6 @@ class _NewFolderState extends State<NewFolder> {
       return [];
     }
   }
+
 }
 

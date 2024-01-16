@@ -40,7 +40,9 @@ class _FileViewerState extends State<FileViewer> {
 
   @override
   Widget build(BuildContext context) {
-    bool isImage = widget.URL.contains('.JPG') || widget.URL.contains('.png') || widget.URL.contains('.img');
+    bool isImage = widget.URL.toLowerCase().contains('.jpg') ||
+        widget.URL.toLowerCase().contains('.png') ||
+        widget.URL.toLowerCase().contains('.img');
 
     return Scaffold(
       body: isImage

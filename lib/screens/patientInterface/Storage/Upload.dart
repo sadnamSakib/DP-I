@@ -689,9 +689,11 @@ import '../BookAppointment/doctorFinderPage.dart';
     );
   }
 
+
+
+
           Future<List<String>> getDoctorIdsForPatient() async {
             try {
-
               CollectionReference appointmentsCollection =
               FirebaseFirestore.instance.collection('Appointments');
 
@@ -699,10 +701,13 @@ import '../BookAppointment/doctorFinderPage.dart';
                   .where('patientId', isEqualTo: userUID)
                   .get();
 
-              List<String> doctorIds = querySnapshot.docs
-                  .map((doc) => doc['doctorId'] as String)
-                  .toList();
+              Set<String> uniqueDoctorIds = Set<String>();
 
+              querySnapshot.docs.forEach((doc) {
+                uniqueDoctorIds.add(doc['doctorId'] as String);
+              });
+
+              List<String> doctorIds = uniqueDoctorIds.toList();
 
               return doctorIds;
             } catch (e) {
@@ -710,5 +715,6 @@ import '../BookAppointment/doctorFinderPage.dart';
               return [];
             }
           }
+
         }
 
