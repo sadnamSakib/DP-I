@@ -124,16 +124,7 @@ class _DoctorswithAppointmentsState extends State<DoctorswithAppointments> {
                             shareFileWithDoctor(filteredDoctors[index]['doctorId']);
                           },
                           child:
-                          // Card(
-                          //   color: Colors.grey,
-                          //   child:
-                          //   ListTile(
-                          //     tileColor: Colors.white,
-                          //     leading: Icon(Icons.person),
-                          //     title: Text(filteredDoctors[index]['name']),
-                          //     subtitle: Text(filteredDoctors[index]['specialization']),
-                          //   ),
-                          // ),
+
                           Container(
                             margin: EdgeInsets.only(bottom: 15),
                             decoration: BoxDecoration(
