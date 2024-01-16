@@ -16,24 +16,24 @@ class DegreeCheckbox extends StatefulWidget {
   _DegreeCheckboxState createState() => _DegreeCheckboxState();
 }
 class _DegreeCheckboxState extends State<DegreeCheckbox> {
-  bool isChecked=false; // Local state to track the checked state
+  bool isChecked=false;
 
   @override
   void initState() {
     super.initState();
-    isChecked = widget.isChecked; // Initialize the local state with the initial value
+    isChecked = widget.isChecked;
   }
 
   @override
   Widget build(BuildContext context) {
     return CheckboxListTile(
       title: Text(widget.degree),
-      value: isChecked, // Use the local state here
+      value: isChecked,
       onChanged: (bool? value) {
         setState(() {
-          isChecked = value ?? false; // Update the local state and trigger a rebuild
+          isChecked = value ?? false;
         });
-        widget.onChecked(isChecked); // Notify the parent widget about the change
+        widget.onChecked(isChecked);
       },
     );
   }

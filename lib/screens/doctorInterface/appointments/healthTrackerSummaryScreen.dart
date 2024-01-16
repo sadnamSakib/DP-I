@@ -105,11 +105,11 @@ class _HealthTrackersScreenState extends State<HealthTrackersScreen> {
                             ),
                           ),
                           SizedBox(
-                            height: 50, // Adjust the height as needed
-                            width: 50, // Adjust the width as needed
+                            height: 50,
+                            width: 50,
                             child: Image.asset(
-                              selectedDiseases[index].icon, // Replace with your image path
-                              fit: BoxFit.cover, // Adjust the fit as needed
+                              selectedDiseases[index].icon,
+                              fit: BoxFit.cover,
                             ),
                           ),
                         ],

@@ -30,7 +30,7 @@ class _HomeState extends State<Home> {
   NotificationServices notificationServices = NotificationServices();
   final AuthService _auth = AuthService();
   var emergencyDoctor = false;
-  int _currentIndex = 2; // Track the current tab index
+  int _currentIndex = 2;
   @override
     void initState() {
     super.initState();

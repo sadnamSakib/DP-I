@@ -33,8 +33,8 @@ class _EnrollAsEmergencyDoctorState extends State<EnrollAsEmergencyDoctor> {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter, // 10% of the width, so there are ten blinds.
-                  colors: [Colors.white70, Colors.pink.shade50], // whitish to gray// repeats the gradient over the canvas
+                  end: Alignment.bottomCenter,
+                  colors: [Colors.white70, Colors.pink.shade50],
                 ),
               ),
               child: Column(
@@ -53,7 +53,7 @@ class _EnrollAsEmergencyDoctorState extends State<EnrollAsEmergencyDoctor> {
                     onTap: () {
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => Emergency()), // Replace YourNewPage with your actual new page
+                        MaterialPageRoute(builder: (context) => Emergency()),
                       );
                     },
                     child: Container(
