@@ -96,6 +96,17 @@ class _CurrentPrescriptionScreenState extends State<CurrentPrescriptionScreen> {
     );
   }
   Widget buildPrescriptionListView(String time) {
+    int medicineCount = 0;
+    for(var prescription in prescriptions){
+      for(var medicine in prescription.prescribedMedicines){
+        if(medicine.intakeTime[time] > 0){
+          medicineCount++;
+        }
+      }
+    }
+    if(medicineCount == 0){
+      return Center(child: Text('No medicines for $time '));
+    }
     return ListView.builder(
       itemCount: prescriptions.length,
       itemBuilder: (context, index) {
