@@ -69,7 +69,12 @@ class _EmergencyRequestListState extends State<EmergencyRequestList> {
             }
             if(snapshot.data!.docs.isEmpty){
               return const Center(
-                child: Text("No emergency requests"),
+
+                child: Text("No emergency requests",
+                  style: TextStyle(
+                    fontSize: 20.0,
+                  ),
+                ),
               );
             }
               return ListView(

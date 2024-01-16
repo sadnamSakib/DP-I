@@ -198,7 +198,7 @@ class _SSLCommerzeState extends State<SSLCommerze> {
         store_id: store_ID,
         store_passwd: store_password,
         total_amount: double.parse(widget.fee),
-        tran_id: "12393",
+        tran_id: "123933",
       ),
     );
     try {

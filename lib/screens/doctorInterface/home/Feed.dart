@@ -70,6 +70,7 @@ class _FeedState extends State<Feed> {
   }
   @override
   void initState() {
+    super.initState();
     List<String> days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
     String today = days[DateTime.now().weekday - 1];
     print(today);
@@ -107,12 +108,11 @@ class _FeedState extends State<Feed> {
         ),
 
           child: Column(
-            // mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            // // mainAxisAlignment: MainAxisAlignment.center,
+            // crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
                 padding: EdgeInsets.all(16.0),
-                alignment: Alignment.center,
                 child: StreamBuilder<DocumentSnapshot>(
                   stream: getUserData(),
                   builder: (context, snapshot) {
@@ -142,25 +142,34 @@ class _FeedState extends State<Feed> {
                           textAlign: TextAlign.center,
 
                         ),
-                        SizedBox(height: 30),
-                        Text(
-                          'Your Schedule for today is:',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey.shade700,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                         SizedBox(height: 10),
-
-
-
-
-
-
-
                       ],
+
+                    );
+                  },
+                ),
+              ),
+              SizedBox(height: 30),
+              Text(
+                'Your Schedule for today',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+                textAlign: TextAlign.left,
+              ),
+              SizedBox(height: 10),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: dayItems.length,
+                  itemBuilder: (context, index) {
+                    final item = dayItems[index];
+                    return Card(
+                      child: ListTile(
+                        title: Text("Session: " + item.sessionType),
+                        subtitle: Text("Time: " + item.startTime + ' - ' + item.endTime),
+                        trailing: Text("Patients: " + item.numberOfPatients.toString()),
+                      ),
                     );
                   },
                 ),
