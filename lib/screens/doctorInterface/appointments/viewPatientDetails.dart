@@ -86,32 +86,69 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
               ),
             ),
             ListTile(
-              title: Text('Patient Name'),
-              subtitle: Text(widget.appointment.patientName),
+              title: Text('Patient Name',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),),
+              subtitle: Text(widget.appointment.patientName,
+              style: TextStyle(
+                fontSize: 18,
+              ),),
             ),
             ListTile(
-              title: Text('Issue'),
+              title: Text('Issue',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),),
               subtitle: Text(widget.appointment.issue),
             ),
             ListTile(
-              title: Text('Previous Issues'),
+              title: Text('Previous Issues',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),),
               subtitle: Text(
                   userData?['preExistingConditions'].join(", ") ?? ''
               ),          ),
             ListTile(
-              title: Text('Phone Number'),
-              subtitle: Text(userData?['phone'] ?? 'N/A'),
+              title: Text('Phone Number',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),),
+              subtitle: Text(userData?['phone'] ?? 'N/A',
+                style: TextStyle(
+                  fontSize: 18,
+                ),),
             ),
             ListTile(
-              title: Text('Session Type'),
-              subtitle: Text(widget.appointment.sessionType),
+              title: Text('Session Type',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),),
+              subtitle: Text(widget.appointment.sessionType,
+                style: TextStyle(
+                  fontSize: 18,
+                ),),
             ),
             ListTile(
-              title: Text('Paid'),
-              subtitle: Text(widget.appointment.isPaid ? 'Yes' : 'No'),
+              title: Text('Paid',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),),
+              subtitle: Text(widget.appointment.isPaid ? 'Yes' : 'No',
+                style: TextStyle(
+                  fontSize: 18,
+                ),),
             ),
             ElevatedButton(
               style: ButtonStyle(
+                fixedSize: MaterialStateProperty.all<Size>(Size(150, 50)),
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.teal.shade800),
               ),
               onPressed: () {

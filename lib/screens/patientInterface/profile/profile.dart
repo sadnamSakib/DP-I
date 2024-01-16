@@ -31,7 +31,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   CollectionReference users = FirebaseFirestore.instance.collection('users');
   CollectionReference patients = FirebaseFirestore.instance.collection('patients');
 
-
+  // Create a combined stream
   late Stream<DocumentSnapshot> combinedStream;
 
   @override
@@ -39,7 +39,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
     fetchUserName();
 
-
+    // Merge the streams using rxdart's StreamGroup
     combinedStream = Rx.combineLatest2(
       users.doc(userUID).snapshots(),
       patients.doc(userUID).snapshots(),
@@ -118,6 +118,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
+            // colors: [Colors.white70, Colors.blue.shade200],
             colors: [Colors.white70, Colors.blue.shade200],
           ),
         ),

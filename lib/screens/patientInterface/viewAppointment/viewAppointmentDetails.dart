@@ -177,21 +177,26 @@ class _ViewAppointmentDetailsPageState extends State<ViewAppointmentDetailsPage>
               },
               child: Text('Pay Now'),
               style: ElevatedButton.styleFrom(
-                primary: Colors.blue.shade900,
+                primary: Colors.green,
+                fixedSize: Size(100, 30),
               ),
             )
                 : null,
           ),
           SizedBox(height: 16),
-              Center(
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(Colors.blue.shade900),
+              Padding(
+                padding: const EdgeInsets.all(14.0),
+                child: Center(
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(Colors.blue.shade900),
+                      fixedSize: MaterialStateProperty.all<Size>(Size(150, 40)),
+                    ),
+                    onPressed: () {
+                      _showBottomSheet(context);
+                    },
+                    child: Text('View Options'),
                   ),
-                  onPressed: () {
-                    _showBottomSheet(context);
-                  },
-                  child: Text('View Options'),
                 ),
               ),
 

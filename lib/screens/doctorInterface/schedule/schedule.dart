@@ -263,7 +263,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
         gradient: LinearGradient(
         begin: Alignment.topRight,
         end: Alignment.bottomLeft,
-        colors: [Colors.white70, Colors.pink.shade100])),
+        colors: [Colors.white70, Colors.pink.shade50])),
             child: Center(
         child: Text(
             'Add day of week to your schedule',
@@ -278,7 +278,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             gradient: LinearGradient(
                 begin: Alignment.topRight,
                 end: Alignment.bottomLeft,
-                colors: [Colors.white70, Colors.pink.shade100])),
+                colors: [Colors.white70, Colors.pink.shade50])),
         child: ListView.builder(
           itemCount: selectedDays.length,
           itemBuilder: (BuildContext context, int index) {

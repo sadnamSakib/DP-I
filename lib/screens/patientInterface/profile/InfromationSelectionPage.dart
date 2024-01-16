@@ -20,49 +20,36 @@ class _InformationSelectionScreenState extends State<InformationSelectionScreen>
         backgroundColor: Colors.blue.shade900,
 
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            colors: [Colors.white70, Colors.blue.shade100],
+      body: ListView(
+        children: <Widget>[
+          ListTile(
+            leading: Icon(Icons.account_circle),
+            title: Text('Account Information'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ProfileScreen()),
+              );
+            },
           ),
-        ),
-        child: ListView(
+          ListTile(
+            leading: Icon(Icons.medical_services),
+            title: Text('Medications'),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const CurrentPrescriptionScreen(medicationTime: 'morning',)));
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.description),
+            title: Text('Reports and Prescriptions'),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const UploadFile()));
+            },
+          ),
 
-          children: <Widget>[
-            ListTile(
 
-              leading: Icon(Icons.account_circle),
-              title: Text('Account Information'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const ProfileScreen()),
-                );
-              },
-            ),
-
-            ListTile(
-              leading: Icon(Icons.medical_services),
-              title: Text('Medications'),
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const CurrentPrescriptionScreen(medicationTime: 'morning',)));
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.description),
-              title: Text('Reports and Prescriptions'),
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const UploadFile()));
-              },
-            ),
-
-          ],
-        ),
+        ],
       ),
-
-
-
     );
   }
 }
