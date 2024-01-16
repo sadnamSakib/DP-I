@@ -41,8 +41,8 @@ class _WaterSummaryState extends State<WaterSummary> {
             padding: const EdgeInsets.only(bottom: 12.0),
             child: Text("Water Intake Summary", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.red)),
           ),
-          waterList.isEmpty // Check if the data is empty
-              ? CircularProgressIndicator() // Show loading indicator
+          waterList.isEmpty
+              ? CircularProgressIndicator()
               : SizedBox(
             height: 300,
             width: 400,

@@ -3,7 +3,6 @@ import 'package:design_project_1/screens/doctorInterface/appointments/viewAppoin
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -133,8 +132,8 @@ List<Appointments> appointments=[];
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
-            end: Alignment.bottomCenter, // 10% of the width, so there are ten blinds.
-            colors: [Colors.white70, Colors.pink.shade50], // whitish to gray// repeats the gradient over the canvas
+            end: Alignment.bottomCenter,
+            colors: [Colors.white70, Colors.pink.shade50],
           )
         ),
         child: Column(
@@ -361,7 +360,7 @@ List<Appointments> appointments=[];
                       color: dayItem.sessionType == 'Online'
                           ? Colors.blue
                           : Colors.red,
-                      size: 16, // Adjust the icon size as needed
+                      size: 16,
                     ),
                   ],
                 ),

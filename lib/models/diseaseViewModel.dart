@@ -21,8 +21,4 @@ Future deleteKidneyDiseaseData() async {
     return diseaseCollection.doc(uid).snapshots();
   }
 
-  //get user data stream
-  // Stream<QuerySnapshot> get users {
-  //   return userCollection.snapshots();
-  // }
 }

@@ -17,14 +17,13 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
   void _selectRole(String role) async {
     User? user = _auth.currentUser;
     if (user != null) {
-      // Set custom claim based on the selected role
       await DatabaseService(uid: user?.uid).setUserRole(role);
       if(role=='doctor'){
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>  DoctorDetailsPage()));
       }
       else{
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>  PatientDetailsPage()));
-      }// Replace with your home page
+      }
     }
   }
   @override
@@ -79,7 +78,7 @@ class RoleCard extends StatelessWidget {
       onTap: onPressed,
       child: Card(
         elevation: 6.0,
-        color: Colors.white,// Adjust the elevation for a slight shadow effect
+        color: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
         ),
@@ -87,7 +86,7 @@ class RoleCard extends StatelessWidget {
           children: [
             Container(
               height: 250,
-              width: 350,// Set the desired image height
+              width: 350,
               child: Transform(
 
                 transform: Matrix4.identity()..rotateZ(0.0),

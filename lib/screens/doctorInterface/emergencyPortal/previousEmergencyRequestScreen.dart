@@ -28,8 +28,8 @@ class _PreviousEmergencyRequestListState extends State<PreviousEmergencyRequestL
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
-            end: Alignment.bottomCenter, // 10% of the width, so there are ten blinds.
-            colors: [Colors.white70, Colors.pink.shade50], // whitish to gray// repeats the gradient over the canvas
+            end: Alignment.bottomCenter,
+            colors: [Colors.white70, Colors.pink.shade50],
           ),
         ),
         child: StreamBuilder(
@@ -61,11 +61,11 @@ class _PreviousEmergencyRequestListState extends State<PreviousEmergencyRequestL
                     dynamic>;
 
                 return ListTile(
-                    contentPadding: EdgeInsets.all(10.0), // Adjust padding as needed
-                    tileColor: Colors.teal[50], // Change the background color as needed
+                    contentPadding: EdgeInsets.all(10.0),
+                    tileColor: Colors.teal[50],
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0), // Adjust the border radius as needed
-                      side: BorderSide(color: Colors.teal.shade50), // Add border if desired
+                      borderRadius: BorderRadius.circular(5.0),
+                      side: BorderSide(color: Colors.teal.shade50),
                     ),
                   title: Text(chatData['receiverName'],
                     style: TextStyle(

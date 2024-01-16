@@ -11,24 +11,22 @@ class _CalendarState extends State<CalendarPage> {
   final AuthService _auth = AuthService();
 
   void onDayPressed(String day) {
-    // Implement the functionality you want for each day here.
     print("Pressed $day");
-    // You can navigate to a new screen, show a dialog, or perform any action you desire.
   }
 
   Widget circularDayLabel(String day) {
     return Container(
-      width: 36, // Adjust the size as needed
-      height: 36, // Adjust the size as needed
+      width: 36,
+      height: 36,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: Colors.lightBlue, // Adjust the background color
+        color: Colors.lightBlue,
       ),
       child: Center(
         child: Text(
           day,
           style: TextStyle(
-            color: Colors.white, // Adjust the text color
+            color: Colors.white,
           ),
         ),
       ),
@@ -56,7 +54,7 @@ class _CalendarState extends State<CalendarPage> {
         decoration: BoxDecoration(
           color: Colors.lightBlue.shade50,
           image: DecorationImage(
-            image: AssetImage('assets/images/doc.png'), // Replace with your image path
+            image: AssetImage('assets/images/doc.png'),
             fit: BoxFit.fitHeight,
             opacity: 0.2,
           ),

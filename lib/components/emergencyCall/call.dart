@@ -1,5 +1,4 @@
 import 'package:agora_uikit/agora_uikit.dart';
-import 'package:agora_uikit/controllers/rtc_buttons.dart';
 import 'package:flutter/material.dart';
 import '../virtualConsultation/callSettings.dart';
 class VoiceCallPage extends StatefulWidget {
@@ -17,7 +16,7 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
   final AgoraClient client = AgoraClient(
     agoraConnectionData: AgoraConnectionData(
       appId: appId,
-      channelName: "doclinkr", // Assuming this is your channel name
+      channelName: "doclinkr",
       tempToken: token,
     ),
     enabledPermission: [
