@@ -29,19 +29,19 @@ class _PrescribeMedicineScreenState extends State<PrescribeMedicineScreen> {
         medicines = value;
       });
     });
-    loadCurrentlyRunningMedicines(widget.patientId).then((value) {
-      setState(() {
-        print(value);
-        prescribedMedicines = value;
-        print(prescribedMedicines.length);
-      });
-    });
+    // loadCurrentlyRunningMedicines(widget.patientId).then((value) {
+    //   setState(() {
+    //     print(value);
+    //     prescribedMedicines = value;
+    //     print(prescribedMedicines.length);
+    //   });
+    // });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false, // This avoids the overflow error when keyboard appears
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text('Search Medicine'),
       ),
@@ -94,16 +94,29 @@ class _PrescribeMedicineScreenState extends State<PrescribeMedicineScreen> {
             ),
             Padding(padding:
               EdgeInsets.all(8.0),
-              child: Text('Prescribed Medicines', style: TextStyle(fontSize: 20.0),),
+              child: Text('Currently Prescribed Medicines', style: TextStyle(fontSize: 20.0),),
             ),
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: prescribedMedicines.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(prescribedMedicines[index].brandName + ' ' + prescribedMedicines[index].strength ),
-                  subtitle: Text(prescribedMedicines[index].generic),
-                );
+            StreamBuilder<List<Medicine>>(
+              stream: loadCurrentlyRunningMedicines(widget.patientId),
+              builder: (BuildContext context, AsyncSnapshot<List<Medicine>> snapshot) {
+                if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                }
+                switch (snapshot.connectionState) {
+                  case ConnectionState.waiting:
+                    return const Text('Loading...');
+                  default:
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          title: Text(snapshot.data![index].brandName + ' ' + snapshot.data![index].strength),
+                          subtitle: Text(snapshot.data![index].generic ),
+                        );
+                      },
+                    );
+                }
               },
             ),
           ],
@@ -141,7 +154,7 @@ void _showPrescribeMedicineModalBottomSheet(BuildContext context, Medicine medic
                   ListTile(
                     title: Text('Morning'),
                     trailing: SizedBox(
-                      width: 110,
+                      width: MediaQuery.of(context).size.width * 0.3,
                       child: Expanded(
                         child: Row(
                           children: <Widget>[
@@ -172,7 +185,7 @@ void _showPrescribeMedicineModalBottomSheet(BuildContext context, Medicine medic
                   ListTile(
                     title: Text('Noon'),
                     trailing: SizedBox(
-                      width: 110,
+                      width: MediaQuery.of(context).size.width * 0.3,
                       child: Expanded(
                         child: Row(
                           children: <Widget>[
@@ -195,8 +208,6 @@ void _showPrescribeMedicineModalBottomSheet(BuildContext context, Medicine medic
                                 });
                               },
                             ),
-
-
                           ],
                         ),
                       ),
@@ -205,7 +216,7 @@ void _showPrescribeMedicineModalBottomSheet(BuildContext context, Medicine medic
                   ListTile(
                     title: Text('Night'),
                     trailing: SizedBox(
-                      width: 110,
+                      width: MediaQuery.of(context).size.width * 0.3,
                       child: Expanded(
                         child: Row(
                           children: <Widget>[
@@ -304,9 +315,10 @@ void _showPrescribeMedicineModalBottomSheet(BuildContext context, Medicine medic
                         instruction: specialNote,
                       );
                       addPrescribedMedicine(patientId, prescribedMedicine);
-                      loadCurrentlyRunningMedicines(patientId).then((value) {
-                        updatePrescribedMedicines(value);
-                      });
+                      // loadCurrentlyRunningMedicines(patientId).then((value) {
+                      //   updatePrescribedMedicines(value);
+                      // });
+
                       Navigator.pop(context);
                     },
                   ),

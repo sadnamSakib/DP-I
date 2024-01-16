@@ -264,7 +264,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
         await appointmentRef.delete();
 
 
-        print("Appointment withhhhhhhhhh ID $docID to beeeeeeeeeeeeee  deleted.");
+        print("Appointment with ID $docID to be  deleted.");
       }
       else if (parsedDateTime.isAtSameMomentAs(currentDateTime) && currentTimeFormat.isAfter(endTimeFormat)) {
         final appointmentRef = FirebaseFirestore.instance.collection(
@@ -296,7 +296,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
         await appointmentRef.delete();
 
 
-        print("Appointment withhhhhhhhhh ID $docID to beeeeeeeeeeeeee  deleted.");
+        print("Appointment with ID $docID to be deleted.");
 
       }
 
@@ -489,7 +489,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                                     ),
                                   ),
                                   Text(
-                                    timeSlot.sessionType, // Add 'Online' or 'Offline' based on doctor availability along with timeslot
+                                    timeSlot.sessionType,
                                     style: TextStyle(
                                       color: Colors.red,
                                       fontWeight: FontWeight.bold,
@@ -524,7 +524,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
-                      maxLines: 2, // Adjust the number of lines as needed
+                      maxLines: 2,
                     ),
                     SizedBox(height: 20),
                     Center(

@@ -133,11 +133,11 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                     return DropdownMenuItem(
                       value: specialty,
                         child: Container(
-                        constraints: BoxConstraints(maxWidth: 200), // Adjust the maximum width as needed
+                        constraints: BoxConstraints(maxWidth: 200),
                     child: Text(
                     specialty,
-                    overflow: TextOverflow.ellipsis, // Use ellipsis to indicate text overflow
-                    maxLines: 1, // Limit to a single line
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
                     ),
                     ),
 
@@ -172,7 +172,7 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                   ),
                   onPressed: () {
                     _showDegreeSelection(
-                        context); // Show the degree selection modal bottom sheet
+                        context);
                   },
                   child: Text('Select Degrees'),
                 ),
@@ -185,7 +185,6 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                     primary: Colors.teal.shade800,
                   ),
                   onPressed: () async {
-                    // Submit the form and handle doctor registration here
                     if (_formKey.currentState!.validate()) {
                       await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid).updateDoctorData(
                           phone, chamberAddress, medicalLicense,specialization, degrees);

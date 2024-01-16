@@ -1,8 +1,5 @@
-import 'package:design_project_1/screens/authentication/sign_in.dart';
-import 'package:design_project_1/screens/wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 class ChangePassword extends StatefulWidget {
   static String id = 'forgot-password';
   const ChangePassword({super.key});
@@ -77,13 +74,13 @@ class _ChangePasswordState extends State<ChangePassword> {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   primary: Colors.blue.shade900,
-                  onPrimary: Colors.white ,// Change the text color
+                  onPrimary: Colors.white ,
                   padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
                 ),
                 child: Text('Send Email'),
                 onPressed: () {
                   passwordReset();
-                  Navigator.of(context).pop(); // Close the pop-up
+                  Navigator.of(context).pop();
                   ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text('An email has been sent.'),

@@ -49,7 +49,6 @@ class _DayBasedScheduleScreenState extends State<DayBasedScheduleScreen> {
           sessionType: sessionType,
           numberOfPatients: numberOfPatients,
         ));
-        // schedule.add(ScheduleDay(day: widget.selectedDay, items: dayItems));
       });
 
     }
@@ -166,7 +165,7 @@ void initState() {
 
 
                     TextFormField(
-                      keyboardType: TextInputType.text, // Input type as number
+                      keyboardType: TextInputType.text,
                       decoration: InputDecoration(labelText: "Number of Patients"),
                       onChanged: (value) {
                         _NumberOfPatients = value;
@@ -440,7 +439,7 @@ void initState() {
 
 
                     TextFormField(
-                      keyboardType: TextInputType.text, // Input type as number
+                      keyboardType: TextInputType.text,
                       decoration: InputDecoration(labelText: "Number of Patients"),
                       onChanged: (value) {
                         _NumberOfPatients = value;
@@ -574,14 +573,14 @@ void initState() {
                                     actions: <Widget>[
                                       TextButton(
                                         onPressed: () {
-                                          deleteSlot(slots.ID); // Pass the ID of the document to delete
-                                          Navigator.of(context).pop(); // Close the dialog
+                                          deleteSlot(slots.ID);
+                                          Navigator.of(context).pop();
                                         },
                                         child: Text('Delete'),
                                       ),
                                       TextButton(
                                         onPressed: () {
-                                          Navigator.of(context).pop(); // Close the dialog without deletion
+                                          Navigator.of(context).pop();
                                         },
                                         child: Text('Cancel'),
                                       ),
@@ -638,7 +637,7 @@ class ScheduleItem {
   final String startTime;
   final String endTime;
   final String sessionType;
-  final String numberOfPatients; // Add the 'numberOfPatients' field
+  final String numberOfPatients;
 
   ScheduleItem({
     required this.ID,
