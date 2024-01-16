@@ -29,27 +29,35 @@ class _PreviousMedicineScreenState extends State<PreviousMedicineScreen> {
         title: Text('Previous Medicines'),
         backgroundColor: Colors.blue.shade900,
       ),
-      body: FutureBuilder<List<PrescriptionModel>>(
-        future: loadPrescription(widget.currentUserID),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting || prescriptions == null) {
-            return Center(
-              child: SpinKitCircle(
-                color: Colors.blue,
-                size: 50.0,
-              ),
-            );
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          }
-          else {
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            colors: [Colors.white70, Colors.blue.shade100],
+          ),
+        ),
+        child: FutureBuilder<List<PrescriptionModel>>(
+          future: loadPrescription(widget.currentUserID),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting || prescriptions == null) {
+              return Center(
+                child: SpinKitCircle(
+                  color: Colors.blue,
+                  size: 50.0,
+                ),
+              );
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            }
+            else {
 
-            return (prescriptions.isNotEmpty)
-                ? buildPreviousMedicinesList()
+              return (prescriptions.isNotEmpty)
+                  ? buildPreviousMedicinesList()
 
-                : Center(child: Text('No previous medicines found'));
-          }
-        },
+                  : Center(child: Text('No previous medicines found'));
+            }
+          },
+        ),
       ),
     );
   }

@@ -66,31 +66,39 @@ class _CurrentPrescriptionScreenState extends State<CurrentPrescriptionScreen> {
             ],
           ),
         ),
-        body: FutureBuilder<List<PrescriptionModel>>(
-          future: loadPrescription(currentUserID),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting || prescriptions == null) {
-              return Center(
-                child: SpinKitCircle(
-                  color: Colors.blue,
-                  size: 50.0,
-                ),
-              );
-            } else if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
-            } else {
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              colors: [Colors.white70, Colors.blue.shade100],
+            ),
+          ),
+          child: FutureBuilder<List<PrescriptionModel>>(
+            future: loadPrescription(currentUserID),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting || prescriptions == null) {
+                return Center(
+                  child: SpinKitCircle(
+                    color: Colors.blue,
+                    size: 50.0,
+                  ),
+                );
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else {
 
-              return (prescriptions.isNotEmpty)
-                  ? TabBarView(
-                children: [
-                  buildPrescriptionListView('morning'),
-                  buildPrescriptionListView('noon'),
-                  buildPrescriptionListView('night'),
-                ],
-              )
-                  : Center(child: Text('No prescribed medicines found'));
-            }
-          },
+                return (prescriptions.isNotEmpty)
+                    ? TabBarView(
+                  children: [
+                    buildPrescriptionListView('morning'),
+                    buildPrescriptionListView('noon'),
+                    buildPrescriptionListView('night'),
+                  ],
+                )
+                    : Center(child: Text('No prescribed medicines found'));
+              }
+            },
+          ),
         ),
       ),
     );

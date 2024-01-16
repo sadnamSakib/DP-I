@@ -20,35 +20,62 @@ class _InformationSelectionScreenState extends State<InformationSelectionScreen>
         backgroundColor: Colors.blue.shade900,
 
       ),
-      body: ListView(
-        children: <Widget>[
-          ListTile(
-            leading: Icon(Icons.account_circle),
-            title: Text('Account Information'),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const ProfileScreen()),
-              );
-            },
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+              colors: [Colors.white70, Colors.blue.shade100],
           ),
-          ListTile(
-            leading: Icon(Icons.medical_services),
-            title: Text('Medications'),
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const CurrentPrescriptionScreen(medicationTime: 'morning',)));
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.description),
-            title: Text('Reports and Prescriptions'),
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const UploadFile()));
-            },
-          ),
+        ),
+        child: ListView(
+          children: <Widget>[
+            ListTile(
+              contentPadding: EdgeInsets.all(10.0),
+              tileColor: Colors.blue.shade100,
+              leading: Icon(Icons.account_circle,
+              size: 40.0),
+              title: Text('Account Information',
+              style: TextStyle(
+                fontSize: 18.0,
+              ),),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ProfileScreen()),
+                );
+              },
+            ),
+            ListTile(
+                contentPadding: EdgeInsets.all(10.0),
+                tileColor: Colors.grey.shade400,
+              leading: Icon(Icons.medical_services,
+                  size: 40.0),
+              title: Text('Medications',
+                style: TextStyle(
+                  fontSize: 18.0,
+                ),),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const CurrentPrescriptionScreen(medicationTime: 'morning',)));
+              },
+            ),
+            ListTile(
+              contentPadding: EdgeInsets.all(10.0),
+              tileColor: Colors.blue.shade50,
+              leading: Icon(Icons.description,
+                  size: 40.0),
+              title: Text('Reports and Prescriptions',
+                style: TextStyle(
+                  fontSize: 18.0,
+                ),),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const UploadFile()));
+              },
+            ),
 
 
-        ],
+          ],
+        ),
       ),
     );
   }
