@@ -69,7 +69,6 @@ This is the development branch for DocLinkr.Commits from individual branches are
    - After initialization , runn this command in the flutter console inside android studio :
      ```
      flutter pub get
-     
      ```
 7. **Run App**
    - Run the app using this command :
