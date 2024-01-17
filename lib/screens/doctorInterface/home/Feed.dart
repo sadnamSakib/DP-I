@@ -189,7 +189,6 @@ class _FeedState extends State<Feed> {
                       child: ListTile(
                         title: Text("Session: " + item.sessionType),
                         subtitle: Text("Time: " + item.startTime + ' - ' + item.endTime),
-                        trailing: Text("Patients: " + item.numberOfPatients.toString()),
                       ),
                     );
                   },
