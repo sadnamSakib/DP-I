@@ -157,7 +157,6 @@ void _showPrescribeMedicineModalBottomSheet(BuildContext context, Medicine medic
                     title: Text('Morning'),
                     trailing: SizedBox(
                       width: MediaQuery.of(context).size.width * 0.3,
-                      child: Expanded(
                         child: Row(
                           children: <Widget>[
                             IconButton(
@@ -181,14 +180,12 @@ void _showPrescribeMedicineModalBottomSheet(BuildContext context, Medicine medic
                             ),
                           ],
                         ),
-                      ),
                     ),
                   ),
                   ListTile(
                     title: Text('Noon'),
                     trailing: SizedBox(
                       width: MediaQuery.of(context).size.width * 0.3,
-                      child: Expanded(
                         child: Row(
                           children: <Widget>[
                             IconButton(
@@ -212,14 +209,12 @@ void _showPrescribeMedicineModalBottomSheet(BuildContext context, Medicine medic
                             ),
                           ],
                         ),
-                      ),
                     ),
                   ),
                   ListTile(
                     title: Text('Night'),
                     trailing: SizedBox(
                       width: MediaQuery.of(context).size.width * 0.3,
-                      child: Expanded(
                         child: Row(
                           children: <Widget>[
 
@@ -245,7 +240,6 @@ void _showPrescribeMedicineModalBottomSheet(BuildContext context, Medicine medic
 
                           ],
                         ),
-                      ),
                     ),
                   ),
                   RadioListTile<bool>(

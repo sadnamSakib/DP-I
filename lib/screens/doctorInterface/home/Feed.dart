@@ -149,16 +149,33 @@ class _FeedState extends State<Feed> {
                 ),
               ),
               SizedBox(height: 30),
-              Text(
-                'Your Schedule for today',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Text(
+                  'Your Schedule for today',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                  textAlign: TextAlign.left,
                 ),
-                textAlign: TextAlign.left,
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 15),
+              if(dayItems.isEmpty)
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text(
+                    'No appointments for today',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+              if(dayItems.isNotEmpty)
               Expanded(
                 child: ListView.builder(
                   itemCount: dayItems.length,
@@ -169,21 +186,6 @@ class _FeedState extends State<Feed> {
                         title: Text("Session: " + item.sessionType),
                         subtitle: Text("Time: " + item.startTime + ' - ' + item.endTime),
                         trailing: Text("Patients: " + item.numberOfPatients.toString()),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: dayItems.length,
-                  itemBuilder: (context, index) {
-                    final item = dayItems[index];
-                    return Card(
-                      child: ListTile(
-                        title: Text(item.sessionType),
-                        subtitle: Text(item.startTime + ' - ' + item.endTime),
-                        trailing: Text(item.numberOfPatients.toString()),
                       ),
                     );
                   },
