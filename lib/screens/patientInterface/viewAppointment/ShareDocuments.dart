@@ -258,11 +258,10 @@ class _SharedDocumentsState extends State<SharedDocuments> {
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 1,
         backgroundColor: Colors.white,
-        textColor: Colors.black,
+        textColor: Colors.blue,
       );
 
       getFiles();
-      // Navigator.pop(context);
     } catch (error) {
       print("Error deleting file: $error");
     }

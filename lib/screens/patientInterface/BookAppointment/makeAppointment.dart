@@ -45,7 +45,6 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
         .get();
 
     if (appointmentsQuery.docs.isNotEmpty) {
-      // Appointments matching the current user exist for this slot
       print('Appointments exist for slot $slotid');
       setState(() {
 
@@ -53,7 +52,6 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
       });
 
     } else {
-      // No matching appointments found for this slot
       print('No appointments for slot $slotid');
     }
   }
@@ -243,7 +241,6 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
         final Map<String, dynamic> appointmentdata = appointmentSnapshot
             .data() as Map<String, dynamic>;
 
-        // You can now access the fields in the appointment document
         CollectionReference missedAppointmentsCollection = FirebaseFirestore
             .instance.collection('MissedAppointments');
 
@@ -279,7 +276,6 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
         CollectionReference missedAppointmentsCollection = FirebaseFirestore
             .instance.collection('MissedAppointments');
 
-        // Add the appointment data to the "MissedAppointments" collection
         await missedAppointmentsCollection.add({
           'patientId': appointmentdata['patientId'] ?? '',
           'patientName': appointmentdata['patientName'] ?? '',
@@ -301,8 +297,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
       }
 
       else {
-        // Current time is equal to end time
-        // Do something else
+
       }
     }
 
@@ -564,8 +559,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                               print('Selected Date: $selectedDate');
                               print('Selected Time Slot: $Day');
                               print( selectedTimeSlot?.id);
-                              // Navigator.pop(context);
-                              // fetchTimeSlots(DateTime.now());
+
 
                               Navigator.of(context).pushReplacement(MaterialPageRoute(
                                 builder: (BuildContext context) => BookAppointmentPage(doctorID: widget.doctorID),
@@ -592,9 +586,9 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                             backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                   (Set<MaterialState> states) {
                                 if (selectedTimeSlot != null) {
-                                  return Colors.green; // Change the color when a time slot is selected
+                                  return Colors.green;
                                 }
-                                return Colors.blue.shade900; // Default color
+                                return Colors.blue.shade900;
                               },
                             ),
 
