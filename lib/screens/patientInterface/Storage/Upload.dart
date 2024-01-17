@@ -279,7 +279,7 @@ import '../BookAppointment/doctorFinderPage.dart';
                                             child:
 
                                             Container(
-                                                // height: 50,
+                                                height: 60,
                                               margin: EdgeInsets.only(bottom: 15),
                                               decoration: BoxDecoration(
                                                 color: Colors.white70,
@@ -307,8 +307,11 @@ import '../BookAppointment/doctorFinderPage.dart';
                                                         crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: [
                                                           Text(
+
                                                             collectionSnapshot.docs[folderIndex].id,
-                                                            style: TextStyle(color: Colors.black, fontSize: 18),
+                                                            style: TextStyle(color: Colors.black, fontSize: 18,
+
+                                                            ),
                                                           ),
 
                                                         ],
@@ -401,7 +404,8 @@ import '../BookAppointment/doctorFinderPage.dart';
                                                       SizedBox(width: 10),
                                                       Expanded(
                                                         child: Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                                          mainAxisAlignment: MainAxisAlignment.center,
                                                           children: [
                                                             Text(
                                                           fileData[fileIndex]['name'].split('_').skip(1).join('_'),

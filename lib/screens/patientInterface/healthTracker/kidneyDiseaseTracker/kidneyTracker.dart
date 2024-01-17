@@ -7,6 +7,7 @@ import 'package:design_project_1/screens/patientInterface/healthTracker/tracker.
 import 'package:design_project_1/screens/patientInterface/healthTracker/waterTracker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:design_project_1/services/trackerServices/healthTrackerService.dart';
 
@@ -32,7 +33,7 @@ class _KidneyTrackerState extends State<KidneyTracker> {
   CalendarFormat _calendarFormat = CalendarFormat.week;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
-  String formattedDate = "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
+  String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
   List<measurement> Measurements = [(measurement('Protein', 'assets/images/food.png')), measurement('Blood Pressure', 'assets/images/bloodPressure.png'), measurement('Weight', 'assets/images/weight.png'), measurement('Urine', 'assets/images/urine.png'), measurement('Water', 'assets/images/water.png')];
   String proteinIntake = '0';
   String waterIntake = '0';
@@ -148,7 +149,7 @@ class _KidneyTrackerState extends State<KidneyTracker> {
                       });
                       setState(() {
 
-                        formattedDate = "${_selectedDay!.year}-${_selectedDay!.month}-${_selectedDay!.day}";
+                        formattedDate = DateFormat('yyyy-MM-dd').format(_selectedDay!);
                       loadData();
                       });
                     }

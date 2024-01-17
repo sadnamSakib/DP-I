@@ -162,20 +162,24 @@ class _FeedState extends State<Feed> {
                 ),
               ),
               SizedBox(height: 15),
-              if(dayItems.isEmpty)
-                Padding(
+              dayItems.isEmpty
+                  ? Center(
+                child: Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: Text(
-                    'No appointments for today',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                  child: Expanded(
+                    child: Text(
+                      'No appointments for today',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+
                     ),
-                    textAlign: TextAlign.left,
                   ),
                 ),
-              if(dayItems.isNotEmpty)
+              )
+                  :
               Expanded(
                 child: ListView.builder(
                   itemCount: dayItems.length,
@@ -185,7 +189,6 @@ class _FeedState extends State<Feed> {
                       child: ListTile(
                         title: Text("Session: " + item.sessionType),
                         subtitle: Text("Time: " + item.startTime + ' - ' + item.endTime),
-                        trailing: Text("Patients: " + item.numberOfPatients.toString()),
                       ),
                     );
                   },

@@ -54,6 +54,7 @@ print('Appointtment');
       int numberOfPatients = int.parse(numofpatients) ;
 
       numberOfPatients--;
+      print("Number of Patients printed");
       print(numofpatients);
 
       DocumentReference slotReference = FirebaseFirestore.instance.collection('Schedule').doc(doctorID)
