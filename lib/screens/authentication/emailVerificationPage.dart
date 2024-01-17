@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../models/UserModel.dart';
-import '../../services/auth.dart';
+import '../../services/authServices/auth.dart';
 import '../../main.dart';
 import '../wrapper.dart';
 import 'chooseRole.dart';
@@ -101,6 +101,11 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                 padding: const EdgeInsets
                     .symmetric(horizontal: 32.0),
                 child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.blue.shade900,
+                    onPrimary: Colors.white,
+                    fixedSize: const Size(100, 50),
+                  ),
                   child: const Text('Resend'),
                   onPressed: () async {
                     try {

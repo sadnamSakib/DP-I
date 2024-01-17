@@ -1,7 +1,7 @@
-import 'package:design_project_1/services/database.dart';
+import 'package:design_project_1/services/profileServices/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../../services/auth.dart';
+import '../../services/authServices/auth.dart';
 import '../wrapper.dart';
 import 'DegreeCheckBox.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
@@ -19,6 +19,14 @@ class _PatientDetailsPageState extends State<PatientDetailsPage> {
   String emergencyPhone = '';
   String error = '';
   String address = '';
+  String gender ='';
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      gender="Male";
+    });
+  }
   List<String> preExistingConditions = [];
   List<String> commonConditions = [
     'Hypertension (High Blood Pressure)',
@@ -35,7 +43,6 @@ class _PatientDetailsPageState extends State<PatientDetailsPage> {
     'Obesity',
     'Osteoporosis',
     'Chronic Migraines',
-    // You can add more conditions here
   ];
 
   List<bool> checkedConditions = List.filled(14, false);
@@ -45,8 +52,18 @@ class _PatientDetailsPageState extends State<PatientDetailsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Sign Up'),
+        backgroundColor: Colors.blue.shade900,
       ),
       body: Container(
+        height: 800,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            // colors: [Colors.white70, Colors.blue.shade200],
+            colors: [Colors.white70, Colors.blue.shade100],
+          ),
+        ),
         padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
         child: Form(
           key: _formKey,
@@ -131,9 +148,56 @@ class _PatientDetailsPageState extends State<PatientDetailsPage> {
                     setState(() => address = val);
                   },
                 ),
+                SizedBox(height: 10.0),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Select your gender:',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                Wrap(
+                  children: [
+                    ChoiceChip(
+                      label: Text('Male'),
+                      selected: gender == 'Male',
+                      selectedColor: Colors.blue,
+                      onSelected: (selected) {
+                        setState(() {
+                          gender = 'Male';
+                          print("On selecting male : " + gender);
+                        });
+                      },
+
+                    ),
+                    ChoiceChip(
+                      label: Text('Female'),
+                      selected: gender == 'Female',
+                      selectedColor: Colors.blue,
+                      onSelected: (selected) {
+                        setState(() {
+                          gender = 'Female';
+                          print("On selecting Female : " + gender);
+                        });
+                      },
+
+                    ),
+                  ],
+                ),
+
+              ],
+            ),
 
                 SizedBox(height: 10.0),
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.blue.shade900,
+                    onPrimary: Colors.white,
+                    fixedSize: const Size(100, 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
                   onPressed: () {
                     _showDegreeSelection(
                         context); // Show the degree selection modal bottom sheet
@@ -145,10 +209,18 @@ class _PatientDetailsPageState extends State<PatientDetailsPage> {
                 Text('Pre-Existing Conditions: ${preExistingConditions.join(", ")}'),
                 SizedBox(height: 10.0),
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.blue.shade900,
+                    onPrimary: Colors.white,
+                    fixedSize: const Size(100, 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
                   onPressed: () async {
                     // Submit the form and handle doctor registration here
                     if (_formKey.currentState!.validate()) {
-                      await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid).updatePatientData(
+                      await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid).updatePatientData(gender,
                           phone, address, emergencyPhone, preExistingConditions);
                       SnackBar snackBar = SnackBar(content: Text('Registration Successful.Please log in to your account.'));
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);

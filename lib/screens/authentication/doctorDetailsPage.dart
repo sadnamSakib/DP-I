@@ -1,8 +1,8 @@
 import 'package:design_project_1/screens/wrapper.dart';
-import 'package:design_project_1/services/database.dart';
+import 'package:design_project_1/services/profileServices/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../../services/auth.dart';
+import '../../services/authServices/auth.dart';
 import 'DegreeCheckBox.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
@@ -32,8 +32,18 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Sign Up'),
+        backgroundColor: Colors.pink.shade900,
       ),
       body: Container(
+        height: 800,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            // colors: [Colors.white70, Colors.blue.shade200],
+            colors: [Colors.white70, Colors.pink.shade100],
+          ),
+        ),
         padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
         child: Form(
           key: _formKey,
@@ -123,11 +133,11 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                     return DropdownMenuItem(
                       value: specialty,
                         child: Container(
-                        constraints: BoxConstraints(maxWidth: 200), // Adjust the maximum width as needed
+                        constraints: BoxConstraints(maxWidth: 200),
                     child: Text(
                     specialty,
-                    overflow: TextOverflow.ellipsis, // Use ellipsis to indicate text overflow
-                    maxLines: 1, // Limit to a single line
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
                     ),
                     ),
 
@@ -157,9 +167,12 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                 ),
                 SizedBox(height: 10.0),
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.teal.shade800,
+                  ),
                   onPressed: () {
                     _showDegreeSelection(
-                        context); // Show the degree selection modal bottom sheet
+                        context);
                   },
                   child: Text('Select Degrees'),
                 ),
@@ -168,8 +181,10 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                 Text('Selected Degrees: ${degrees.join(", ")}'),
                 SizedBox(height: 10.0),
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.teal.shade800,
+                  ),
                   onPressed: () async {
-                    // Submit the form and handle doctor registration here
                     if (_formKey.currentState!.validate()) {
                       await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid).updateDoctorData(
                           phone, chamberAddress, medicalLicense,specialization, degrees);

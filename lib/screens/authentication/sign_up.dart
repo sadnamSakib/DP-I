@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-
-import '../../services/auth.dart';
+import '../../services/authServices/auth.dart';
+import '../../utilities/squareTile.dart';
+import 'chooseRole.dart';
 import 'emailVerificationPage.dart';
 class SignUp extends StatefulWidget {
 
@@ -32,7 +33,8 @@ class _SignUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('SIgn Up'),
+        title: const Text('Sign Up'),
+        backgroundColor: Colors.blue.shade900,
       ),
       body: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
@@ -98,6 +100,14 @@ class _SignUpState extends State<SignUp> {
                   ),
                   const SizedBox(height: 20.0),
                   ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.blue.shade900,
+                      onPrimary: Colors.white,
+                      fixedSize: const Size(100, 50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
 
@@ -122,7 +132,7 @@ class _SignUpState extends State<SignUp> {
 
                       }
                     },
-                    child: const Text('Register'),
+                    child: const Text('Register', style: TextStyle(fontSize: 18.0)),
                   ),
                   const SizedBox(height: 20.0),
                   Text(
@@ -130,21 +140,52 @@ class _SignUpState extends State<SignUp> {
                     style: const TextStyle(color: Colors.red, fontSize: 14.0),
                   ),
                   Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center, // Aligns the children to the center horizontally
+                    child: Column(
                       children: [
-                        SizedBox(height: 20.0),
-                        Text('Already have an account?'),
-                        TextButton(
-                          onPressed: () {
-                            widget.toggleView();
-                          },
-                          child: Text('Sign In'),
-                        ),
-                      ],
-                    ),
-                  )
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center, // Aligns the children to the center horizontally
+                          children: [
+                            SizedBox(height: 20.0),
+                            Text('Already have an account?', style: TextStyle(fontSize: 16.0)),
+                            TextButton(
+                              onPressed: () {
+                                widget.toggleView();
+                              },
+                              child: Text('Sign In', style: TextStyle(fontSize: 16.0)),
+                            ),
+                          ],
 
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children:[
+                            //google button
+                             Text('Or, Sign up with', style: TextStyle(fontSize: 16.0)),
+                           SquareTile(
+                               onTap: () async {
+                                 dynamic result = await _auth.registerWithGoogle();
+                                 if (result == null) {
+                                   setState(() {
+                                     error = 'Could not sign in with those credentials';
+                                   });
+                                 }
+                                 else{
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => RoleSelectionPage(),
+                                      ),
+                                    );
+                                 }
+                               },
+                                imagePath: 'assets/images/google.png',
+                                ),
+                          ]
+                        )
+                      ],
+
+                      )
+                    ),
                 ],
               ),
             ),
