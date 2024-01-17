@@ -48,7 +48,7 @@ class _CurrentPrescriptionScreenState extends State<CurrentPrescriptionScreen> {
             if(prescriptions.isNotEmpty)
               IconButton(
                   onPressed: () {
-                    generatePrescriptionPDF(prescriptions[0]);
+                    generatePrescriptionPDF(prescriptions);
                   },
                   icon: Icon(Icons.picture_as_pdf)
               ),
