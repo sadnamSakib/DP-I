@@ -29,7 +29,7 @@ class waterTrackerService{
 
   Future getWaterData() async {
     final now = DateTime.now();
-    final formattedDate = "${now.year}-${now.month}-${now.day}";
+    final formattedDate = DateFormat('yyyy-MM-dd').format(now);
 
     final docRef = diseaseCollection!.doc(uid);
 

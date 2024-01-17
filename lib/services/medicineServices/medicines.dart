@@ -32,33 +32,38 @@ Future<List<Medicine>> loadMedicines() async {
   return medicines;
 }
 
-void generatePrescriptionPDF(PrescriptionModel prescription) async {
+void generatePrescriptionPDF(List<PrescriptionModel> prescription) async {
   final prescriptionText = await generatePrescriptionText(prescription);
   final pdf = await Text2Pdf.generatePdf(prescriptionText);
 
 }
 
-generatePrescriptionText(PrescriptionModel prescription) async {
-  final doctorName = await FirebaseFirestore.instance.collection('users').doc(prescription.doctorId).get().then((value) => value.data()!['name']);
+generatePrescriptionText(List<PrescriptionModel> prescriptions) async {
 
-  final patientName = await FirebaseFirestore.instance.collection('users').doc(prescription.patientId).get().then((value) => value.data()!['name']);
-  final date = DateTime.parse(prescription.date).toLocal().toString().split(' ')[0];
-  final medicines = prescription.prescribedMedicines;
+  final patientName = await FirebaseFirestore.instance.collection('users').doc(prescriptions[0].patientId).get().then((value) => value.data()!['name']);
+  String prescriptionText = 'Patient Name: $patientName\n\n';
+  prescriptionText += '----------------------------------------\n\n';
+  for(PrescriptionModel prescription in prescriptions){
+    final doctorName = await FirebaseFirestore.instance.collection('users').doc(prescription.doctorId).get().then((value) => value.data()!['name']);
+    final date = DateTime.parse(prescription.date).toLocal().toString().split(' ')[0];
+    final medicines = prescription.prescribedMedicines;
 
-  String prescriptionText = 'Doctor Name: $doctorName\n'
-      'Patient Name: $patientName\n'
-      'Date: $date\n\n';
+    prescriptionText += 'Doctor Name: $doctorName\n'
 
-  for (final prescribedMedicine in medicines) {
-    final medicineDetails = prescribedMedicine.medicineDetails;
-    final intakeTime = prescribedMedicine.intakeTime;
-    final days = prescribedMedicine.days;
-    final String isBeforeMeal = prescribedMedicine.isBeforeMeal ? 'before meal' : 'after meal';
+        'Date: $date\n\n';
 
-    prescriptionText += 'Medicine: ${medicineDetails.brandName} ${medicineDetails.strength}\n'
-        'Intake Time: ${intakeTime['morning']}+${intakeTime['noon']}+${intakeTime['night']}\n'
-        'Days: $days\n'
-        'Take $isBeforeMeal\n\n';
+    for (final prescribedMedicine in medicines) {
+      final medicineDetails = prescribedMedicine.medicineDetails;
+      final intakeTime = prescribedMedicine.intakeTime;
+      final days = prescribedMedicine.days;
+      final String isBeforeMeal = prescribedMedicine.isBeforeMeal ? 'before meal' : 'after meal';
+
+      prescriptionText += 'Medicine: ${medicineDetails.brandName} ${medicineDetails.strength}\n'
+          'Intake Time: ${intakeTime['morning']}+${intakeTime['noon']}+${intakeTime['night']}\n'
+          'Days: $days\n'
+          'Take $isBeforeMeal\n\n';
+    }
+    prescriptionText += '----------------------------------------\n\n';
   }
 
   return prescriptionText;

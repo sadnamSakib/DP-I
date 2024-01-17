@@ -265,7 +265,12 @@ class _ViewAppointmentDetailsPageState extends State<ViewAppointmentDetailsPage>
 
             ListTile(
                leading: Icon(Icons.location_on),
-                title: Text('Chamber Address : ${doctorData?['chamberAddress']}'),
+                title: Text('Chamber Address : ${doctorData?['chamberAddress']}',
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontSize: 16,
+                  ),
+                ),
                 ),
           ],
         ),
