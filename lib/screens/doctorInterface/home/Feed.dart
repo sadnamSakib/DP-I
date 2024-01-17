@@ -161,7 +161,7 @@ class _FeedState extends State<Feed> {
                   textAlign: TextAlign.left,
                 ),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 15),
               Expanded(
                 child: ListView.builder(
                   itemCount: dayItems.length,
