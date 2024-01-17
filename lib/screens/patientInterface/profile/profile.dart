@@ -8,7 +8,6 @@ import 'package:design_project_1/services/authServices/auth.dart';
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 
@@ -39,7 +38,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
     fetchUserName();
 
-    // Merge the streams using rxdart's StreamGroup
     combinedStream = Rx.combineLatest2(
       users.doc(userUID).snapshots(),
       patients.doc(userUID).snapshots(),
@@ -254,7 +252,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                                           child:
                                         ReusableRow(title: 'Address', value: patientData?['address'] ?? 'xxx-xxx-xxx', iconData: Icons.house), // Add more rows as needed
-                                             // Add more rows as needed
                                           ),
                                         ReusableRow(
                                           title: 'Gender',

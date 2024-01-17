@@ -194,7 +194,6 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
 
 
     print(currentTime);
-    print('CURRENT  TIMEEEEEEEEEEEEE');
 
     DateTime currentTimeFormat = DateFormat('h:mm a').parse(
         currentTime); // Parse current time
@@ -218,7 +217,6 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
       CollectionReference missedAppointmentsCollection = FirebaseFirestore
           .instance.collection('MissedAppointments');
 
-      // Add the appointment data to the "MissedAppointments" collection
       await missedAppointmentsCollection.add({
         'patientId': appointmentdata['patientId'] ?? '',
         'patientName': appointmentdata['patientName'] ?? '',

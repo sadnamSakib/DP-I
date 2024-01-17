@@ -30,7 +30,6 @@ class _DoctorswithAppointmentsState extends State<DoctorswithAppointments> {
       CollectionReference doctorsCollection = FirebaseFirestore.instance.collection('doctors');
 
 
-      // Fetch doctor information for each doctorId
       for (String doctorId in widget.doctorIds) {
         DocumentSnapshot doctorSnapshot = await doctorsCollection.doc(doctorId).get();
         print(doctorId);
