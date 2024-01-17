@@ -46,8 +46,7 @@ class _EmergencyRequestListState extends State<EmergencyRequestList> {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
-            end: Alignment.bottomCenter, // 10% of the width, so there are ten blinds.
-            colors: [Colors.white70, Colors.pink.shade50], // whitish to gray// repeats the gradient over the canvas
+            colors: [Colors.white70, Colors.pink.shade50],
           ),
         ),
         child: StreamBuilder(
@@ -68,7 +67,16 @@ class _EmergencyRequestListState extends State<EmergencyRequestList> {
             if (snapshot.hasError) {
               return const Text('Something went wrong');
             }
-            // Display current emergency requests
+            if(snapshot.data!.docs.isEmpty){
+              return const Center(
+
+                child: Text("No emergency requests",
+                  style: TextStyle(
+                    fontSize: 20.0,
+                  ),
+                ),
+              );
+            }
               return ListView(
                 children: snapshot.data!.docs.map((DocumentSnapshot document) {
                   Map<String, dynamic> data =

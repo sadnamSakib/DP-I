@@ -37,51 +37,59 @@ class _RequestEmergencyScreenState extends State<RequestEmergencyScreen> {
               title: Text('Request Emergency'),
               backgroundColor: Colors.blue.shade900,
             ),
-            body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      maxLines: 3,
-                      controller: _messageController,
-                      decoration: InputDecoration(
-                        labelText: "Emergency Note",
-                        hintText: "Include the health issue for better assistance",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(25.0),
+            body: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  colors: [Colors.white70, Colors.blue.shade100],
+                ),
+              ),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextField(
+                        maxLines: 3,
+                        controller: _messageController,
+                        decoration: InputDecoration(
+                          labelText: "Emergency Note",
+                          hintText: "Include the health issue for better assistance",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(25.0),
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.red.shade800,
-                      onPrimary: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(40.0),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.red.shade800,
+                        onPrimary: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(40.0),
+                        ),
+                        fixedSize: Size(100.0, 50.0),
                       ),
-                      fixedSize: Size(100.0, 50.0),
-                    ),
-                    child: Icon(Icons.emergency_outlined,
-                      size: 40.0,
-                    ),
-                    onPressed: () async {
-                      initialMessage = _messageController.text;
-                      await _chatService.requestEmergency(initialMessage);
+                      child: Icon(Icons.emergency_outlined,
+                        size: 40.0,
+                      ),
+                      onPressed: () async {
+                        initialMessage = _messageController.text;
+                        await _chatService.requestEmergency(initialMessage);
 
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) =>
-                            Chat(receiverUserID: receiverID,
-                              initialMessage: initialMessage,)),
-                      );
-                    },
-                  ),
-                ],
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) =>
+                              Chat(receiverUserID: receiverID,
+                                initialMessage: initialMessage,)),
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           );

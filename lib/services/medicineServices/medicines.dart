@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csv/csv.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -114,20 +116,20 @@ Future<List<PrescriptionModel>> loadPrescription(String patientId) async {
   return prescriptions;
 }
 
-Future<List<Medicine>> loadCurrentlyRunningMedicines(String patientId) async{
-List<Medicine> medicines = [];
-  try {
-    final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('prescriptions')
-        .where('patientId', isEqualTo: patientId)
-        .get();
+Stream<List<Medicine>> loadCurrentlyRunningMedicines(String patientId) {
+  final StreamController<List<Medicine>> controller = StreamController<List<Medicine>>();
 
+  FirebaseFirestore.instance
+      .collection('prescriptions')
+      .where('patientId', isEqualTo: patientId)
+      .snapshots()
+      .listen((QuerySnapshot querySnapshot) {
+    List<Medicine> medicines = [];
     for (final doc in querySnapshot.docs) {
       final Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?;
-
       if (data != null) {
-        for(final prescribedMedicine in data['prescribedMedicines']){
-          final medicineDetails  = prescribedMedicine['medicineDetails'];
+        for (final prescribedMedicine in data['prescribedMedicines']) {
+          final medicineDetails = prescribedMedicine['medicineDetails'];
           final medicine = Medicine(
             brandName: medicineDetails['brandName'],
             dosageForm: medicineDetails['dosageForm'],
@@ -137,14 +139,12 @@ List<Medicine> medicines = [];
           );
           medicines.add(medicine);
         }
-
       }
     }
-  } catch (e) {
-    print('Error fetching valid medicines: $e');
-  }
+    controller.add(medicines);
+  });
 
-  return medicines;
+  return controller.stream;
 }
 
 Future<void> addPrescribedMedicine(String patientId, PrescribeMedicineModel prescribedMedicine) async {

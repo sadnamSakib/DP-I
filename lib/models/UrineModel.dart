@@ -18,6 +18,6 @@ class Urine {
   }
 
   Urine({required this.volume, required this.color, required this.time}) {
-    DateFormatter(DateTime.now()); // Call DateFormatter in the constructor
+    DateFormatter(DateTime.now());
   }
 }

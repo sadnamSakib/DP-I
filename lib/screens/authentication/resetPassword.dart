@@ -27,7 +27,6 @@ final TextEditingController emailController = TextEditingController();
       await _auth.sendPasswordResetEmail(email: emailController.text.trim());
     } catch (e) {
       print(email);
-      print("kisu ekta");
     }
   }
 

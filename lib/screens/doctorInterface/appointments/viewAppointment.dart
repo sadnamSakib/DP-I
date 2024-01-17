@@ -85,10 +85,19 @@ class _ViewAppointmentScreenState extends State<ViewAppointmentScreen> {
           itemBuilder: (context, index) {
             final appointment = appointments[index];
             return ListTile(
-              title: Text(appointment.patientName),
+              tileColor: Colors.teal.shade50,
+              title: Text(appointment.patientName,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),),
               subtitle:
 
-                  Text('Issue: ${appointment.issue}'),
+                  Text('Issue: ${appointment.issue}',
+                  style: TextStyle(
+                    fontSize: 15,
+                  ),
+                  ),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => AppointmentDetailScreen(appointment: appointment)));
               },

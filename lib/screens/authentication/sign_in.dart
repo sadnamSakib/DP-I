@@ -8,7 +8,6 @@ class SignIn extends StatefulWidget {
   final Function toggleView;
 
   SignIn({required this.toggleView});
-  //const SignIn({super.key, required void Function() toggleView});
 
   @override
   State<SignIn> createState() => _SignInState();
@@ -101,7 +100,7 @@ class _SignInState extends State<SignIn> {
                           child: Text('Forgot Password?'),
                         ),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.center, // Aligns the children to the center horizontally
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SizedBox(height: 20.0),
                             Text('Don\'t have an account?'),

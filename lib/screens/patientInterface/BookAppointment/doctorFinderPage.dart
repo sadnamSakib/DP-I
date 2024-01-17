@@ -108,7 +108,7 @@ class _DoctorFinderState extends State<DoctorFinder> {
                     children: specializations.map((category) {
                       return CategoryTile(
                         category: category,
-                        onSelectCategory: onSelectCategory, // Step 2: Pass the callback function
+                        onSelectCategory: onSelectCategory,
                       );
                     }).toList(),
                   ),
@@ -156,7 +156,7 @@ class _DoctorFinderState extends State<DoctorFinder> {
                       if (userDoctors != null && userDoctors.isNotEmpty) {
                         return InkWell(
                           onTap: () {
-                            final doctorDocumentID = userDocumentID; // Assign userDocumentID to doctorDocumentID
+                            final doctorDocumentID = userDocumentID;
                             print(doctorDocumentID);
                             Navigator.push(
                               context,

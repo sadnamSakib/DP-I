@@ -44,6 +44,7 @@ class healthTrackerService {
 
 
   Future<List<double>> getPastProteinData(int days) async {
+    print('INSIDE getPastProteinData');
     return proteinTrackerService(uid: uid, diseaseCollection: kidneyDiseaseCollection).getPastProteinData(days);
   }
 

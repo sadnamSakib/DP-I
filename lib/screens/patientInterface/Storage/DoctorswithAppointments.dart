@@ -77,7 +77,7 @@ class _DoctorswithAppointmentsState extends State<DoctorswithAppointments> {
         backgroundColor: Colors.blue.shade900,
         title: Align(
           alignment: Alignment.centerLeft,
-          child: Text('DocLinkr'),
+          child: Text('Share Documents'),
         ),
       ),
           body: Container(
@@ -103,7 +103,13 @@ class _DoctorswithAppointmentsState extends State<DoctorswithAppointments> {
                 Expanded(
                   child: filteredDoctors.isEmpty
                       ? Center(
-                    child: Text('No doctor with this name'),
+                    child: Text('Search for Doctors you have appointment with',
+                      style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey.shade700,
+                    ),
+                      textAlign: TextAlign.center,),
                   )
                       :
                   ListView.builder(
@@ -113,19 +119,56 @@ class _DoctorswithAppointmentsState extends State<DoctorswithAppointments> {
                         padding: const EdgeInsets.all(8.0),
                         child: InkWell(
                           onTap: () {
-                            // shareFilewithDoctor(filteredDoctors[index]['id']);
+
                             print(filteredDoctors[index]['doctorId']);
                             shareFileWithDoctor(filteredDoctors[index]['doctorId']);
                           },
-                          child: Card(
-                            color: Colors.white,
-                            child: ListTile(
-                              tileColor: Colors.white,
-                              leading: Icon(Icons.person),
-                              title: Text(filteredDoctors[index]['name']),
-                              subtitle: Text(filteredDoctors[index]['specialization']),
+                          child:
+
+                          Container(
+                            margin: EdgeInsets.only(bottom: 15),
+                            decoration: BoxDecoration(
+                              color: Colors.white70,
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.blueGrey.withOpacity(0.5),
+                                  spreadRadius: 1,
+                                  blurRadius: 5,
+                                  offset: Offset(0, 2),
+                                ),
+                              ],
                             ),
-                          ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.person,
+                                    color: Colors.black,
+                                  ),
+                                  SizedBox(width: 10),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          filteredDoctors[index]['name']?? '',
+                                          style: TextStyle(color: Colors.black,  fontSize: 18),
+                                        ),
+                                        SizedBox(height: 8),
+                                        Text(
+                                          filteredDoctors[index]['specialization']?? '',
+                                          style: TextStyle(color: Colors.black,  fontSize: 18),
+                                        ),
+
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
                         ),
                       );
                     },
