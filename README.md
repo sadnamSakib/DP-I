@@ -34,11 +34,11 @@ This is the development branch for DocLinkr.Commits from individual branches are
     - Tracking water intake , urine condition , protein intake , weight measurement , blood pressure.
     - For protein calculation we have used nutritionix api to get protein value for different food.
       
--**Prescribing Medicines**
+- **Prescribing Medicines:**
   - Doctors can prescribe medicines to the patient during the appointment.
   - The medicine information was taken from a kaggle dataset which contained general medicine information of bangladeshi medicines.
 
--**Payment**
+- **Payment:**
   - We used SSLCOMMERZE sandbox to implement payment feature.
   - As of now it is still a dummy feature but in future we can use the original SSLCOMMERZE api and integrate it. 
 
