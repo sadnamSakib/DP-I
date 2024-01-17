@@ -83,7 +83,7 @@ class AppointmentCard extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: appointment.sessionType == 'Online' ? Colors.blue : Colors.red, // Change the color based on the session type
+                  color: appointment.sessionType == 'Online' ? Colors.blue : Colors.red,
                 ),
               )
 
@@ -158,8 +158,8 @@ class AppointmentCard extends StatelessWidget {
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 2,
-          backgroundColor: Colors.blue,
-          textColor: Colors.black,
+          backgroundColor: Colors.white,
+          textColor: Colors.blue,
         );
 
       } else {
