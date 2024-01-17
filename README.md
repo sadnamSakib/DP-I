@@ -75,7 +75,7 @@ This is the development branch for DocLinkr.Commits from individual branches are
      ```
      flutter run
      ```
-##**Installing App On Your Phone**
+## **Installing App On Your Phone**
   - Build the release version of the app
     ```
     flutter build --release
@@ -83,7 +83,7 @@ This is the development branch for DocLinkr.Commits from individual branches are
   - The release version of apk will be located at [root_folder/build/app/outputs/flutter-apk]
   - Copy and install the app on your phone and use it.
 
-##**Downloading The App**
+## **Downloading The App**
   - The app has not been deployed for mass usage yet.
   - It will soon be uploaded on platforms such as google playstore and galaxy store.
       
