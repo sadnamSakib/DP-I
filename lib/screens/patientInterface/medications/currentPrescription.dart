@@ -176,7 +176,7 @@ class _CurrentPrescriptionScreenState extends State<CurrentPrescriptionScreen> {
                 ],
               );
             } else {
-              return Container(); // Return an empty container if remainingDays is not greater than 0
+              return Container();
             }
           }).toList(),
         );

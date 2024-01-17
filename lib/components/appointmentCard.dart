@@ -40,7 +40,6 @@ class AppointmentCard extends StatelessWidget {
 
     String formattedTime = '$hour:$minute $period';
 
-    print('HOUR');
     print("Formatted Time: $formattedTime");
 
     return formattedTime;
@@ -159,7 +158,7 @@ class AppointmentCard extends StatelessWidget {
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 2,
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.blue,
           textColor: Colors.black,
         );
 

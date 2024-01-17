@@ -115,7 +115,7 @@ class _NewFolderState extends State<NewFolder> {
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 1,
         backgroundColor: Colors.white,
-        textColor: Colors.black,
+        textColor: Colors.blue,
       );
 
       Navigator.push(
@@ -401,7 +401,7 @@ class _NewFolderState extends State<NewFolder> {
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,
             backgroundColor: Colors.white,
-            textColor: Colors.black,
+            textColor: Colors.blue,
           );
 
           Navigator.pushReplacement(
@@ -435,27 +435,7 @@ class _NewFolderState extends State<NewFolder> {
     );
   }
 
-  // Future<List<String>> getDoctorIdsForPatient() async {
-  //   try {
-  //
-  //     CollectionReference appointmentsCollection =
-  //     FirebaseFirestore.instance.collection('Appointments');
-  //
-  //     QuerySnapshot querySnapshot = await appointmentsCollection
-  //         .where('patientId', isEqualTo: userUID)
-  //         .get();
-  //
-  //     List<String> doctorIds = querySnapshot.docs
-  //         .map((doc) => doc['doctorId'] as String) // Adjust the type if needed
-  //         .toList();
-  //
-  //
-  //     return doctorIds;
-  //   } catch (e) {
-  //     print('Error fetching appointments: $e');
-  //     return [];
-  //   }
-  // }
+
 
 
   Future<List<String>> getDoctorIdsForPatient() async {

@@ -30,7 +30,7 @@ Future main() async {
       DateTime.now().year,
       DateTime.now().month,
       DateTime.now().day,
-      0, 1); // 3:00 PM
+      0, 1);
 
   AndroidAlarmManager.oneShotAt(
     alarmTime,
