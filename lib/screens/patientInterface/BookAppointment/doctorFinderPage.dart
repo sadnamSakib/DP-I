@@ -203,7 +203,7 @@ class _DoctorFinderState extends State<DoctorFinder> {
 
 class CategoryTile extends StatefulWidget {
   final String category;
-  final Function(String) onSelectCategory; // Step 1: Declare a callback function
+  final Function(String) onSelectCategory;
   CategoryTile({required this.category, required this.onSelectCategory});
 
   @override
@@ -224,7 +224,6 @@ class _CategoryTileState extends State<CategoryTile> {
     return GestureDetector(
       onTap:() {
         onSelectCategory(widget.category);
-        print("Jalay bachina");
         print(selectedCategory);
         Navigator.push(context, MaterialPageRoute(builder: (context)=>DoctorsListPage(selectedCategory: selectedCategory)));
       },

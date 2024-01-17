@@ -377,7 +377,6 @@ import '../BookAppointment/doctorFinderPage.dart';
                                               child:
 
                                               Container(
-                                                // height: 50,
                                                 margin: EdgeInsets.only(bottom: 15),
                                                 decoration: BoxDecoration(
                                                   color: Colors.white70,
