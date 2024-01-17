@@ -149,14 +149,17 @@ class _FeedState extends State<Feed> {
                 ),
               ),
               SizedBox(height: 30),
-              Text(
-                'Your Schedule for today',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Text(
+                  'Your Schedule for today',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                  textAlign: TextAlign.left,
                 ),
-                textAlign: TextAlign.left,
               ),
               SizedBox(height: 10),
               Expanded(
