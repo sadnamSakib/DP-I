@@ -69,7 +69,7 @@ print('Appointtment');
       print(e);
     }
 
-      print(numberOfPatients); // Print the updated value
+      print(numberOfPatients);
 
 
     }

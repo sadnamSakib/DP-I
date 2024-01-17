@@ -18,7 +18,6 @@ Future<List<Medicine>> loadMedicines() async {
   final csvString = await rootBundle.loadString('assets/medicineList.csv');
   final csvList = CsvToListConverter().convert(csvString);
 
-  // Skip the first row (header row) and map the rest to Medicine objects
   final medicines = csvList.skip(1).map((row) {
     return Medicine(
       brandName: row[0],

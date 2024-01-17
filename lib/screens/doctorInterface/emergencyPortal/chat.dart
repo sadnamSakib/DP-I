@@ -116,7 +116,7 @@ class _ChatState extends State<Chat> {
     );
   }
 
-  //build message item
+
   Widget _buildMessageItem(DocumentSnapshot document){
     Map<String, dynamic> data = document.data() as Map<String, dynamic>;
     String messageId = document.id;
