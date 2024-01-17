@@ -166,7 +166,6 @@ class _FeedState extends State<Feed> {
                   ? Center(
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: Expanded(
                     child: Text(
                       'No appointments for today',
                       style: TextStyle(
@@ -176,7 +175,6 @@ class _FeedState extends State<Feed> {
                       ),
 
                     ),
-                  ),
                 ),
               )
                   :
