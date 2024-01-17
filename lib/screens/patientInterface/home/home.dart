@@ -29,7 +29,7 @@ class _HomeState extends State<Home> {
   NotificationServices notificationServices = NotificationServices();
 
   final AuthService _auth = AuthService();
-  int _currentIndex = 2; // Track the current tab index
+  int _currentIndex = 2;
   @override
   void initState() {
     super.initState();
@@ -92,7 +92,7 @@ class _HomeState extends State<Home> {
               navBarStyle: NavBarStyle.style14,
               onItemSelected: (int index) {
                 setState(() {
-                  _currentIndex = index; // Update the current tab index
+                  _currentIndex = index;
                 });
               },
             ),
