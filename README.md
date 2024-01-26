@@ -4,7 +4,7 @@
 
 ## Overview
 
-This is the development branch for DocLinkr.Commits from individual branches are pushed and merged here after each iteration.
+This is the main branch for DocLinkr.Commits from individual branches are pushed and merged here after each iteration.
 
 ## Features
 
