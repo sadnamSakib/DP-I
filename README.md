@@ -52,6 +52,9 @@ This is the main branch for DocLinkr.Commits from individual branches are pushed
   - We have used AGORA video calling uikit to implement video calling feature.
   - This feature has also not been finalized.As we need to refresh the token each day for the free video calling feature from AGORA.
 
+## Technological Stack
+
+<img src="https://logowik.com/content/uploads/images/flutter5786.jpg" width="100" /><img src="https://cdn4.iconfinder.com/data/icons/google-i-o-2016/512/google_firebase-2-512.png" width="100" /><img src="https://cdn.icon-icons.com/icons2/3053/PNG/512/android_studio_alt_macos_bigsur_icon_190395.png" width="100" />
 
 ## Setup
 
